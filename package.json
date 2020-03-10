@@ -2,7 +2,7 @@
   "name": "home",
   "version": "1.0.0",
   "description": "My homepage",
-  "main": "index.js",
+  "main": "dist/index.html",
   "author": "Maxime Buffa <mbuffa@gmail.com>",
   "license": "MIT",
   "devDependencies": {
