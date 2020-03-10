@@ -61,6 +61,9 @@ body {
     }
 
     ul {
+      margin-top: 30px;
+      margin-bottom: 30px;
+
       li {
         @media screen and (max-width: 600px) {
           height: auto;
@@ -94,6 +97,16 @@ body {
           padding-top: 50px;
         }
       }
+    }
+
+    iframe.spotify-player {
+      @media screen and (max-width: 600px) {
+        display: none;
+      }
+
+      display: block;
+      margin: auto;
+      width: 90%;
     }
   }
 
