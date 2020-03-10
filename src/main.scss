@@ -32,6 +32,7 @@ body {
 
     background-color: $olive-light;
     color: black;
+    border-right: 1px solid $black;
 
     float: left;
     height: 100%;
@@ -81,12 +82,18 @@ body {
 
           &:hover {
             @media screen and (max-width: 600px) {
+              margin-right: 0;
             }
 
             background-color: $grey;
+            // Here I want to "collapse" the nav border.
+            // FIXME: Find a better method.
+            border-right: 2px solid $grey;
+            margin-right: -1px;
           }
 
           color: $black;
+
           font-size: 1.4em;
           font-variant: small-caps;
           font-weight: bold;
