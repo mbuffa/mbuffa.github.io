@@ -105,6 +105,8 @@ body {
     height: 100%;
     overflow: hidden;
 
+    max-width: 1000px; // Done for readibility. Unsure if it's a good idea.
+
     article {
       padding: 20px;
     }
