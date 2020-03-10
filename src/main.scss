@@ -120,6 +120,14 @@ body {
 
     max-width: 1000px; // Done for readibility. Unsure if it's a good idea.
 
+    header {
+      padding: 10px;
+
+      hr {
+        margin: 10px;
+      }
+    }
+
     article {
       padding: 20px;
     }
