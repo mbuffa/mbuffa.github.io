@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h3>Pages tagged with "{{ term.name }}"</h3>
+
+  <ul>
+    {% for page in term.pages %}
+      <li>
+        <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+      </li>
+    {% endfor %}
+
+  </ul>
+
+{% endblock content %}

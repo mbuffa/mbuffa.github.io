@@ -1,0 +1,224 @@
+$black: #171717;
+$redish: #c12900;
+
+$orange: #e37226;
+$orange-light: #fd7313;
+$orange-deep: #f36115;
+
+$grey: #ddd;
+$olive-light: #87b22a;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  background: radial-gradient(ellipse at bottom -200% right -100%, $orange-light 0%, #090A0F 100%);
+  overflow: hidden;
+}
+
+body {
+  background-color: $black;
+  color: white;
+  // font-family: 'Courier New', 'Bellota Text', sans-serif;
+  font-family: 'Lato', sans-serif;
+  // font-size: 2em;
+
+  a, a:visited {
+    color: $orange-light;
+  }
+
+  a:hover {
+    color: $orange-deep;
+  }
+
+  p {
+    margin: 1em;
+  }
+
+  main {
+    position: absolute;
+    // background-color: $grey;
+    // margin: 1em;
+    // padding: 1em;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    #navbar {
+      display: block;
+      width: 1000PX;
+      margin: auto;
+      font-size: 1em;
+      background-color: $black;
+
+      li {
+        display: inline-block;
+        // max-width: 10%;
+
+        a {
+          display: block;
+          padding: 1em;
+          padding-top: 0;
+          padding-bottom: 0;
+          text-decoration: none;
+
+          &:hover {
+            background-color: $orange-deep;
+            color: $black;
+          }
+        }
+      }
+    }
+
+    table.articles {
+      width: 100%;
+
+      thead {
+        // background-color: red;
+      }
+
+      td {
+        width: 50%;
+
+        &:first-child {
+          width: 10%;
+        }
+
+        &:last-child {
+          // background-color: blue;
+          width: 40%;
+        }
+      }
+
+      .tag {
+        display: inline-block;
+        background-color: #333;
+        padding: 3px;
+        margin: 0 1ex 0 0;
+      }
+    }
+
+    article {
+      margin: 1em;
+      // margin-top: 1em;
+      // margin-bottom: 0;
+      // height: 100%;
+
+      section {
+        // float: left;
+        // width: 50%;
+        width: 1000px;
+        margin: auto;
+
+        // background-color: blue;
+        // height: 70%;
+
+        // background: transparentize(#000000, 0.5);
+        // border-radius: 1em;
+
+        padding: 1em;
+      }
+
+      // aside {
+      //   overflow: hidden;
+      //   // background-color: yellow;
+      //   // width: 50%;
+      //   width: auto;
+
+      //   padding: 1em;
+      // }
+    }
+  }
+}
+
+/*
+  Stars background, shamelessly copy/pasted and adapted from:
+  https://codepen.io/saransh/pen/BKJun
+*/
+
+@function multiple-box-shadow($n, $color) {
+  $value: '#{random(2000)}px #{random(2000)}px ' + $color;
+
+  @for $i from 2 through $n {
+    $value: '#{$value} , #{random(2000)}px #{random(2000)}px ' + $color;
+  }
+
+  @return unquote($value);
+}
+
+$shadows-small: multiple-box-shadow(700, #fff);
+$shadows-medium: multiple-box-shadow(200, #999);
+$shadows-large: multiple-box-shadow(100, #666);
+
+@keyframes animStar {
+  from {
+    transform: translateY(0px);
+  }
+
+  to {
+    transform: translateY(-2000px);
+  }
+}
+
+#stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+
+  box-shadow: $shadows-small;
+  animation: animStar 50s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: $shadows-small;
+  }
+}
+
+#stars2 {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+
+  box-shadow: $shadows-medium;
+  animation: animStar 100s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: $shadows-medium;
+  }
+}
+
+#stars3 {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+
+  box-shadow: $shadows-large;
+  border-radius: 100%;
+  animation: animStar 150s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: $shadows-large;
+    border-radius: 100%;
+  }
+}
