@@ -2,6 +2,13 @@
 <head>
   <meta charset="UTF-8">
   <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <!-- Workaround for parcel live reload -->
+  <!-- https://github.com/parcel-bundler/parcel/issues/943 -->
+  <script id="__parcel__helper__">
+    // clear html from helper script tag, just in case
+    var helperScriptElement = document.getElementById('__parcel__helper__')
+    helperScriptElement.parentNode.removeChild(helperScriptElement);
+  </script>
   <title>Home</title>
   <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./main.scss" />
