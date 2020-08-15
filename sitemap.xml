@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+        <url>
+            <loc>https://mbuffa.github.io/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/about/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/opinions/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/opinions/subnautica/</loc>
+            
+                <lastmod>2018-08-01</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tags/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tags/english/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tags/rails/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tips/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/</loc>
+            
+                <lastmod>2020-08-15</lastmod>
+            
+        </url>
+    
+</urlset>

@@ -1,0 +1,87 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <!-- Workaround for parcel live reload -->
+  <!-- https://github.com/parcel-bundler/parcel/issues/943 -->
+  <title>Maxime Buffa</title>
+  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css" />
+</head>
+<body>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+  <main>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/opinions/">Opinions</a></li>
+        <li><a href="/tags/">Tags</a></li>
+      </ul>
+    </nav>
+    <article>
+      <section>
+        
+  <header>
+    <h1 class="title">
+      Rails: Deprecate an ActiveRecord attribute
+    </h1>
+    
+      <p class="subtitle">
+        Published on 2020-08-15
+      </p>
+    
+  </header>
+
+  <p><h2 id="context">Context</h2>
+<p>When working on a growing application relying on a database, it is not uncommon to have a data model that collects dust: some of its data may become obsolete, but you may not want to delete it just yet, because you may need to migrate it, prepare its deletion later or keep it as history.</p>
+<p>You might want to flag this data as deprecated, so that no one (including you) would rely on this no longer updated or relevant data.</p>
+<h2 id="how">How</h2>
+<p>You could of course add comments in your code, but there would be no guarantee someone would check those comments before using those attributes. Also, you wouldn't notice anything if existing code would use those attributes indirectly.</p>
+<p>Fortunately, Rails provides <a href="https://apidock.com/rails/v4.0.2/Module/deprecate">a nice way to flag ActiveRecord attributes as obsolete</a>, stabilized since Rails 4.x.</p>
+<p>Let's create a <code>Deprecator</code> class, that'll embed any behavior we'd like to implement. We can be creative here, like:</p>
+<ul>
+<li>logging the action</li>
+<li>logging parts of the stacktrace</li>
+<li>shaming your coworkers on Slack with a bot message</li>
+</ul>
+<p>But let's keep it simple for the time being:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#65737e;"># app/deprecators/field_deprecator.rb
+</span><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">FieldDeprecator
+  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">deprecation_warning</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">field</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">replacement</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">_caller_backtrace </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">nil</span><span style="color:#c0c5ce;">)
+    message = &quot;</span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">field</span><span style="color:#ab7967;">}</span><span style="color:#a3be8c;"> is deprecated, please favor </span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">replacement</span><span style="color:#ab7967;">}</span><span style="color:#c0c5ce;">&quot;
+    </span><span style="color:#ebcb8b;">Kernel</span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">warn</span><span style="color:#c0c5ce;"> message
+  </span><span style="color:#b48ead;">end
+end
+</span></pre>
+<p>We're not respecting the semantics of the second argument, but hey, this is duck-typing :trollface:</p>
+<p>Then, all we have to do is to add a call to this class method in our model:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">Racoon </span><span style="color:#eff1f5;">&lt; </span><span style="color:#a3be8c;">ApplicationRecord</span><span style="color:#c0c5ce;">
+  deprecate \
+    </span><span style="color:#a3be8c;">owner_id: </span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">Racoon#caretaker_id</span><span style="color:#c0c5ce;">&#39;,
+    </span><span style="color:#65737e;"># ... any other attribute you need to deprecate.
+    </span><span style="color:#a3be8c;">deprecator: </span><span style="color:#ebcb8b;">FieldDeprecator</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">new
+</span><span style="color:#b48ead;">end
+</span></pre>
+<p>With our current deprecator, this would output a warning message everytime this field is being read and updated:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">&gt; Racoon.first.owner_id
+owner_id is deprecated, please favor Racoon#caretaker_id
+</span></pre>
+<p><em>Et voilà.</em></p>
+</p>
+
+      </section>
+    </article>
+
+    <footer>
+      Proudly written with <a href="https://www.getzola.org/" target="_blank">Zola</a>
+    </footer>
+  </main>
+</body>
+</html>
