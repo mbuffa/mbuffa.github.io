@@ -54,6 +54,10 @@ body {
     }
   }
 
+  pre {
+    padding: 1em;
+  }
+
   & > main {
     position: absolute;
     // background-color: $grey;
