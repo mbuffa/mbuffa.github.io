@@ -2,11 +2,11 @@
 
 {% block content %}
   <h3>Tags</h3>
-  <ul>
+  <div class="tag-cards">
     {% for term in terms %}
-      <li>
-        <a href="{{ term.permalink | safe }}">{{ term.name }}</a>
-      </li>
+      <div class="tag-card">
+        <a class="tag" href="{{ term.permalink | safe }}">{{ term.name }}</a>
+      </div>
     {% endfor %}
-  </ul>
+  </div>
 {% endblock content %}

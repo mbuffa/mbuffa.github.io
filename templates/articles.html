@@ -13,8 +13,8 @@
         </td>
         <td>
           {% for tag in page.taxonomies["tags"] %}
-            <div class="tag">
-              <a href="/tags/{{ tag }}">{{ tag }}</a>
+            <div>
+              <a class="tag" href="/tags/{{ tag }}">{{ tag }}</a>
             </div>
           {% endfor %}
         </td>
@@ -22,5 +22,4 @@
       {% endfor %}
     </tbody>
   </table>
-
 {% endblock content %}

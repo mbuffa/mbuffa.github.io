@@ -1,5 +1,7 @@
 $black: #171717;
+$black_transparent: rgba(17, 17, 17, .7);
 $redish: #c12900;
+
 
 $orange: #e37226;
 $orange-light: #fd7313;
@@ -24,18 +26,28 @@ body {
   color: white;
   // font-family: 'Courier New', 'Bellota Text', sans-serif;
   font-family: 'Lato', sans-serif;
-  // font-size: 2em;
+  font-size: 1.4em;
+
+  h1, h2, h3, h4, h5, h6 {
+    padding: 1em;
+    // background-color: blue;
+  }
+
+  ul, p {
+    margin: 1em;
+  }
 
   a, a:visited {
     color: $orange-light;
+
+    &:hover {
+      color: $orange-deep;
+      // background-color: $black;
+    }
   }
 
-  a:hover {
-    color: $orange-deep;
-  }
-
-  p {
-    margin: 1em;
+  ul {
+    list-style-type: "- ";
   }
 
   main {
@@ -53,7 +65,7 @@ body {
       width: 1000PX;
       margin: auto;
       font-size: 1em;
-      background-color: $black;
+      background-color: $black_transparent;
 
       li {
         display: inline-block;
@@ -77,12 +89,20 @@ body {
     table.articles {
       width: 100%;
 
-      thead {
-        // background-color: red;
-      }
-
       td {
         width: 50%;
+
+        a {
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        * {
+          display: block;
+        }
 
         &:first-child {
           width: 10%;
@@ -94,11 +114,9 @@ body {
         }
       }
 
-      .tag {
+      a.tag {
         display: inline-block;
-        background-color: #333;
-        padding: 3px;
-        margin: 0 1ex 0 0;
+        text-decoration: none;
       }
     }
 
@@ -107,6 +125,8 @@ body {
       // margin-top: 1em;
       // margin-bottom: 0;
       // height: 100%;
+      // background-color: blue;
+      background-color: $black_transparent;
 
       section {
         // float: left;
@@ -131,6 +151,47 @@ body {
 
       //   padding: 1em;
       // }
+    }
+
+    a.tag {
+      // display: inline-block;
+      // background-color: #333;
+      // padding: 3px;
+      // margin: 0 1ex 0 0;
+      display: block;
+      font-family: "Courier New", monospace, sans-serif;
+      text-decoration: none;
+    }
+
+    div.tag-cards {
+      display: flex;
+      flex-flow: row wrap;
+      // width: 100%;
+      // background-color: red;
+
+      div.tag-card {
+        // display: flex;
+
+        margin-right: 1ex;
+        // width: 10%;
+        // background-color: blue;
+        // background-color: $black;
+        border: 1px solid #111;
+
+        a {
+          padding: 1em;
+
+          &:hover {
+            background-color: $orange-deep;
+            color: $black;
+          }
+        }
+      }
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.6em;
     }
   }
 }
