@@ -20,7 +20,7 @@ jobs:
     - name: Push
       run: |
         cd $GITHUB_WORKSPACE
-        git add public
+        git add -f public
         git checkout gh-pages
         git commit -m "New release"
         git push origin gh-pages
