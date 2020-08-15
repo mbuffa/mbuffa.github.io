@@ -24,12 +24,10 @@ jobs:
     - name: Push
       run: |
         cd $GITHUB_WORKSPACE
-        # git add -f public
         git fetch -p
+        git checkout gh-pages
         rm -rf config.toml content sass templates
         mv public/* .
         git add -f .
-        git checkout gh-pages
-        # git pull
         git commit -m "New release"
         git push origin gh-pages
