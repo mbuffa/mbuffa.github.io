@@ -25,10 +25,10 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         git fetch -p
-        git checkout gh-pages
+        git checkout master
         rm -rf config.toml content sass templates
         cp -R public/* .
         rm -rf public
         git add -f .
         git commit -m "New release"
-        git push origin gh-pages
+        git push origin master
