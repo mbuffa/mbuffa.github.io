@@ -27,7 +27,8 @@ jobs:
         git fetch -p
         git checkout gh-pages
         rm -rf config.toml content sass templates
-        mv public/* .
+        cp -R public/* .
+        rm -rf public
         git add -f .
         git commit -m "New release"
         git push origin gh-pages
