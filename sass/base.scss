@@ -58,6 +58,7 @@ body {
 
   pre {
     padding: 1em;
+    white-space: pre-wrap;
   }
 
   & > main {
@@ -149,8 +150,6 @@ body {
       background-color: $black_transparent;
 
       section {
-        // float: left;
-        // width: 50%;
         max-width: 1000px;
         margin: auto;
 
@@ -172,16 +171,12 @@ body {
             font-size: medium;
           }
         }
+
+        img {
+          margin: auto;
+          display: flex;
+        }
       }
-
-      // aside {
-      //   overflow: hidden;
-      //   // background-color: yellow;
-      //   // width: 50%;
-      //   width: auto;
-
-      //   padding: 1em;
-      // }
     }
 
     a.tag {
