@@ -152,6 +152,8 @@ body {
       section {
         max-width: 1000px;
         margin: auto;
+        padding-top: 1em;
+        padding-bottom: 1em;
 
         // background-color: blue;
         // height: 70%;
@@ -175,6 +177,12 @@ body {
         img {
           margin: auto;
           display: flex;
+          max-width: 90%;
+        }
+
+        img[src$="#cropped"] {
+          object-fit: scale-down;
+          width: 600px;
         }
       }
     }
