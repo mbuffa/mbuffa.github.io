@@ -22,7 +22,17 @@
         </url>
     
         <url>
+            <loc>https://mbuffa.github.io/tags/dev/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://mbuffa.github.io/tags/rails/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tags/wsl/</loc>
             
         </url>
     
@@ -35,6 +45,13 @@
             <loc>https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/</loc>
             
                 <lastmod>2020-08-15</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tips/20200816-developing-on-wsl/</loc>
+            
+                <lastmod>2020-08-16</lastmod>
             
         </url>
     
