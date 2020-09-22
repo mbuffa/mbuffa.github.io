@@ -16,7 +16,7 @@ This document is:
 However, it is NOT:
 * An article from an expert on the topic. I'll do my best to describe symptoms and conditions, and I'll add sources when appropriate.
 * A call for pity. If we work together, I'd rather have you fully aware than wondering.
-* A defense or an argument for [positive discrimination][1]. I think this is an awful solution to an awful issue that only produces jealousy, neurosis and bitterness, and I'd rather have you hire me for my skills rather than to satisfy your quotas.
+* A defense or an argument in favor of [positive discrimination][1]. I think this is an awful solution that only produces jealousy, neurosis and bitterness, and I'd rather have you hire me for my skills rather than to satisfy your quotas or pay less taxes.
 
 ## Your eyes
 (general explanations on how an eye works)
@@ -55,8 +55,16 @@ In my particular case, I'd say my vision slows me a bit; it makes reading long d
 
 I also have to double check my work, which makes me cautious, or unsure to many eyes. I tend to insert doubt when I am sure of a thing, even though I triple checked that thing already, and it can be an issue when arguing or asserting myself.
 
-### Hobbies
+### Impact on day-to-day life
+Having such a low vision basically rules out driving most kind of vehicles, including bicycles, at least in crowded cities where it's already a bit dangerous with healthy eyes.
 
+Public transportation is the way to go then, and even in some scenarios, a smartphone is still a welcome assistant (mostly for train stations, where France is behind some countries regarding accessibility).
+
+Any sports that relies on reactivity, precision and a truly stereoscopic view is also out of the question, but there's still a wide range of activities that can be picked.
+
+Fortunately, hobbies aren't so impacted. Even when good vision is required, you can still thrive with determination, efforts and creativity when having disabilities.
+
+However, in my case, visiting a museum isn't very interesting without a guide, and even though I can go to a theater, I feel I'm not building the same "emotional connection" with the actors as I do when watching a movie on a screen a few centimeters from my nose. It certainly has to do with the fact that I don't get the small details on people's faces, and I think I like music and sound better than the other forms of arts for the same reason. It probably impacts social life as well, as it's easier for me to feel emotions from a voice rather than a face.
 
 ### Give me a torch and sunglasses
 I got almost no night vision. Thankfully, we all got a flashlight on our smartphones now, but it can still be a bit dangerous to walk at night in an uncivilized city like Paris.
@@ -68,7 +76,7 @@ Since I have been relying on hearing and memorization, I have developed those tw
 
 I also got a good hearing and rely a lot on it for social interaction, since people faces are blurry most of the time, and despite the fact that I endangered my eardrums with lowcost earbuds and dubious music in high school, I am still performing on the high end of the spectrum.
 
-## Conclusion
+## Always look on the bright side of life
 On a positive note, I have been able to observe black holes way before anyone else ;)
 
 [0]: https://en.wikipedia.org/wiki/Retinitis_pigmentosa
