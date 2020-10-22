@@ -100,12 +100,12 @@ Since at least its version <code>1.10</code>, Mix can handle this (you won't nee
 </span></pre>
 <p>This command will generate a few files. Let's take a look at <code>vm.args.eex</code>. It should contain a few commented lines, specifically:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">## Customize flags given to the VM: http://erlang.org/doc/man/erl.html
+<span style="color:#65737e;">## Customize flags given to the VM: http://erlang.org/doc/man/erl.html
 ## -mode/-name/-sname/-setcookie are configured via env vars, do not set them here
 </span></pre>
 <p>Since we want to set <code>name</code> and deploy on Linux containers, let's get to <code>env.sh.eex</code>. There's a few commented lines in there, but we're most interested in the last block:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;"># Set the release to work across nodes. If using the long name format like
+<span style="color:#65737e;"># Set the release to work across nodes. If using the long name format like
 # the one below (my_app@127.0.0.1), you need to also uncomment the
 # RELEASE_DISTRIBUTION variable below. Must be &quot;sname&quot;, &quot;name&quot; or &quot;none&quot;.
 # export RELEASE_DISTRIBUTION=name
@@ -118,48 +118,48 @@ Since at least its version <code>1.10</code>, Mix can handle this (you won't nee
 </span></pre>
 <p>So your setup should end up looking like this:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">export POD_A_RECORD=$(echo $POD_IP | sed &#39;s/\./-/g&#39;)
-export RELEASE_DISTRIBUTION=name
-export RELEASE_NODE=myapp@$(echo $POD_A_RECORD).$(echo $NAMESPACE).pod.cluster.local
+<span style="color:#b48ead;">export </span><span style="color:#bf616a;">POD_A_RECORD</span><span style="color:#c0c5ce;">=$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">POD_IP </span><span style="color:#c0c5ce;">| </span><span style="color:#bf616a;">sed </span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">s/\./-/g</span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">)
+</span><span style="color:#b48ead;">export </span><span style="color:#bf616a;">RELEASE_DISTRIBUTION</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">name
+</span><span style="color:#b48ead;">export </span><span style="color:#bf616a;">RELEASE_NODE</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">myapp@</span><span style="color:#c0c5ce;">$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">POD_A_RECORD</span><span style="color:#a3be8c;">).</span><span style="color:#c0c5ce;">$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#a3be8c;">).pod.cluster.local
 </span></pre>
 <p>Both <code>$POD_IP</code> and <code>$NAMESPACE</code> will have to be defined when our application starts, so we'll add those to our k8s deployment manifest.</p>
 <h2 id="kubernetes-configuration">Kubernetes configuration</h2>
 <p>We should now declare our two new environment variables:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myapp
-  namespace: default
-spec:
-  selector:
-    matchLabels:
-      app: myapp
-      tier: web
-  template:
-    metadata:
-      labels:
-        app: myapp
-        tier: web
-    spec:
-      containers:
-        - name: myapp
-          image: &lt;Image&gt;
-          resources:
-            limits:
-              memory: &quot;128Mi&quot;
-              cpu: &quot;500m&quot;
-          ports:
-            - containerPort: &lt;Port&gt;
-          env:
-            - name: NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
+<span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
+kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
+metadata</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">myapp
+  namespace</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">default
+spec</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">selector</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">matchLabels</span><span style="color:#c0c5ce;">:
+      </span><span style="color:#bf616a;">app</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">myapp
+      tier</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">web
+  template</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">metadata</span><span style="color:#c0c5ce;">:
+      </span><span style="color:#bf616a;">labels</span><span style="color:#c0c5ce;">:
+        </span><span style="color:#bf616a;">app</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">myapp
+        tier</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">web
+    spec</span><span style="color:#c0c5ce;">:
+      </span><span style="color:#bf616a;">containers</span><span style="color:#c0c5ce;">:
+        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">myapp
+          image</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">&lt;Image&gt;
+          resources</span><span style="color:#c0c5ce;">:
+            </span><span style="color:#bf616a;">limits</span><span style="color:#c0c5ce;">:
+              </span><span style="color:#bf616a;">memory</span><span style="color:#c0c5ce;">: &quot;</span><span style="color:#a3be8c;">128Mi</span><span style="color:#c0c5ce;">&quot;
+              </span><span style="color:#bf616a;">cpu</span><span style="color:#c0c5ce;">: &quot;</span><span style="color:#a3be8c;">500m</span><span style="color:#c0c5ce;">&quot;
+          </span><span style="color:#bf616a;">ports</span><span style="color:#c0c5ce;">:
+            - </span><span style="color:#bf616a;">containerPort</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">&lt;Port&gt;
+          env</span><span style="color:#c0c5ce;">:
+            - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">NAMESPACE
+              valueFrom</span><span style="color:#c0c5ce;">:
+                </span><span style="color:#bf616a;">fieldRef</span><span style="color:#c0c5ce;">:
+                  </span><span style="color:#bf616a;">fieldPath</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">metadata.namespace
+            </span><span style="color:#c0c5ce;">- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">POD_IP
+              valueFrom</span><span style="color:#c0c5ce;">:
+                </span><span style="color:#bf616a;">fieldRef</span><span style="color:#c0c5ce;">:
+                  </span><span style="color:#bf616a;">fieldPath</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">status.podIP
 </span></pre>
 <p>Both variables references the pod's information once it's started. You can check it by running:e by running:</p>
 <pre style="background-color:#2b303b;">
@@ -174,20 +174,20 @@ spec:
 <p>Last, but not least, we need to specify our libcluster strategy:</p>
 <pre style="background-color:#2b303b;">
 <span style="color:#c0c5ce;">topologies = [
-  default: [
-    strategy: Cluster.Strategy.Kubernetes,
-    config: [
-      mode: :dns,
-      kubernetes_node_basename: &quot;myapp&quot;,
-      kubernetes_selector: &quot;app=myapp,tier=web&quot;,
-      kubernetes_namespace: &quot;default&quot;,
-      polling_interval: 10_000
-    ]
+  </span><span style="color:#d08770;">default: </span><span style="color:#c0c5ce;">[
+    </span><span style="color:#d08770;">strategy: </span><span style="color:#ebcb8b;">Cluster</span><span style="color:#c0c5ce;">.</span><span style="color:#ebcb8b;">Strategy</span><span style="color:#c0c5ce;">.</span><span style="color:#ebcb8b;">Kubernetes</span><span style="color:#c0c5ce;">,
+    </span><span style="color:#d08770;">config: </span><span style="color:#c0c5ce;">[
+      </span><span style="color:#d08770;">mode: </span><span style="color:#a3be8c;">:dns</span><span style="color:#c0c5ce;">,
+      </span><span style="color:#d08770;">kubernetes_node_basename: </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">myapp</span><span style="color:#c0c5ce;">&quot;,
+      </span><span style="color:#d08770;">kubernetes_selector: </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">app=myapp,tier=web</span><span style="color:#c0c5ce;">&quot;,
+      </span><span style="color:#d08770;">kubernetes_namespace: </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">default</span><span style="color:#c0c5ce;">&quot;,
+      </span><span style="color:#d08770;">polling_interval: 10_000
+    </span><span style="color:#c0c5ce;">]
   ]
 ]
 
 [
-  {Cluster.Supervisor, [topologies, [name: Myapp.ClusterSupervisor]]}
+  {</span><span style="color:#ebcb8b;">Cluster</span><span style="color:#c0c5ce;">.</span><span style="color:#ebcb8b;">Supervisor</span><span style="color:#c0c5ce;">, [topologies, [</span><span style="color:#d08770;">name: </span><span style="color:#ebcb8b;">Myapp</span><span style="color:#c0c5ce;">.</span><span style="color:#ebcb8b;">ClusterSupervisor</span><span style="color:#c0c5ce;">]]}
 ]
 </span></pre>
 <p>Once you deploy this, you should be good :) After scaling up your deployment (<code>kubectl scale --replicas=X deployment/my-app</code>), you should see various <code>[libcluster]</code> log entries on your pods.</p>
@@ -205,23 +205,23 @@ spec:
 <p><a href="http://erlang.org/doc/man/net_kernel.html#monitor_nodes-1">Erlang exposes a simple function</a> that'll get the current process notified when nodes are up or down. This can allow us to react accordingly, like printing debug information in the logs, dereferencing the node, or push the self destruct button.</p>
 <p>In our first example, if you had run the following before connecting the two nodes together:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">:net_kernel.monitor_nodes(true)
+<span style="color:#a3be8c;">:net_kernel</span><span style="color:#c0c5ce;">.monitor_nodes(</span><span style="color:#d08770;">true</span><span style="color:#c0c5ce;">)
 </span></pre>
 <p>Then running <code>flush</code> would show you the messages you received:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">{:nodeup, :a@Hostname}
+<span style="color:#c0c5ce;">{</span><span style="color:#a3be8c;">:nodeup</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">:a@Hostname</span><span style="color:#c0c5ce;">}
 </span></pre>
 <p>You can call <code>monitor_nodes</code> in a <a href="https://elixir-lang.org/getting-started/mix-otp/genserver.html">GenServer</a>, of course, and implement the relevant callbacks:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">def handle_info({:nodeup, node}, state) do
-  IO.puts(&quot;[STORE] Node connected: #{inspect node}&quot;)
-  {:noreply, state}
-end
+<span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">handle_info</span><span style="color:#c0c5ce;">({</span><span style="color:#a3be8c;">:nodeup</span><span style="color:#c0c5ce;">, </span><span style="color:#b48ead;">node</span><span style="color:#c0c5ce;">}, state) </span><span style="color:#b48ead;">do
+  </span><span style="color:#ebcb8b;">IO</span><span style="color:#c0c5ce;">.puts(&quot;</span><span style="color:#a3be8c;">[STORE] Node connected: </span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">inspect node</span><span style="color:#ab7967;">}</span><span style="color:#c0c5ce;">&quot;)
+  {</span><span style="color:#a3be8c;">:noreply</span><span style="color:#c0c5ce;">, state}
+</span><span style="color:#b48ead;">end
 
-def handle_info({:nodedown, node}, state) do
-  IO.puts(&quot;[STORE] Node disconnected: #{inspect node}&quot;)
-  {:noreply, state}
-end
+def </span><span style="color:#8fa1b3;">handle_info</span><span style="color:#c0c5ce;">({</span><span style="color:#a3be8c;">:nodedown</span><span style="color:#c0c5ce;">, </span><span style="color:#b48ead;">node</span><span style="color:#c0c5ce;">}, state) </span><span style="color:#b48ead;">do
+  </span><span style="color:#ebcb8b;">IO</span><span style="color:#c0c5ce;">.puts(&quot;</span><span style="color:#a3be8c;">[STORE] Node disconnected: </span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">inspect node</span><span style="color:#ab7967;">}</span><span style="color:#c0c5ce;">&quot;)
+  {</span><span style="color:#a3be8c;">:noreply</span><span style="color:#c0c5ce;">, state}
+</span><span style="color:#b48ead;">end
 </span></pre><h2 id="conclusion">Conclusion</h2>
 <p>This article is a bit long and rough around the edges, but it should give you a better understanding on how to deploy Elixir applications as a cluster.</p>
 <p>I strongly suggest that you follow the official documentations of Elixir, Erlang and libraries. The snippets I included may get outdated over time, though I don't expect the process to be easier than it currently is :)</p>
