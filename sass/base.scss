@@ -53,6 +53,11 @@ body {
 
   pre, code {
     background-color: $black_less_transparent !important;
+
+    &, * {
+      // color: yellow !important;
+      font-family: monospace;
+    }
   }
 
   pre {
@@ -63,13 +68,6 @@ body {
 
     border: 1px solid white;
     border-top-width: 6px;
-  }
-
-  code {
-    &, * {
-      color: yellow !important;
-      font-family: monospace;
-    }
   }
 
   & > main {
