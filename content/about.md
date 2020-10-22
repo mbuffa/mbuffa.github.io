@@ -11,13 +11,12 @@ I love tinkering with a new language, finding new tools, breaking down the unkno
 I also love almost every topic related to video games that does not include microtransactions or addictive mechanics, ranging from game design as a whole to writing and art. Which is why you'll find some video games reviews here as well.
 
 #### Contact
-Some of my projects are hosted on [Github][0]. But my epic commits history is on a private Gitlab.
+You can send me an [email](mailto:mbuffa+website@gmail.com) or reach me on one of the following platforms:
 
-I'm also on [Codewars][1] :)
-
-And [CoderWall][2].
-
-And, *of course*, on [Linkedin][99].
+- [Github][0]
+- [Codewars][1]
+- [CoderWall][2]
+- [Linkedin][99]
 
 [0]: https://github.com/mbuffa
 [1]: https://www.codewars.com/users/mbuffa
