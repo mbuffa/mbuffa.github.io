@@ -1,4 +1,5 @@
 $black: #171717;
+$black_less_transparent: rgba(17, 17, 17, .9);
 $black_transparent: rgba(17, 17, 17, .7);
 $redish: #c12900;
 
@@ -26,16 +27,10 @@ body {
   height: 100%;
 
   h1, h2, h3, h4, h5, h6 {
-    padding: .5em;
+    margin: 1em;
     // background-color: blue;
     color: $orange-light;
     text-shadow: 2px 2px black;
-  }
-
-  ul {
-    list-style-type: "- ";
-
-    margin: 1em;
   }
 
   p {
@@ -56,9 +51,25 @@ body {
     }
   }
 
+  pre, code {
+    background-color: $black_less_transparent !important;
+  }
+
   pre {
-    padding: 1em;
+    width: 90%;
+    margin: auto;
+    padding: .5em;
     white-space: pre-wrap;
+
+    border: 1px solid white;
+    border-top-width: 6px;
+  }
+
+  code {
+    &, * {
+      color: yellow !important;
+      font-family: monospace;
+    }
   }
 
   & > main {
@@ -141,7 +152,7 @@ body {
       }
     }
 
-    article {
+    & > article {
       margin: 1em;
       // margin-top: 1em;
       // margin-bottom: 0;
@@ -183,6 +194,18 @@ body {
         img[src$="#cropped"] {
           object-fit: scale-down;
           width: 600px;
+        }
+
+        ol, ul {
+          margin: 1em;
+        }
+
+        ul {
+          list-style-type: "- ";
+        }
+
+        li {
+          margin: 1em;
         }
       }
     }
