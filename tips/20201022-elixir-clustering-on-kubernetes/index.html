@@ -1,0 +1,243 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <!-- Workaround for parcel live reload -->
+  <!-- https://github.com/parcel-bundler/parcel/issues/943 -->
+  <title>Maxime Buffa</title>
+  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css" />
+</head>
+<body>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+  <main>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/tags/">Tags</a></li>
+      </ul>
+    </nav>
+    <article>
+      <section>
+        
+  <header>
+    <h1 class="title">
+      Elixir: Clustering on Kubernetes
+    </h1>
+    
+      <p class="subtitle">
+        Published on 2020-10-21
+      </p>
+    
+  </header>
+
+  <p><h2 id="context">Context</h2>
+<p>When developing Elixir applications, you may want to create a cluster of Erlang nodes at some point, for example, to provide redundancy, high availability,or to share a global state on the cluster (with Mnesia, for example) without hitting an outside DBMS.</p>
+<p>This can be easily achieved with <code>libcluster</code>. As you can see <a href="https://hexdocs.pm/libcluster/readme.html">in the docs</a>, it supports multiple strategies.</p>
+<p>I'll assume you want to deploy to a Kubernetes cluster, and I'll be covering this strategy only (<code>Cluster.Strategy.Kubernetes</code>) for simplicity sake, but you may find some bits interesting even if that doesn't apply to your case. I'll also assume that you already have a working basic Kubernetes deployment setup.</p>
+<p>We'll deploy a <code>cluster</code> of Erlang <code>nodes</code>. To avoid confusion with Kubernetes terminology, I'll use the prefix <code>k8s</code> when referring to Kube.</p>
+<h2 id="a-word-about-wsl">A word about WSL</h2>
+<p>You may run into one issue if you're using WSL: by default, WSL systems use the same hostname as their Windows host, which isn't fully qualified, and Erlang may not like that.</p>
+<p>To fix this (and to avoid breaking WSL), you can specify a full computer name on Windows.</p>
+<ol>
+<li>Go to your PC settings (<code>This PC</code> -&gt; <code>Properties</code> -&gt; <code>Change Settings</code> -&gt; <code>Change</code>),</li>
+<li>In the <code>Computer/Domain Changes</code> window, keep a simple Computer Name,</li>
+<li>Click on More, and in the <code>DNS Suffix and NetBIOS Computer Name</code> window, specify a primary DNS suffix (like <code>localdomain</code>).</li>
+</ol>
+<p>You can keep the other settings unchanged, provided you have something like <code>barney</code> as computer name and <code>barney.localdomain</code> as full computer name.</p>
+<h2 id="connecting-nodes-locally">Connecting nodes locally</h2>
+<p>Let's make a new clean project with Mix:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">&gt; mix new cluster
+&gt; cd cluster
+</span></pre>
+<p>And let's start a <code>iex</code> REPL, giving it a new argument:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">&gt; iex --sname a
+</span></pre>
+<p>Here, we just passed a flag to the Erlang VM, specifying the shortname of the node we want to run.</p>
+<p>There's now a slight difference appearing in your prompt:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">iex(a@{HOSTNAME})1&gt;
+</span></pre>
+<p>You should see your PC hostname at the right of that <code>@</code> symbol. This is a default value, because we haven't specified a fully qualified name.</p>
+<p>Let's start a second Elixir app, in another terminal:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">&gt; iex --sname b
+</span></pre>
+<p>And let's discover a few functions!</p>
+<ul>
+<li><code>node()</code> (or <code>Node.self()</code>) returns the name of the current Node.</li>
+<li><code>Node.list()</code> returns a list of the connected Nodes in the cluster. At this point, it should be empty.</li>
+<li><code>Node.connect()</code> and <code>Node.disconnect()</code> allow you to, you guessed it, connect and disconnect nodes. Let's try it!</li>
+</ul>
+<p>On the <code>b</code> Node, type:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">Node.connect(:a@hostname)
+</span></pre>
+<p>Now, go back to the <code>a</code> Node, and run:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">Node.list()
+</span></pre>
+<p>You should see <code>b@hostname</code> appearing there. Congratulations :) We haven't done anything spectacular this far, but this is exactly what <code>libcluster</code> will do under the hood once it's set up correctly.</p>
+<h2 id="todo">Todo</h2>
+<p>So, here's what we'll have to do:</p>
+<ol>
+<li>Pass the relevant fully qualified name to each Erlang VM</li>
+<li>Update our Kubernetes configuration</li>
+<li>Define a cluster topology to configure <code>libcluster</code></li>
+</ol>
+<h2 id="vm-args">VM Args</h2>
+<p>We'll need to pass some arguments to our Erlang VMs.
+Since at least its version <code>1.10</code>, Mix can handle this (you won't need to add Distillery as a dependency).</p>
+<p>In your project directory, run:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">mix release.init
+</span></pre>
+<p>This command will generate a few files. Let's take a look at <code>vm.args.eex</code>. It should contain a few commented lines, specifically:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">## Customize flags given to the VM: http://erlang.org/doc/man/erl.html
+## -mode/-name/-sname/-setcookie are configured via env vars, do not set them here
+</span></pre>
+<p>Since we want to set <code>name</code> and deploy on Linux containers, let's get to <code>env.sh.eex</code>. There's a few commented lines in there, but we're most interested in the last block:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;"># Set the release to work across nodes. If using the long name format like
+# the one below (my_app@127.0.0.1), you need to also uncomment the
+# RELEASE_DISTRIBUTION variable below. Must be &quot;sname&quot;, &quot;name&quot; or &quot;none&quot;.
+# export RELEASE_DISTRIBUTION=name
+# export RELEASE_NODE=&lt;%= @release.name %&gt;@127.0.0.1
+</span></pre>
+<p>To enable clustering, we need to replace the <code>127.0.0.1</code> part with the fully qualified name of our pod. Kubernetes has its own internal DNS, and pods are typically named like this:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;"># Assuming our Pod IP is 192.168.0.45
+192-168-0-45.namespace.pod.cluster.local
+</span></pre>
+<p>So your setup should end up looking like this:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">export POD_A_RECORD=$(echo $POD_IP | sed &#39;s/\./-/g&#39;)
+export RELEASE_DISTRIBUTION=name
+export RELEASE_NODE=myapp@$(echo $POD_A_RECORD).$(echo $NAMESPACE).pod.cluster.local
+</span></pre>
+<p>Both <code>$POD_IP</code> and <code>$NAMESPACE</code> will have to be defined when our application starts, so we'll add those to our k8s deployment manifest.</p>
+<h2 id="kubernetes-configuration">Kubernetes configuration</h2>
+<p>We should now declare our two new environment variables:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+      tier: web
+  template:
+    metadata:
+      labels:
+        app: myapp
+        tier: web
+    spec:
+      containers:
+        - name: myapp
+          image: &lt;Image&gt;
+          resources:
+            limits:
+              memory: &quot;128Mi&quot;
+              cpu: &quot;500m&quot;
+          ports:
+            - containerPort: &lt;Port&gt;
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+</span></pre>
+<p>Both variables references the pod's information once it's started. You can check it by running:e by running:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">kubectl get pod myapp-456789 -o yaml
+</span></pre>
+<p>If you already have one pod correctly labelled, you can check that libcluster will correctly poll the right pods from Kube by doing what it does: polling with a labelSelector:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">kubectl get pods -l app=myapp,tier=web
+</span></pre>
+<p>If this returns off-topic pods, then you should fix this before proceeding :)</p>
+<h2 id="libcluster-topology">Libcluster topology</h2>
+<p>Last, but not least, we need to specify our libcluster strategy:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">topologies = [
+  default: [
+    strategy: Cluster.Strategy.Kubernetes,
+    config: [
+      mode: :dns,
+      kubernetes_node_basename: &quot;myapp&quot;,
+      kubernetes_selector: &quot;app=myapp,tier=web&quot;,
+      kubernetes_namespace: &quot;default&quot;,
+      polling_interval: 10_000
+    ]
+  ]
+]
+
+[
+  {Cluster.Supervisor, [topologies, [name: Myapp.ClusterSupervisor]]}
+]
+</span></pre>
+<p>Once you deploy this, you should be good :) After scaling up your deployment (<code>kubectl scale --replicas=X deployment/my-app</code>), you should see various <code>[libcluster]</code> log entries on your pods.</p>
+<h2 id="what-now">What now?</h2>
+<p>There's a few things to toy around with if you want to leverage your cluster!</p>
+<p>Starting from there, and after cleaning your configuration and/or setting up cleaner environment variables, there are a few interesting things to do. How about:</p>
+<ul>
+<li>Declaring a GenServer tracking nodes status?</li>
+<li>Implementing a Cluster Singleton worker using <a href="https://github.com/Virviil/individual">Individual</a>?</li>
+<li>Toying around with Phoenix.PubSub?</li>
+<li>Playing with process registries, like Phoenix.Tracker?</li>
+<li>Discovering Erlang's <a href="http://erlang.org/doc/apps/mnesia/Mnesia_chap2.html">Mnesia</a>, a powerful in-cluster DBMS to use for internal state or cache, and which makes Redis irrelevant?</li>
+</ul>
+<h2 id="node-up-down-notifications">Node up/down notifications</h2>
+<p><a href="http://erlang.org/doc/man/net_kernel.html#monitor_nodes-1">Erlang exposes a simple function</a> that'll get the current process notified when nodes are up or down. This can allow us to react accordingly, like printing debug information in the logs, dereferencing the node, or push the self destruct button.</p>
+<p>In our first example, if you had run the following before connecting the two nodes together:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">:net_kernel.monitor_nodes(true)
+</span></pre>
+<p>Then running <code>flush</code> would show you the messages you received:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">{:nodeup, :a@Hostname}
+</span></pre>
+<p>You can call <code>monitor_nodes</code> in a <a href="https://elixir-lang.org/getting-started/mix-otp/genserver.html">GenServer</a>, of course, and implement the relevant callbacks:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">def handle_info({:nodeup, node}, state) do
+  IO.puts(&quot;[STORE] Node connected: #{inspect node}&quot;)
+  {:noreply, state}
+end
+
+def handle_info({:nodedown, node}, state) do
+  IO.puts(&quot;[STORE] Node disconnected: #{inspect node}&quot;)
+  {:noreply, state}
+end
+</span></pre><h2 id="conclusion">Conclusion</h2>
+<p>This article is a bit long and rough around the edges, but it should give you a better understanding on how to deploy Elixir applications as a cluster.</p>
+<p>I strongly suggest that you follow the official documentations of Elixir, Erlang and libraries. The snippets I included may get outdated over time, though I don't expect the process to be easier than it currently is :)</p>
+</p>
+
+      </section>
+    </article>
+
+    <footer>
+      <span>
+        Proudly written with
+        <a href="https://www.getzola.org/" target="_blank">Zola</a>
+      </span>
+    </footer>
+    <br>
+  </main>
+  <script type="text/javascript" src = "https://api.123metrics.com/123metrics.js" async defer></script>
+</body>
+</html>

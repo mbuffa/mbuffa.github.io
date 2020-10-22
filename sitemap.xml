@@ -27,6 +27,16 @@
         </url>
     
         <url>
+            <loc>https://mbuffa.github.io/tags/elixir/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tags/k8s/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://mbuffa.github.io/tags/rails/</loc>
             
         </url>
@@ -52,6 +62,13 @@
             <loc>https://mbuffa.github.io/tips/20200816-developing-on-wsl/</loc>
             
                 <lastmod>2020-08-16</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/</loc>
+            
+                <lastmod>2020-10-21</lastmod>
             
         </url>
     
