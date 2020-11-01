@@ -29,8 +29,7 @@ jobs:
         rm -rf config.toml content sass templates
         cp -R public/* .
         rm -rf public
-        mv vendor/* .
-        rm -rf vendor
+        cp vendor/* .
         git add -f .
         git commit -m "New release"
         git push origin master
