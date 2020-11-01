@@ -20,7 +20,9 @@ jobs:
     - name: Build
       run: |
         cd $GITHUB_WORKSPACE
+        ls
         zola build
+        cp vendor/* public/
     - name: Push
       run: |
         cd $GITHUB_WORKSPACE
@@ -29,7 +31,6 @@ jobs:
         rm -rf config.toml content sass templates
         cp -R public/* .
         rm -rf public
-        cp vendor/* .
         git add -f .
         git commit -m "New release"
         git push origin master
