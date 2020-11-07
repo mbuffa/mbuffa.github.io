@@ -1,13 +1,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-  <!-- Workaround for parcel live reload -->
-  <!-- https://github.com/parcel-bundler/parcel/issues/943 -->
-  <title>Maxime Buffa</title>
+  {% set default_description = "My personal website with tips and rants." %}
+
+  {% if page is defined and page.title is string and page.title != "" %}
+    <title>a {{ page.title }}</title>
+  {% elif section is defined and section.title is string and section.title != "" %}
+    <title>b {{ section.title }}</title>
+  {% else %}
+    <title>Maxime Buffa</title>
+  {% endif %}
+
+  {% if page is defined and page.description is string and page.description != "" %}
+    {% set meta_description = page.description %}
+  {% elif section is defined and section.description is string and section.description != "" %}
+    {% set meta_description = section.description %}
+  {% else %}
+    {% set meta_description = default_description %}
+  {% endif %}
+
   <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/base.css" />
+
+  <meta name="description" content="{{ meta_description }}" />
 </head>
 <body>
   <div id='stars'></div>

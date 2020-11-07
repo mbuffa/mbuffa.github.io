@@ -1,5 +1,5 @@
 +++
-title = "About"
+title = "About me"
 template = "article.html"
 +++
 ![Picture of me](/assets/me.webp#cropped ":wave:")

@@ -74,12 +74,13 @@ body {
     overflow-x: hidden;
 
     & > div.navbar {
+      background-color: $black_transparent;
       position: static;
-      height: 4em;
+      height: 103px;
+
+      margin-bottom: 1em;
 
       nav {
-        background-color: $black_transparent;
-
         position: fixed;
         width: 100%;
 

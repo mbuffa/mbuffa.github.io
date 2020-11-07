@@ -1,5 +1,6 @@
 +++
 title = "Elixir: Clustering on Kubernetes"
+description = "A quick walkthrough to setup a cluster with Elixir, Kubernetes and libcluster."
 date = 2020-10-21
 [taxonomies]
 tags = ["elixir", "k8s"]
