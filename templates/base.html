@@ -14,18 +14,29 @@
   <div id='stars2'></div>
   <div id='stars3'></div>
   <main>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/tags/">Tags</a></li>
-      </ul>
-    </nav>
-    <article>
-      <section>
+    <div class='navbar'>
+      <nav>
+        <ul>
+          {% set navbar = load_data(path="content/navbar.csv") %}
+          {% for link in navbar["records"] %}
+            {% if current_path == link.2 %}
+              {% set link_class = "active" %}
+            {% else %}
+              {% set link_class = "" %}
+            {% endif %}
+            <li>
+              <a class="{{ link_class }}"  href="{{ link.0 }}">{{ link.1 }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      <div class="flex row">
         {% block content %} {% endblock %}
-      </section>
-    </article>
+      </div>
+    </div>
 
     <footer>
       <span>

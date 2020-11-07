@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h3>Pages tagged with "{{ term.name }}"</h3>
+<article class="lonely">
+  <header>
+    <h3>Pages tagged with "{{ term.name }}"</h3>
+  </header>
   <table class="articles">
     <tbody>
       {% for page in term.pages %}
@@ -14,5 +17,5 @@
       {% endfor %}
     </tbody>
   </table>
-
+</article>
 {% endblock content %}
