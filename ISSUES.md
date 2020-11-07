@@ -9,3 +9,7 @@ Scrolling up doesn't fix this, and one must click on another anchor or go to pre
 
 ### Resolution
 I don't know yet. I tried applying a margin-bottom on both `footer` and `article`.
+
+## Table of Contents broken on mobile
+### Resolution
+ToC should collapse and displayed before content.
