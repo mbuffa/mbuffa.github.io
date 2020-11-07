@@ -14,24 +14,71 @@
   <div id='stars2'></div>
   <div id='stars3'></div>
   <main>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/tags/">Tags</a></li>
-      </ul>
-    </nav>
-    <article>
-      <section>
+    <div class='navbar'>
+      <nav>
+        <ul>
+          
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;">Home</a>
+            </li>
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;about&#x2F;">About</a>
+            </li>
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;tags&#x2F;">Tags</a>
+            </li>
+          
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      <div class="flex row">
         
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/#how">How</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
   <header>
     <h1 class="title">
       Rails: Deprecate an ActiveRecord attribute
     </h1>
     
-      <p class="subtitle">
-        Published on 2020-08-15
-      </p>
+    <p class="subtitle">
+      Published on 2020-08-15
+    </p>
     
   </header>
 
@@ -49,34 +96,35 @@
 </ul>
 <p>But let's keep it simple for the time being:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#65737e;"># app/deprecators/field_deprecator.rb
+<code><span style="color:#65737e;"># app/deprecators/field_deprecator.rb
 </span><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">FieldDeprecator
   </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">deprecation_warning</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">field</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">replacement</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">_caller_backtrace </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">nil</span><span style="color:#c0c5ce;">)
-    message = &quot;</span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">field</span><span style="color:#ab7967;">}</span><span style="color:#a3be8c;"> is deprecated, please favor </span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">replacement</span><span style="color:#ab7967;">}</span><span style="color:#c0c5ce;">&quot;
+    message = &quot;#{field}</span><span style="color:#a3be8c;"> is deprecated, please favor </span><span style="color:#c0c5ce;">#{replacement}&quot;
     </span><span style="color:#ebcb8b;">Kernel</span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">warn</span><span style="color:#c0c5ce;"> message
   </span><span style="color:#b48ead;">end
 end
-</span></pre>
+</span></code></pre>
 <p>We're not respecting the semantics of the second argument, but hey, this is duck-typing :trollface:</p>
 <p>Then, all we have to do is to add a call to this class method in our model:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">Racoon </span><span style="color:#eff1f5;">&lt; </span><span style="color:#a3be8c;">ApplicationRecord</span><span style="color:#c0c5ce;">
-  deprecate \
+<code><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">Racoon </span><span style="color:#eff1f5;">&lt; </span><span style="color:#a3be8c;">ApplicationRecord
+</span><span style="color:#c0c5ce;">  deprecate \
     </span><span style="color:#a3be8c;">owner_id: </span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">Racoon#caretaker_id</span><span style="color:#c0c5ce;">&#39;,
     </span><span style="color:#65737e;"># ... any other attribute you need to deprecate.
     </span><span style="color:#a3be8c;">deprecator: </span><span style="color:#ebcb8b;">FieldDeprecator</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">new
 </span><span style="color:#b48ead;">end
-</span></pre>
+</span></code></pre>
 <p>With our current deprecator, this would output a warning message everytime this field is being read and updated:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">&gt; Racoon.first.owner_id
+<code><span style="color:#c0c5ce;">&gt; Racoon.first.owner_id
 owner_id is deprecated, please favor Racoon#caretaker_id
-</span></pre>
+</span></code></pre>
 <p><em>Et voilà.</em></p>
 </p>
+</article>
 
-      </section>
-    </article>
+      </div>
+    </div>
 
     <footer>
       <span>

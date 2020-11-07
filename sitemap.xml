@@ -1,75 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    
-        <url>
-            <loc>https://mbuffa.github.io/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/about/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/opinions/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tags/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tags/dev/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tags/elixir/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tags/k8s/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tags/rails/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tags/wsl/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tips/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/</loc>
-            
-                <lastmod>2020-08-15</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tips/20200816-developing-on-wsl/</loc>
-            
-                <lastmod>2020-08-16</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/</loc>
-            
-                <lastmod>2020-10-21</lastmod>
-            
-        </url>
-    
+    <url>
+        <loc>https://mbuffa.github.io/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/about/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/opinions/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/dev/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/elixir/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/k8s/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/rails/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/wsl/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tips/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/</loc>
+        <lastmod>2020-08-15</lastmod>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tips/20200816-developing-on-wsl/</loc>
+        <lastmod>2020-08-16</lastmod>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/</loc>
+        <lastmod>2020-10-21</lastmod>
+    </url>
 </urlset>

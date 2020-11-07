@@ -14,24 +14,122 @@
   <div id='stars2'></div>
   <div id='stars3'></div>
   <main>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/tags/">Tags</a></li>
-      </ul>
-    </nav>
-    <article>
-      <section>
+    <div class='navbar'>
+      <nav>
+        <ul>
+          
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;">Home</a>
+            </li>
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;about&#x2F;">About</a>
+            </li>
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;tags&#x2F;">Tags</a>
+            </li>
+          
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      <div class="flex row">
         
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-good">The Good</a>
+        
+        <ol>
+          
+          <li>
+            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#seamless-development">Seamless development</a>
+          </li>
+          
+          <li>
+            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#you-can-use-docker">You can use Docker</a>
+          </li>
+          
+          <li>
+            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#accessing-files-between-linux-and-windows">Accessing files between Linux and Windows</a>
+          </li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-bad">The Bad</a>
+        
+        <ol>
+          
+          <li>
+            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#occasional-bugs-and-freezes">Occasional bugs and freezes</a>
+          </li>
+          
+          <li>
+            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#wondering-about-long-term-stability">Wondering about long-term stability</a>
+          </li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-ugly">The Ugly</a>
+        
+        <ol>
+          
+          <li>
+            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#get-out-of-my-path">Get out of my $PATH</a>
+          </li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#conclusion">Conclusion</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
   <header>
     <h1 class="title">
       Developing on WSL
     </h1>
     
-      <p class="subtitle">
-        Published on 2020-08-16
-      </p>
+    <p class="subtitle">
+      Published on 2020-08-16
+    </p>
     
   </header>
 
@@ -63,9 +161,9 @@ And sure, there's bugtracking through Github, but I think WSL as a whole is pret
 <h3 id="get-out-of-my-path">Get out of my $PATH</h3>
 <p>To achieve a seemless integration with Windows, my Ubuntu installation has basically the whole Windows mess injected into its default $PATH:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">➜  / echo $PATH
+<code><span style="color:#c0c5ce;">➜  / echo $PATH
 /home/makks/.asdf/shims:/home/makks/.asdf/bin:/home/makks/.cargo/bin:/home/makks/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/Git/cmd:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Users/Makks/.cargo/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Makks/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Makks.cargo/bin:/mnt/c/Users/Makks/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps
-</span></pre>
+</span></code></pre>
 <p>Whish is... yeah. It itched me in many places when I saw this, and when I saw random DLLs popping in my autocompletion. But this is sadly probably the price to pay for this kind of integration.</p>
 <p><a href="https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/">There's a setting to disable this</a> (and even a few other things), but my distro just didn't cared about my feelings and refused to apply it. Judging by the comments section, I'm not alone in this situation.</p>
 <p>This kind of dirty black magic may annoy you if you want your distro to be 100% clean. But I guess you wouldn't want to use WSL in the first place in that was the case ;)</p>
@@ -73,9 +171,10 @@ And sure, there's bugtracking through Github, but I think WSL as a whole is pret
 <p>I'm very satisfied with WSL and its related developments so far. My primary reason for using it is the need for good UI and accessibility tools, because I have an extremely low vision (but I'll run into details in a future article) but it's also really satisfying to leverage a good CPU (in that case, a Ryzen 3800X) instead of the traditional coughing overpriced Macbook Pro any startup company grants its employees with.</p>
 <p>And of course, you can launch a game or two when you need a break.</p>
 </p>
+</article>
 
-      </section>
-    </article>
+      </div>
+    </div>
 
     <footer>
       <span>

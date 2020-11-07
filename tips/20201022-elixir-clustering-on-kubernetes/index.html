@@ -14,24 +14,111 @@
   <div id='stars2'></div>
   <div id='stars3'></div>
   <main>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/tags/">Tags</a></li>
-      </ul>
-    </nav>
-    <article>
-      <section>
+    <div class='navbar'>
+      <nav>
+        <ul>
+          
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;">Home</a>
+            </li>
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;about&#x2F;">About</a>
+            </li>
+          
+            
+              
+            
+            <li>
+              <a class=""  href="&#x2F;tags&#x2F;">Tags</a>
+            </li>
+          
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      <div class="flex row">
         
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#a-word-about-wsl">A word about WSL</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#connecting-nodes-locally">Connecting nodes locally</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#todo">Todo</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#vm-args">VM Args</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#kubernetes-configuration">Kubernetes configuration</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#libcluster-topology">Libcluster topology</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#what-now">What now?</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#node-up-down-notifications">Node up&#x2F;down notifications</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/#conclusion">Conclusion</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
   <header>
     <h1 class="title">
       Elixir: Clustering on Kubernetes
     </h1>
     
-      <p class="subtitle">
-        Published on 2020-10-21
-      </p>
+    <p class="subtitle">
+      Published on 2020-10-21
+    </p>
     
   </header>
 
@@ -52,23 +139,23 @@
 <h2 id="connecting-nodes-locally">Connecting nodes locally</h2>
 <p>Let's make a new clean project with Mix:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">&gt; mix new cluster
+<code><span style="color:#c0c5ce;">&gt; mix new cluster
 &gt; cd cluster
-</span></pre>
+</span></code></pre>
 <p>And let's start a <code>iex</code> REPL, giving it a new argument:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">&gt; iex --sname a
-</span></pre>
+<code><span style="color:#c0c5ce;">&gt; iex --sname a
+</span></code></pre>
 <p>Here, we just passed a flag to the Erlang VM, specifying the shortname of the node we want to run.</p>
 <p>There's now a slight difference appearing in your prompt:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">iex(a@{HOSTNAME})1&gt;
-</span></pre>
+<code><span style="color:#c0c5ce;">iex(a@{HOSTNAME})1&gt;
+</span></code></pre>
 <p>You should see your PC hostname at the right of that <code>@</code> symbol. This is a default value, because we haven't specified a fully qualified name.</p>
 <p>Let's start a second Elixir app, in another terminal:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">&gt; iex --sname b
-</span></pre>
+<code><span style="color:#c0c5ce;">&gt; iex --sname b
+</span></code></pre>
 <p>And let's discover a few functions!</p>
 <ul>
 <li><code>node()</code> (or <code>Node.self()</code>) returns the name of the current Node.</li>
@@ -77,12 +164,12 @@
 </ul>
 <p>On the <code>b</code> Node, type:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">Node.connect(:a@hostname)
-</span></pre>
+<code><span style="color:#c0c5ce;">Node.connect(:a@hostname)
+</span></code></pre>
 <p>Now, go back to the <code>a</code> Node, and run:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">Node.list()
-</span></pre>
+<code><span style="color:#c0c5ce;">Node.list()
+</span></code></pre>
 <p>You should see <code>b@hostname</code> appearing there. Congratulations :) We haven't done anything spectacular this far, but this is exactly what <code>libcluster</code> will do under the hood once it's set up correctly.</p>
 <h2 id="todo">Todo</h2>
 <p>So, here's what we'll have to do:</p>
@@ -96,37 +183,37 @@
 Since at least its version <code>1.10</code>, Mix can handle this (you won't need to add Distillery as a dependency).</p>
 <p>In your project directory, run:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">mix release.init
-</span></pre>
+<code><span style="color:#c0c5ce;">mix release.init
+</span></code></pre>
 <p>This command will generate a few files. Let's take a look at <code>vm.args.eex</code>. It should contain a few commented lines, specifically:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#65737e;">## Customize flags given to the VM: http://erlang.org/doc/man/erl.html
+<code><span style="color:#65737e;">## Customize flags given to the VM: http://erlang.org/doc/man/erl.html
 ## -mode/-name/-sname/-setcookie are configured via env vars, do not set them here
-</span></pre>
+</span></code></pre>
 <p>Since we want to set <code>name</code> and deploy on Linux containers, let's get to <code>env.sh.eex</code>. There's a few commented lines in there, but we're most interested in the last block:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#65737e;"># Set the release to work across nodes. If using the long name format like
+<code><span style="color:#65737e;"># Set the release to work across nodes. If using the long name format like
 # the one below (my_app@127.0.0.1), you need to also uncomment the
 # RELEASE_DISTRIBUTION variable below. Must be &quot;sname&quot;, &quot;name&quot; or &quot;none&quot;.
 # export RELEASE_DISTRIBUTION=name
 # export RELEASE_NODE=&lt;%= @release.name %&gt;@127.0.0.1
-</span></pre>
+</span></code></pre>
 <p>To enable clustering, we need to replace the <code>127.0.0.1</code> part with the fully qualified name of our pod. Kubernetes has its own internal DNS, and pods are typically named like this:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;"># Assuming our Pod IP is 192.168.0.45
+<code><span style="color:#c0c5ce;"># Assuming our Pod IP is 192.168.0.45
 192-168-0-45.namespace.pod.cluster.local
-</span></pre>
+</span></code></pre>
 <p>So your setup should end up looking like this:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">export </span><span style="color:#bf616a;">POD_A_RECORD</span><span style="color:#c0c5ce;">=$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">POD_IP </span><span style="color:#c0c5ce;">| </span><span style="color:#bf616a;">sed </span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">s/\./-/g</span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">)
+<code><span style="color:#b48ead;">export </span><span style="color:#bf616a;">POD_A_RECORD</span><span style="color:#c0c5ce;">=$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">POD_IP </span><span style="color:#c0c5ce;">| </span><span style="color:#bf616a;">sed </span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">s/\./-/g</span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">)
 </span><span style="color:#b48ead;">export </span><span style="color:#bf616a;">RELEASE_DISTRIBUTION</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">name
 </span><span style="color:#b48ead;">export </span><span style="color:#bf616a;">RELEASE_NODE</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">myapp@</span><span style="color:#c0c5ce;">$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">POD_A_RECORD</span><span style="color:#a3be8c;">).</span><span style="color:#c0c5ce;">$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span style="color:#c0c5ce;">$</span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#a3be8c;">).pod.cluster.local
-</span></pre>
+</span></code></pre>
 <p>Both <code>$POD_IP</code> and <code>$NAMESPACE</code> will have to be defined when our application starts, so we'll add those to our k8s deployment manifest.</p>
 <h2 id="kubernetes-configuration">Kubernetes configuration</h2>
 <p>We should now declare our two new environment variables:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
+<code><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
 kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
 metadata</span><span style="color:#c0c5ce;">:
   </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">myapp
@@ -160,20 +247,20 @@ spec</span><span style="color:#c0c5ce;">:
               valueFrom</span><span style="color:#c0c5ce;">:
                 </span><span style="color:#bf616a;">fieldRef</span><span style="color:#c0c5ce;">:
                   </span><span style="color:#bf616a;">fieldPath</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">status.podIP
-</span></pre>
+</span></code></pre>
 <p>Both variables references the pod's information once it's started. You can check it by running:e by running:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">kubectl get pod myapp-456789 -o yaml
-</span></pre>
+<code><span style="color:#c0c5ce;">kubectl get pod myapp-456789 -o yaml
+</span></code></pre>
 <p>If you already have one pod correctly labelled, you can check that libcluster will correctly poll the right pods from Kube by doing what it does: polling with a labelSelector:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">kubectl get pods -l app=myapp,tier=web
-</span></pre>
+<code><span style="color:#c0c5ce;">kubectl get pods -l app=myapp,tier=web
+</span></code></pre>
 <p>If this returns off-topic pods, then you should fix this before proceeding :)</p>
 <h2 id="libcluster-topology">Libcluster topology</h2>
 <p>Last, but not least, we need to specify our libcluster strategy:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">topologies = [
+<code><span style="color:#c0c5ce;">topologies = [
   </span><span style="color:#d08770;">default: </span><span style="color:#c0c5ce;">[
     </span><span style="color:#d08770;">strategy: </span><span style="color:#ebcb8b;">Cluster</span><span style="color:#c0c5ce;">.</span><span style="color:#ebcb8b;">Strategy</span><span style="color:#c0c5ce;">.</span><span style="color:#ebcb8b;">Kubernetes</span><span style="color:#c0c5ce;">,
     </span><span style="color:#d08770;">config: </span><span style="color:#c0c5ce;">[
@@ -189,7 +276,7 @@ spec</span><span style="color:#c0c5ce;">:
 [
   {</span><span style="color:#ebcb8b;">Cluster</span><span style="color:#c0c5ce;">.</span><span style="color:#ebcb8b;">Supervisor</span><span style="color:#c0c5ce;">, [topologies, [</span><span style="color:#d08770;">name: </span><span style="color:#ebcb8b;">Myapp</span><span style="color:#c0c5ce;">.</span><span style="color:#ebcb8b;">ClusterSupervisor</span><span style="color:#c0c5ce;">]]}
 ]
-</span></pre>
+</span></code></pre>
 <p>Once you deploy this, you should be good :) After scaling up your deployment (<code>kubectl scale --replicas=X deployment/my-app</code>), you should see various <code>[libcluster]</code> log entries on your pods.</p>
 <h2 id="what-now">What now?</h2>
 <p>There's a few things to toy around with if you want to leverage your cluster!</p>
@@ -205,30 +292,31 @@ spec</span><span style="color:#c0c5ce;">:
 <p><a href="http://erlang.org/doc/man/net_kernel.html#monitor_nodes-1">Erlang exposes a simple function</a> that'll get the current process notified when nodes are up or down. This can allow us to react accordingly, like printing debug information in the logs, dereferencing the node, or push the self destruct button.</p>
 <p>In our first example, if you had run the following before connecting the two nodes together:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#a3be8c;">:net_kernel</span><span style="color:#c0c5ce;">.monitor_nodes(</span><span style="color:#d08770;">true</span><span style="color:#c0c5ce;">)
-</span></pre>
+<code><span style="color:#a3be8c;">:net_kernel</span><span style="color:#c0c5ce;">.monitor_nodes(</span><span style="color:#d08770;">true</span><span style="color:#c0c5ce;">)
+</span></code></pre>
 <p>Then running <code>flush</code> would show you the messages you received:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">{</span><span style="color:#a3be8c;">:nodeup</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">:a@Hostname</span><span style="color:#c0c5ce;">}
-</span></pre>
+<code><span style="color:#c0c5ce;">{</span><span style="color:#a3be8c;">:nodeup</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">:a@Hostname</span><span style="color:#c0c5ce;">}
+</span></code></pre>
 <p>You can call <code>monitor_nodes</code> in a <a href="https://elixir-lang.org/getting-started/mix-otp/genserver.html">GenServer</a>, of course, and implement the relevant callbacks:</p>
 <pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">handle_info</span><span style="color:#c0c5ce;">({</span><span style="color:#a3be8c;">:nodeup</span><span style="color:#c0c5ce;">, </span><span style="color:#b48ead;">node</span><span style="color:#c0c5ce;">}, state) </span><span style="color:#b48ead;">do
-  </span><span style="color:#ebcb8b;">IO</span><span style="color:#c0c5ce;">.puts(&quot;</span><span style="color:#a3be8c;">[STORE] Node connected: </span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">inspect node</span><span style="color:#ab7967;">}</span><span style="color:#c0c5ce;">&quot;)
+<code><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">handle_info</span><span style="color:#c0c5ce;">({</span><span style="color:#a3be8c;">:nodeup</span><span style="color:#c0c5ce;">, node}, state) </span><span style="color:#b48ead;">do
+  </span><span style="color:#ebcb8b;">IO</span><span style="color:#c0c5ce;">.puts(&quot;</span><span style="color:#a3be8c;">[STORE] Node connected: #{</span><span style="color:#c0c5ce;">inspect node}&quot;)
   {</span><span style="color:#a3be8c;">:noreply</span><span style="color:#c0c5ce;">, state}
 </span><span style="color:#b48ead;">end
 
-def </span><span style="color:#8fa1b3;">handle_info</span><span style="color:#c0c5ce;">({</span><span style="color:#a3be8c;">:nodedown</span><span style="color:#c0c5ce;">, </span><span style="color:#b48ead;">node</span><span style="color:#c0c5ce;">}, state) </span><span style="color:#b48ead;">do
-  </span><span style="color:#ebcb8b;">IO</span><span style="color:#c0c5ce;">.puts(&quot;</span><span style="color:#a3be8c;">[STORE] Node disconnected: </span><span style="color:#ab7967;">#{</span><span style="color:#a3be8c;">inspect node</span><span style="color:#ab7967;">}</span><span style="color:#c0c5ce;">&quot;)
+def </span><span style="color:#8fa1b3;">handle_info</span><span style="color:#c0c5ce;">({</span><span style="color:#a3be8c;">:nodedown</span><span style="color:#c0c5ce;">, node}, state) </span><span style="color:#b48ead;">do
+  </span><span style="color:#ebcb8b;">IO</span><span style="color:#c0c5ce;">.puts(&quot;</span><span style="color:#a3be8c;">[STORE] Node disconnected: #{</span><span style="color:#c0c5ce;">inspect node}&quot;)
   {</span><span style="color:#a3be8c;">:noreply</span><span style="color:#c0c5ce;">, state}
 </span><span style="color:#b48ead;">end
-</span></pre><h2 id="conclusion">Conclusion</h2>
+</span></code></pre><h2 id="conclusion">Conclusion</h2>
 <p>This article is a bit long and rough around the edges, but it should give you a better understanding on how to deploy Elixir applications as a cluster.</p>
 <p>I strongly suggest that you follow the official documentations of Elixir, Erlang and libraries. The snippets I included may get outdated over time, though I don't expect the process to be easier than it currently is :)</p>
 </p>
+</article>
 
-      </section>
-    </article>
+      </div>
+    </div>
 
     <footer>
       <span>
