@@ -3,6 +3,9 @@ on:
   push:
     branches: [ content ]
 
+env:
+  ZOLA_VERSION: v0.12.2
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,16 +16,21 @@ jobs:
 
     - name: Set Git identity
       run: |
+        # This is required to run `act` locally (default image doesn't include those).
+        # See: https://github.com/nektos/act/issues/107
+        apt update && apt install -y git sudo
         git config --global user.email "mbuffa@gmail.com"
         git config --global user.name "Maxime Buffa"
+
     - name: Checkout Zola
-      run: curl -s -L https://github.com/getzola/zola/releases/download/v0.9.0/zola-v0.9.0-x86_64-unknown-linux-gnu.tar.gz | sudo tar xvzf - -C /usr/local/bin
+      run: curl -s -L https://github.com/getzola/zola/releases/download/$ZOLA_VERSION/zola-$ZOLA_VERSION-x86_64-unknown-linux-gnu.tar.gz | sudo tar xvzf - -C /usr/local/bin
+
     - name: Build
       run: |
         cd $GITHUB_WORKSPACE
-        ls
         zola build
         cp vendor/* public/
+
     - name: Push
       run: |
         cd $GITHUB_WORKSPACE
@@ -32,5 +40,6 @@ jobs:
         cp -R public/* .
         rm -rf public
         git add -f .
+        git status
         git commit -m "New release"
         git push origin master
