@@ -17,17 +17,10 @@
     <div class='navbar'>
       <nav>
         <ul>
-          {% set navbar = load_data(path="content/navbar.csv") %}
-          {% for link in navbar["records"] %}
-            {% if current_path == link.2 %}
-              {% set link_class = "active" %}
-            {% else %}
-              {% set link_class = "" %}
-            {% endif %}
-            <li>
-              <a class="{{ link_class }}"  href="{{ link.0 }}">{{ link.1 }}</a>
-            </li>
-          {% endfor %}
+        {% set navbar = load_data(path="content/navbar.csv") %}
+        {% for link in navbar["records"] %}}
+          <li><a href="{{ link.0 }}">{{ link.1 }}</a></li>
+        {% endfor %}
         </ul>
       </nav>
     </div>
