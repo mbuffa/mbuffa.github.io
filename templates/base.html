@@ -4,9 +4,9 @@
   {% set default_description = "My personal website with tips and rants." %}
 
   {% if page is defined and page.title is string and page.title != "" %}
-    <title>a {{ page.title }}</title>
+    <title>{{ page.title }}</title>
   {% elif section is defined and section.title is string and section.title != "" %}
-    <title>b {{ section.title }}</title>
+    <title>{{ section.title }}</title>
   {% else %}
     <title>Maxime Buffa</title>
   {% endif %}
