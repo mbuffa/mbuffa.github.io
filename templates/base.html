@@ -21,11 +21,86 @@
 
   <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/base.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
   <meta name="description" content="{{ meta_description }}" />
 </head>
-<body>
+<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function updateStylesheetToggler(mode) {
+      // ion-icon seems to apply `visibility:hidden` when it gets
+      // `display: none`, not sure why.
+      for (tag of getStylesheetTogglerTags()) {
+        if (tag.name == getIconNameForMode(mode)) {
+          tag.setAttribute("class", "stylesheet-toggler");
+          tag.style["visibility"] = "visible";
+        } else {
+          tag.setAttribute("class", "stylesheet-toggler no-display");
+          tag.style["visibility"] = "hidden";
+        }
+      }
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) != -1) {
+        var classes = "stylesheet-mode " + activeStylesheet;
+      } else {
+        var classes = "stylesheet-mode dark";
+      }
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateStylesheetToggler(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+          break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+          break;
+
+          default:
+            activeMode = "dark";
+          break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateStylesheetToggler(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
   <div id='stars'></div>
   <div id='stars2'></div>
   <div id='stars3'></div>
@@ -37,6 +112,12 @@
         {% for link in navbar["records"] %}
           <li><a href="{{ link.0 }}">{{ link.1 }}</a></li>
         {% endfor %}
+          <li>
+            <a onClick="switchStylesheets()">
+              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
+              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -55,6 +136,9 @@
     </footer>
     <br>
   </main>
+
   <script type="text/javascript" src = "https://api.123metrics.com/123metrics.js" async defer></script>
+  <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
 </body>
 </html>

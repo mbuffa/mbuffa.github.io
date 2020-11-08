@@ -1,35 +1,17 @@
-$black: #171717;
-$black_less_transparent: rgba(17, 17, 17, .9);
-$black_transparent: rgba(17, 17, 17, .7);
-$redish: #c12900;
-
-$orange: #e37226;
-$orange-light: #fd7313;
-$orange-deep: #f36115;
-
-$grey: #ddd;
-$olive-light: #87b22a;
-
 * {
   margin: 0;
   padding: 0;
 }
 
 body {
-  background: radial-gradient(ellipse at bottom -200% right -100%, $orange-light 0%, #090A0F 100%);
-  color: white;
-
   overflow: hidden;
   height: 100%;
 
   font-family: 'Lato', sans-serif;
-  // font-size: 1.4em;
   font-size: xx-large;
 
   h1, h2, h3, h4, h5, h6 {
     margin: 1em;
-    color: $orange-light;
-    text-shadow: 2px 2px black;
   }
 
   p {
@@ -38,21 +20,15 @@ body {
   }
 
   a, a:visited {
-    color: $orange-light;
     text-decoration: underline;
 
     &:hover {
-      color: $orange-deep;
-      background-color: $black;
       text-decoration: none;
     }
   }
 
   pre, code {
-    background-color: $black_less_transparent !important;
-
     &, * {
-      // color: yellow !important;
       font-family: monospace;
     }
   }
@@ -62,9 +38,10 @@ body {
     margin: auto;
     padding: .5em;
     white-space: pre-wrap;
+  }
 
-    border: 1px solid white;
-    border-top-width: 6px;
+  .no-display {
+    display: none;
   }
 
   & > main {
@@ -74,9 +51,8 @@ body {
     overflow-x: hidden;
 
     & > div.navbar {
-      background-color: $black_transparent;
       position: static;
-      height: 103px;
+      height: 96px;
 
       margin-bottom: 1em;
 
@@ -100,14 +76,10 @@ body {
               text-decoration: none;
 
               &:hover {
-                background-color: $orange-light;
-                color: $black;
                 text-decoration: none;
               }
 
-              &.active {
-                color: white;
-              }
+              // &.active {}
             }
           }
         }
@@ -120,8 +92,6 @@ body {
       font-size: xx-large;
 
       td {
-        // width: 50%;
-
         line-height: 1.5em;
         padding: .5em;
 
@@ -132,9 +102,7 @@ body {
           padding-right: 1em;
         }
 
-        &:last-child {
-          // width: 35%;
-        }
+        // &:last-child {}
 
         a {
           text-decoration: none;
@@ -146,8 +114,6 @@ body {
 
         * {
           display: inline-block;
-          // padding: 1em;
-          // margin: 1em;
         }
       }
 
@@ -158,7 +124,6 @@ body {
     }
 
     & aside {
-      background-color: $black_transparent;
       width: 500px;
 
       font-size: large;
@@ -172,9 +137,7 @@ body {
           padding: 1em;
           width: 100%;
 
-          &:hover {
-            background-color: transparent;
-          }
+          // &:hover {}
         }
 
         ol {
@@ -184,8 +147,6 @@ body {
     }
 
     & article {
-      background-color: $black_transparent;
-
       max-width: 1000px;
 
       padding-top: 1em;
@@ -228,10 +189,6 @@ body {
     }
 
     a.tag {
-      // display: inline-block;
-      // background-color: #333;
-      // padding: 3px;
-      // margin: 0 1ex 0 0;
       display: block;
       font-family: "Courier New", monospace, sans-serif;
       text-decoration: none;
@@ -240,23 +197,14 @@ body {
     div.tag-cards {
       display: flex;
       flex-flow: row wrap;
-      // width: 100%;
 
       div.tag-card {
-        // display: flex;
-
         margin-right: 1ex;
-        // width: 10%;
-        // background-color: $black;
-        border: 1px solid #111;
 
         a {
           padding: 1em;
 
-          &:hover {
-            background-color: $orange-deep;
-            color: $black;
-          }
+          // &:hover {}
         }
       }
     }
@@ -286,93 +234,5 @@ body {
         font-size: medium;
       }
     }
-  }
-}
-
-/*
-  Stars background, shamelessly copy/pasted and adapted from:
-  https://codepen.io/saransh/pen/BKJun
-*/
-
-@function multiple-box-shadow($n, $color) {
-  $value: '#{random(2000)}px #{random(2000)}px ' + $color;
-
-  @for $i from 2 through $n {
-    $value: '#{$value} , #{random(2000)}px #{random(2000)}px ' + $color;
-  }
-
-  @return unquote($value);
-}
-
-$shadows-small: multiple-box-shadow(700, #fff);
-$shadows-medium: multiple-box-shadow(200, #999);
-$shadows-large: multiple-box-shadow(100, #666);
-
-@keyframes animStar {
-  from {
-    transform: translateY(0px);
-  }
-
-  to {
-    transform: translateY(-2000px);
-  }
-}
-
-#stars {
-  width: 1px;
-  height: 1px;
-  background: transparent;
-
-  box-shadow: $shadows-small;
-  animation: animStar 50s linear infinite;
-
-  &:after {
-    content: " ";
-    position: absolute;
-    top: 2000px;
-    width: 1px;
-    height: 1px;
-    background: transparent;
-    box-shadow: $shadows-small;
-  }
-}
-
-#stars2 {
-  width: 2px;
-  height: 2px;
-  background: transparent;
-
-  box-shadow: $shadows-medium;
-  animation: animStar 100s linear infinite;
-
-  &:after {
-    content: " ";
-    position: absolute;
-    top: 2000px;
-    width: 2px;
-    height: 2px;
-    background: transparent;
-    box-shadow: $shadows-medium;
-  }
-}
-
-#stars3 {
-  width: 3px;
-  height: 3px;
-  background: transparent;
-
-  box-shadow: $shadows-large;
-  border-radius: 100%;
-  animation: animStar 150s linear infinite;
-
-  &:after {
-    content: " ";
-    position: absolute;
-    top: 2000px;
-    width: 3px;
-    height: 3px;
-    background: transparent;
-    box-shadow: $shadows-large;
-    border-radius: 100%;
   }
 }
