@@ -24,6 +24,7 @@ body {
 
     &:hover {
       text-decoration: none;
+      cursor: pointer;
     }
   }
 
@@ -44,6 +45,10 @@ body {
     display: none;
   }
 
+  ion-icon.stylesheet-toggler {
+    margin-top: 7px; // Icon is 96px wide, other links are 103px high.
+  }
+
   & > main {
     height: 100vh;
     width: 100%;
@@ -52,7 +57,7 @@ body {
 
     & > div.navbar {
       position: static;
-      height: 96px;
+      height: 103px;
 
       margin-bottom: 1em;
 
