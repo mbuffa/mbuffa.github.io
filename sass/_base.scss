@@ -56,18 +56,19 @@ body {
     overflow-x: hidden;
 
     & > div.navbar {
-      position: static;
       height: 103px;
-
       margin-bottom: 1em;
+      position: sticky;
+      top: 1px;
+      width: 100%;
 
       nav {
-        position: fixed;
         width: 100%;
+        position: relative;
 
         ul {
           list-style-type: none;
-
+          width: 100%;
           display: flex;
           margin: 0;
           padding: 0;
@@ -86,6 +87,10 @@ body {
 
               // &.active {}
             }
+          }
+
+          li:last-of-type {
+            margin-left: auto;
           }
         }
       }
@@ -134,7 +139,8 @@ body {
       font-size: large;
 
       div.toc {
-        position: fixed;
+        position: sticky;
+        top: 200px;
         display: flex;
 
         li a, li a:visited {

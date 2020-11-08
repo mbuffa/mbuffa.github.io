@@ -54,11 +54,11 @@
     function loadActiveStylesheet() {
       var activeStylesheet = localStorage.getItem("active-stylesheet");
 
-      if (["dark", "light"].indexOf(activeStylesheet) != -1) {
-        var classes = "stylesheet-mode " + activeStylesheet;
-      } else {
-        var classes = "stylesheet-mode dark";
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
       }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
 
       for (elem of getStylesheetModeTags()) {
         elem.setAttribute("class", classes);
@@ -113,7 +113,7 @@
           <li><a href="{{ link.0 }}">{{ link.1 }}</a></li>
         {% endfor %}
           <li>
-            <a href="" onClick="switchStylesheets()">
+            <a onClick="switchStylesheets()">
               <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
               <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
             </a>

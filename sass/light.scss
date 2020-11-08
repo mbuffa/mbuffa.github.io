@@ -50,6 +50,7 @@ body.light {
     & > div.navbar {
       nav {
         background-color: $white;
+        border-bottom: 1px solid black;
 
         ul {
           li {
