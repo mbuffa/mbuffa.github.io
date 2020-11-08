@@ -116,10 +116,18 @@ body.light {
     }
 
     div.main-content {
-      border: 1px solid black;
-      box-shadow: 10px 10px 2px 2px $blue-darker;
+      aside, article {
+        border-collapse: collapse;
+        border: 1px solid black;
+        box-shadow: 10px 10px 2px 2px $blue-darker;
 
-      border-radius: $border-radius;
+        border-radius: $border-radius;
+      }
+
+      aside {
+        border-bottom: 0;
+        border-right: 0;
+      }
     }
 
     div.flex.row {
