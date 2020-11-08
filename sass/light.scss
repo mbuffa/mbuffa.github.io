@@ -1,53 +1,61 @@
 @import "_base.scss";
 
-$black: 171717;
+$black: #171717;
 $white: #eee;
-$white_less_transparent: rgba(238, 238, 238, .9);
-$white_transparent: rgba(238, 238, 238, .7);
 
-$grey: #ddd;
+$blue: #184970;
+$blue-light: #2D8DD6;
+$blue-darker: #0d283f;
+
 $olive-light: #87b22a;
-$olive-deep: #87b22a;
+$olive-deep: #61801e;
 $redish: #c12900;
 
+$border-radius: 0px;
+// $border-radius: 12px;
+
 body.light {
-  background: none; // Reset dark mode background.
-  background-color: $grey;
+  background-color: $blue;
   color: $black;
 
   h1, h2, h3, h4, h5, h6 {
-    color: $olive-deep;
-    text-shadow: 2px 2px $black;
+    color: black;
   }
 
   a, a:visited {
-    color: $olive-deep;
+    color: $blue;
 
     &:hover {
-      color: $olive-light;
+      color: $blue-light;
       background-color: $white;
     }
   }
 
-  pre, code {
-    background-color: $white !important;
+  code {
+    background-color: #ccc !important;
+    padding: 4px;
+  }
+
+  pre code {
+    background-color: #333 !important;
   }
 
   pre {
+    background-color: #333 !important;
     border: 1px solid black;
     border-top-width: 6px;
   }
 
   & > main {
     & > div.navbar {
-      background-color: $white_transparent;
-
       nav {
+        background-color: $white;
+
         ul {
           li {
             a, a:visited {
               &:hover {
-                background-color: $olive-deep;
+                background-color: $blue-light;
                 color: $white;
               }
 
@@ -61,7 +69,16 @@ body.light {
     }
 
     & aside {
-      background-color: $white_transparent;
+      background-color: $white;
+      border: 1px solid $white;
+      border-top-left-radius: $border-radius;
+      border-bottom-left-radius: $border-radius;
+
+      @media screen and (max-width: 1499px) {
+        border-radius: 0;
+        border-top-left-radius: $border-radius;
+        border-top-right-radius: $border-radius;
+      }
 
       div.toc {
         li a {
@@ -73,7 +90,16 @@ body.light {
     }
 
     & article {
-      background-color: $white_transparent;
+      background-color: $white;
+      border: 1px solid $white;
+      border-top-right-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+
+      @media screen and (max-width: 1499px) {
+        border-radius: 0;
+        border-bottom-left-radius: $border-radius;
+        border-bottom-right-radius: $border-radius;
+      }
     }
 
     div.tag-cards {
@@ -82,10 +108,23 @@ body.light {
 
         a {
           &:hover {
-            background-color: $olive-light;
+            background-color: $blue-light;
             color: $white;
           }
         }
+      }
+    }
+
+    div.main-content {
+      border: 1px solid black;
+      box-shadow: 10px 10px 2px 2px $blue-darker;
+
+      border-radius: $border-radius;
+    }
+
+    div.flex.row {
+      .lonely {
+        border-radius: $border-radius;
       }
     }
   }

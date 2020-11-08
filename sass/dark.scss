@@ -55,9 +55,9 @@ body.dark {
 
   & > main {
     & > div.navbar {
-      background-color: $black_transparent;
-
       nav {
+        background-color: $black_transparent;
+
         ul {
           li {
             a, a:visited {
