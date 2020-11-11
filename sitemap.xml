@@ -16,6 +16,9 @@
         <loc>https://mbuffa.github.io/tags/elixir/</loc>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/tags/erlang/</loc>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/k8s/</loc>
     </url>
     <url>
@@ -38,5 +41,9 @@
     <url>
         <loc>https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/</loc>
         <lastmod>2020-10-21</lastmod>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/</loc>
+        <lastmod>2020-11-11</lastmod>
     </url>
 </urlset>
