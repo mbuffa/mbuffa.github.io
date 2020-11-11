@@ -117,6 +117,10 @@ body.light {
     }
 
     div.main-content {
+      .lonely {
+        border-radius: $border-radius;
+      }
+
       aside, article {
         border-collapse: collapse;
         border: 1px solid black;
@@ -128,12 +132,6 @@ body.light {
       aside {
         border-bottom: 0;
         border-right: 0;
-      }
-    }
-
-    div.flex.row {
-      .lonely {
-        border-radius: $border-radius;
       }
     }
   }
