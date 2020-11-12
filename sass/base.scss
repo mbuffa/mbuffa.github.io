@@ -59,7 +59,7 @@ body {
       height: 103px;
       margin-bottom: 1em;
       position: sticky;
-      top: 1px;
+      top: -1px; // With 0px, position: sticky isn't applied.
       width: 100%;
 
       nav {
