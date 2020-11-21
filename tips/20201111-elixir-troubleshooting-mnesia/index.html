@@ -703,7 +703,8 @@ end
 </span></code></pre>
 <p><img src="https://media.giphy.com/media/11CCn8sSFSm2kg/giphy.gif" alt="" title="I lied." /></p>
 <p>Well, it might cause you some trouble once you compile your release with <code>mix release</code> and your node starts.</p>
-<p>Somehow, I had to add <code>:mnesia</code> to another parameter for it to not create its own schema all on its own (and making my code crash happily):</p>
+<p>Thing is, adding libraries to <code>extra_applications</code> would start them automatically before your application does, so we have to specify
+that we only want to reference it in our release, to avoid :mnesia creating a schema and starting automatically.</p>
 <pre style="background-color:#2b303b;">
 <code><span style="color:#c0c5ce;"># In mix.exs
 def application do
@@ -727,11 +728,11 @@ end
   ]
 )
 </span></code></pre>
-<p><code>:mnesia.info()</code> would properly display a populated <code>disc_copies</code> option.</p>
+<p>Now, <code>:mnesia.info()</code> will properly display a populated <code>disc_copies</code> option.</p>
 <p>I do not know why those differences between <code>iex</code> and compiled code exist. I may be doing something wrong, so please feel free to open an issue on the <a href="https://github.com/mbuffa/elixir-mnesia-example">repository</a> if you find why!</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>I hope this was neither too tedious or frightening regarding the usage of Mnesia in your project. I thought the &quot;crash course&quot; format to be interesting in this case (ie. amending snippets), because it helps to have beaten that path when things go wrong.</p>
-<p>I didn't mention the issue of network partitioning and a possible way to solve it, but this is closer to your cluster configuration. Basically, network failure may happen inside your cluster, and reconnecting nodes wouldn't know how to handle this, since we're not using a master-replica strategy. I haven't read much about this a lot, but one possible solution would be to pass the cluster size as an environment variable to all nodes, and check the <code>Node.list()</code> result when a <code>:nodedown</code> message is received. Afterwards, a simple calculation should be enough to determine if your node is isolated or in a dominant group, allowing you to push the self-destruct red button with, for example, a &quot;liveness&quot; GenServer exposed to your orchestrator, returning <code>HTTP 200 Ok</code> responses codes until isolation is detected.</p>
+<p>I didn't mention the issue of network partitioning and a possible way to solve it, but this is more related to your cluster configuration. Essentially, network failure may happen inside your cluster, and reconnecting nodes wouldn't know how to handle this, since we're not using a master-replica strategy. I haven't read much about this, but one possible solution would be to pass the cluster size as an environment variable to all nodes, and check the <code>Node.list()</code> result when a <code>:nodedown</code> message is received. Afterwards, a simple calculation should be enough to determine if your node is isolated or in a dominant group, allowing you to push the self-destruct red button with, for example, a &quot;liveness&quot; GenServer exposed to your orchestrator, returning <code>HTTP 200 Ok</code> responses codes until isolation is detected.</p>
 <p>Note that there's also the <a href="https://github.com/beardedeagle/mnesiac">Mnesiac</a> library, which is an Elixir layer on top of Mnesia. I prefer using low-level libraries directly, at least for learning, but it might be a good fit for production though.</p>
 <p>Last, but not least, I <a href="https://github.com/mbuffa/elixir-mnesia-example">created a repository</a> with a small and clear commit history, in case you want to tinker with it.</p>
 <p><em>Et voilà.</em></p>
