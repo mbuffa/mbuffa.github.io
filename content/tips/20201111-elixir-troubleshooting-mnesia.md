@@ -577,7 +577,9 @@ end
 
 Well, it might cause you some trouble once you compile your release with `mix release` and your node starts.
 
-Somehow, I had to add `:mnesia` to another parameter for it to not create its own schema all on its own (and making my code crash happily):
+Thing is, adding libraries to `extra_applications` would start them automatically before your application does, so we have to specify
+that we only want to reference it in our release, to avoid :mnesia creating a schema and starting automatically.
+
 ```
 # In mix.exs
 def application do
@@ -603,14 +605,14 @@ Thing is, I also had to revert my changes on `create_table` and remove the `disc
 )
 ```
 
-`:mnesia.info()` would properly display a populated `disc_copies` option.
+Now, `:mnesia.info()` will properly display a populated `disc_copies` option.
 
 I do not know why those differences between `iex` and compiled code exist. I may be doing something wrong, so please feel free to open an issue on the [repository][5] if you find why!
 
 ## Conclusion
 I hope this was neither too tedious or frightening regarding the usage of Mnesia in your project. I thought the "crash course" format to be interesting in this case (ie. amending snippets), because it helps to have beaten that path when things go wrong.
 
-I didn't mention the issue of network partitioning and a possible way to solve it, but this is closer to your cluster configuration. Basically, network failure may happen inside your cluster, and reconnecting nodes wouldn't know how to handle this, since we're not using a master-replica strategy. I haven't read much about this a lot, but one possible solution would be to pass the cluster size as an environment variable to all nodes, and check the `Node.list()` result when a `:nodedown` message is received. Afterwards, a simple calculation should be enough to determine if your node is isolated or in a dominant group, allowing you to push the self-destruct red button with, for example, a "liveness" GenServer exposed to your orchestrator, returning `HTTP 200 Ok` responses codes until isolation is detected.
+I didn't mention the issue of network partitioning and a possible way to solve it, but this is more related to your cluster configuration. Essentially, network failure may happen inside your cluster, and reconnecting nodes wouldn't know how to handle this, since we're not using a master-replica strategy. I haven't read much about this, but one possible solution would be to pass the cluster size as an environment variable to all nodes, and check the `Node.list()` result when a `:nodedown` message is received. Afterwards, a simple calculation should be enough to determine if your node is isolated or in a dominant group, allowing you to push the self-destruct red button with, for example, a "liveness" GenServer exposed to your orchestrator, returning `HTTP 200 Ok` responses codes until isolation is detected.
 
 Note that there's also the [Mnesiac][6] library, which is an Elixir layer on top of Mnesia. I prefer using low-level libraries directly, at least for learning, but it might be a good fit for production though.
 
