@@ -13,6 +13,10 @@ $border-radius: 0px;
 // $border-radius: 12px;
 
 body.light {
+  .dark-only {
+    display: none;
+  }
+
   background-color: $blue;
   color: $black;
 

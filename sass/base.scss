@@ -87,6 +87,11 @@ body {
 
               // &.active {}
             }
+
+            &.spotify-embed {
+              padding-top: 12px;
+              padding-bottom: 11px;
+            }
           }
 
           li:last-of-type {
@@ -187,6 +192,17 @@ body {
       img[src$="#cropped"] {
         object-fit: scale-down;
         width: 600px;
+      }
+
+      div.video-embed {
+        display: flex;
+        width: 100%;
+
+        iframe {
+          margin: auto;
+          width: 600px;
+          height: 400px;
+        }
       }
 
       ol, ul {

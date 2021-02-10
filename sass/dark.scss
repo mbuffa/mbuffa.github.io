@@ -11,6 +11,10 @@ $grey: #ddd;
 $olive-light: #87b22a;
 
 body.dark {
+  .light-only {
+    display: none;
+  }
+
   // Pretty, but tedious.
   // @keyframes smoothOpacity {
   //   from {
