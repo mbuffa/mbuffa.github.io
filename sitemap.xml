@@ -22,6 +22,9 @@
         <loc>https://mbuffa.github.io/tags/k8s/</loc>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/tags/postgres/</loc>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/rails/</loc>
     </url>
     <url>
@@ -45,5 +48,9 @@
     <url>
         <loc>https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/</loc>
         <lastmod>2020-11-11</lastmod>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tips/20210706-postgres-filtering-with-count/</loc>
+        <lastmod>2021-07-06</lastmod>
     </url>
 </urlset>

@@ -4,7 +4,7 @@
   
 
   
-    <title>Maxime Buffa</title>
+    <title>Postgres: Filtering with COUNT()</title>
   
 
   
@@ -17,7 +17,7 @@
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
   <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
-  <meta name="description" content="My personal website with tips and rants." />
+  <meta name="description" content="Filtering with COUNT() with PostgreSQL" />
 </head>
 <!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -129,99 +129,37 @@
 
     <div class="main-content">
       
+
+
+
+
 <article class="lonely">
+
   <header>
-    <h1 class="title">Tips & Thoughts</h1>
+    <h1 class="title">
+      Postgres: Filtering with COUNT()
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2021-07-06
+    </p>
+    
   </header>
 
-  
-    <table class="articles">
-      <tbody>
-        
-        <tr>
-          <td>2021-07-06</td>
-          <td>
-            <a href="https://mbuffa.github.io/tips/20210706-postgres-filtering-with-count/">Postgres: Filtering with COUNT()</a>
-          </td>
-          <td>
-            
-              <div>
-                <a class="tag" href="/tags/postgres">postgres</a>
-              </div>
-            
-          </td>
-        </tr>
-        
-        <tr>
-          <td>2020-11-11</td>
-          <td>
-            <a href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/">Elixir: Troubleshooting Mnesia</a>
-          </td>
-          <td>
-            
-              <div>
-                <a class="tag" href="/tags/elixir">elixir</a>
-              </div>
-            
-              <div>
-                <a class="tag" href="/tags/erlang">erlang</a>
-              </div>
-            
-          </td>
-        </tr>
-        
-        <tr>
-          <td>2020-10-21</td>
-          <td>
-            <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/">Elixir: Clustering on Kubernetes</a>
-          </td>
-          <td>
-            
-              <div>
-                <a class="tag" href="/tags/elixir">elixir</a>
-              </div>
-            
-              <div>
-                <a class="tag" href="/tags/k8s">k8s</a>
-              </div>
-            
-          </td>
-        </tr>
-        
-        <tr>
-          <td>2020-08-16</td>
-          <td>
-            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/">Developing on WSL</a>
-          </td>
-          <td>
-            
-              <div>
-                <a class="tag" href="/tags/wsl">wsl</a>
-              </div>
-            
-              <div>
-                <a class="tag" href="/tags/dev">dev</a>
-              </div>
-            
-          </td>
-        </tr>
-        
-        <tr>
-          <td>2020-08-15</td>
-          <td>
-            <a href="https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/">Rails: Deprecate an ActiveRecord attribute</a>
-          </td>
-          <td>
-            
-              <div>
-                <a class="tag" href="/tags/rails">rails</a>
-              </div>
-            
-          </td>
-        </tr>
-        
-      </tbody>
-    </table>
+  <p><h2 id="context">Context</h2>
+<p>Doing a COUNT() in SQL is pretty simple, but sometimes you want to return several counts at once with different filters. To achieve this, you would typically do multiple queries, <a href="https://www.postgresql.org/docs/9.1/queries-with.html">optionally with a <code>WITH</code> query</a>.</p>
+<p>Thankfully, there's a way simpler way to do this in PostgreSQL, with <code>FILTER</code>.</p>
+<p>Let's consider we have a simple table (<code>racoons</code>) with a few fields, and we want to return a <code>caretaker_id</code>, the total number of racoons taken care by this person, and the number of racoons that have been released to the wilds.</p>
+<p>It's as simple as this:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#b48ead;">SELECT   </span><span style="color:#d08770;">r</span><span style="color:#c0c5ce;">.</span><span style="color:#d08770;">caretaker_id</span><span style="color:#c0c5ce;">,
+         </span><span style="color:#96b5b4;">COUNT</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">*</span><span style="color:#c0c5ce;">) as total,
+         </span><span style="color:#96b5b4;">COUNT</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">*</span><span style="color:#c0c5ce;">) FILTER (</span><span style="color:#b48ead;">WHERE</span><span style="color:#c0c5ce;"> released = </span><span style="color:#d08770;">true</span><span style="color:#c0c5ce;">) as released
+</span><span style="color:#b48ead;">FROM</span><span style="color:#c0c5ce;">     racoons r
+</span><span style="color:#b48ead;">GROUP BY </span><span style="color:#d08770;">r</span><span style="color:#c0c5ce;">.</span><span style="color:#d08770;">caretaker_id</span><span style="color:#c0c5ce;">;
+</span></code></pre>
+<p><a href="https://kb.objectrocket.com/postgresql/how-to-use-the-filter-clause-in-postgresql-881">This page</a> has a bit more information, especially if you're working with a PostgreSQL database prior to 9.4.</p>
+</p>
 </article>
 
     </div>
