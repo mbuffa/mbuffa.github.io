@@ -1,0 +1,319 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+    <title>Kustomize: Using Environment Variables</title>
+  
+
+  
+    
+  
+
+  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
+  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/light.css" />
+
+  <meta name="description" content="Using Environment Variables in your Kubernetes manifests" />
+</head>
+<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function updateStylesheetToggler(mode) {
+      // ion-icon seems to apply `visibility:hidden` when it gets
+      // `display: none`, not sure why.
+      for (tag of getStylesheetTogglerTags()) {
+        if (tag.name == getIconNameForMode(mode)) {
+          tag.setAttribute("class", "stylesheet-toggler");
+          tag.style["visibility"] = "visible";
+        } else {
+          tag.setAttribute("class", "stylesheet-toggler no-display");
+          tag.style["visibility"] = "hidden";
+        }
+      }
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateStylesheetToggler(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+          break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+          break;
+
+          default:
+            activeMode = "dark";
+          break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateStylesheetToggler(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+  <main>
+    <div class='navbar'>
+      <nav>
+        <ul>
+        
+        
+          <li><a href="&#x2F;">Home</a></li>
+        
+          <li><a href="&#x2F;about&#x2F;">About</a></li>
+        
+          <li><a href="&#x2F;tags&#x2F;">Tags</a></li>
+        
+          <li class="spotify-embed dark-only">
+            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
+              allowtransparency="true" allow="encrypted-media"></iframe>
+          </li>
+          <li class="spotify-embed light-only">
+            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
+              allowtransparency="true" allow="encrypted-media"></iframe>
+          </li>
+          <li>
+            <a onClick="switchStylesheets()">
+              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
+              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#prerequisites">Prerequisites</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#let-s-get-started">Let&#x27;s get started</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
+  <header>
+    <h1 class="title">
+      Kustomize: Using Environment Variables
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2021-07-20
+    </p>
+    
+  </header>
+
+  <p><h2 id="context">Context</h2>
+<p>Using environment variables in your Kubernetes manifests built with Kustomize may be a bit tedious, but I recently found how you can actually use some.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>I won't go into too much details about Kubernetes manifests, or deploying on Kubernetes in general. I learned as I went, mostly by looking at examples and documentation. If you're looking for tutorials or courses, there are pretty good resources available for free. <a href="https://prefetch.net/blog/2019/10/16/the-beginners-guide-to-creating-kubernetes-manifests/">This great article</a> gives some very useful tips to learn by doing, and there's even <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-interactive/">an official interactive tutorial</a>.</p>
+<p>And, of course, you also need to know Docker :-)</p>
+<h2 id="let-s-get-started">Let's get started</h2>
+<p>Let's take this stripped down deployment example, named <code>deployment.yaml</code>:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
+kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
+metadata</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
+  namespace</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">default
+  labels</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">app</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
+spec</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">selector</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">matchLabels</span><span style="color:#c0c5ce;">:
+      </span><span style="color:#bf616a;">app</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">MYAPP
+  replicas</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1
+  </span><span style="color:#bf616a;">template</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">spec</span><span style="color:#c0c5ce;">:
+      </span><span style="color:#bf616a;">containers</span><span style="color:#c0c5ce;">:
+      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
+        image</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP:latest
+        resources</span><span style="color:#c0c5ce;">:
+          </span><span style="color:#bf616a;">requests</span><span style="color:#c0c5ce;">:
+            </span><span style="color:#bf616a;">cpu</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">100m
+            memory</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">100Mi
+          limits</span><span style="color:#c0c5ce;">:
+            </span><span style="color:#bf616a;">cpu</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">100m
+            memory</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">100Mi
+        env</span><span style="color:#c0c5ce;">:
+        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">DB_HOST
+          valueFrom</span><span style="color:#c0c5ce;">:
+            </span><span style="color:#bf616a;">configMapKeyRef</span><span style="color:#c0c5ce;">:
+              </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">MYAPP
+              key</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">DB_HOST
+        ports</span><span style="color:#c0c5ce;">:
+        - </span><span style="color:#bf616a;">containerPort</span><span style="color:#c0c5ce;">:  </span><span style="color:#d08770;">80
+          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
+      restartPolicy</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Always
+</span></code></pre>
+<p>You would typically associate this with a <code>Kustomization.yaml</code> file:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">resources</span><span style="color:#c0c5ce;">:
+  - </span><span style="color:#a3be8c;">deployment.yaml
+</span></code></pre>
+<p>This file allows you to define values shared across multiple resources (like services, jobs, ingresses...), either by editing it directly, like this:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">resources</span><span style="color:#c0c5ce;">:
+  - </span><span style="color:#bf616a;">deployment.yaml
+
+namespace</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">web
+</span></code></pre>
+<p>...or programmatically, for example, in your CI:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">$</span><span style="color:#c0c5ce;"> kustomize edit set namespace web
+</span></code></pre>
+<p>Running <code>kustomize build .</code> in the directory containing your kustomization and deployment would result in an output that you could apply directly with <code>kubectl apply</code>. Just run <code>kustomize build . | kubectl apply -f -</code> and you're good to go.</p>
+<p>Now let's say we want to add an annotation at build time in our CI with an environment variable, like this:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
+kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
+metadata</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
+  annotations</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">example.com/git-commit</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">$(CI_COMMIT_SHORT_SHA)
+</span></code></pre>
+<p>This can be pretty useful if, for example, you want to do a new deployment even if the docker image specified in that deployment hasn't changed.</p>
+<p>Running <code>kustomize build .</code> now would keep that line as-is.</p>
+<p>In that case, you <em>could</em> add an annotation programmatically, like this:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">kustomize</span><span style="color:#c0c5ce;"> edit add annotation example.com/git_commit:$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA
+</span></code></pre>
+<p>But then all your resources would be affected, mearning that your service and ingress would also be redeployed in that example. In some cases, you really want to scope your changes.</p>
+<p>To use environment variables, you need to specify them in your <code>Kustomization</code>, in a <code>vars:</code> section:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">resources</span><span style="color:#c0c5ce;">:
+  - </span><span style="color:#bf616a;">deployment.yaml
+
+vars</span><span style="color:#c0c5ce;">:
+- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA
+  objref</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">ConfigMap
+    name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">environment-variables
+    apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">v1
+  fieldref</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">fieldpath</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">data.CI_COMMIT_SHORT_SHA
+</span></code></pre>
+<p>Each variable defined here must have a name and references to let Kustomize know where it's supposed to get that value. In that example, I'm using a <code>configMap</code>, which is often the best option to store configuration.</p>
+<p>While we could definitely define a <code>ConfigMap</code> ourselves as part of our <code>Resources</code>, we would lose the ability to define that variable at build time.</p>
+<p>That's why we want to build a <code>ConfigMap</code> programmatically, by sourcing a file we'll create in our CI:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">resources</span><span style="color:#c0c5ce;">:
+  - </span><span style="color:#bf616a;">deployment.yaml
+
+configMapGenerator</span><span style="color:#c0c5ce;">:
+- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">environment-variables
+  envs</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">environment-properties.env</span><span style="color:#c0c5ce;">]
+  </span><span style="color:#bf616a;">behavior</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">create
+
+vars</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">...
+</span></code></pre>
+<p>And at last, in our CI job, we can build that file:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#96b5b4;">echo</span><span style="color:#c0c5ce;"> CI_COMMIT_SHORT_SHA=$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA </span><span style="color:#c0c5ce;">&gt; environment-properties.env
+</span></code></pre>
+<p>Now running <code>kustomize build .</code> would result in this :-)</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">v1
+data</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA</span><span style="color:#c0c5ce;">: &quot;</span><span style="color:#a3be8c;">123456</span><span style="color:#c0c5ce;">&quot;
+</span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">ConfigMap
+metadata</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">environment-variables-2t266m664k
+</span><span style="color:#c0c5ce;">---
+</span><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
+kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
+metadata</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">annotations</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">example.com/git-commit</span><span style="color:#c0c5ce;">: &quot;</span><span style="color:#a3be8c;">123456</span><span style="color:#c0c5ce;">&quot;
+</span></code></pre>
+<p>Tada!</p>
+<p>Kustomize has a predefined list of fields it'll actually replace corresponding patterns with environment variables. You can check this list <a href="https://github.com/kubernetes-sigs/kustomize/blob/a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce/api/konfig/builtinpluginconsts/varreference.go">directly in the repository</a>. If you want to do variable substitution in a field that is not in that list, you can follow the section <code>I want to put $VAR in some (currently disallowed) field</code> <a href="https://github.com/kubernetes-sigs/kustomize/issues/2052">on this Github issue</a>, which points to the aforementioned source file.</p>
+<p>Hope this will help some people stumbling around here.</p>
+</p>
+</article>
+
+    </div>
+
+    <footer>
+      <span>
+        Proudly written with
+        <a href="https://www.getzola.org/" target="_blank">Zola</a>
+      </span>
+    </footer>
+    <br>
+  </main>
+
+  <script type="text/javascript">
+    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=document.createElement("script");r.type="text/javascript",r.async=!0,r.src="https://cdn.heapanalytics.com/js/heap-"+e+".js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(r,a);for(var n=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],o=0;o<p.length;o++)heap[p[o]]=n(p[o])};
+    heap.load("4008293954");
+  </script>
+  <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+</html>
