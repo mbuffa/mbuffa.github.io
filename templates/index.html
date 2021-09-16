@@ -15,13 +15,13 @@
           <td>
             <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
           </td>
-          <td>
+          <!-- <td>
             {% for tag in page.taxonomies["tags"] %}
               <div>
                 <a class="tag" href="/tags/{{ tag }}">{{ tag }}</a>
               </div>
             {% endfor %}
-          </td>
+          </td> -->
         </tr>
         {% endfor %}
       </tbody>
