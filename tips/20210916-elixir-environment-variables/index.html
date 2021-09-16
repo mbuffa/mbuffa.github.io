@@ -1,0 +1,253 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+    <title>Elixir: Using Environment Variables</title>
+  
+
+  
+    
+  
+
+  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
+  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/light.css" />
+
+  <meta name="description" content="A short guide about dealing with environment variables in your Elixir project" />
+</head>
+<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function updateStylesheetToggler(mode) {
+      // ion-icon seems to apply `visibility:hidden` when it gets
+      // `display: none`, not sure why.
+      for (tag of getStylesheetTogglerTags()) {
+        if (tag.name == getIconNameForMode(mode)) {
+          tag.setAttribute("class", "stylesheet-toggler");
+          tag.style["visibility"] = "visible";
+        } else {
+          tag.setAttribute("class", "stylesheet-toggler no-display");
+          tag.style["visibility"] = "hidden";
+        }
+      }
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateStylesheetToggler(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+          break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+          break;
+
+          default:
+            activeMode = "dark";
+          break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateStylesheetToggler(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+  <main>
+    <div class='navbar'>
+      <nav>
+        <ul>
+        
+        
+          <li><a href="&#x2F;">Home</a></li>
+        
+          <li><a href="&#x2F;about&#x2F;">About</a></li>
+        
+          <li><a href="&#x2F;tags&#x2F;">Tags</a></li>
+        
+          <li class="spotify-embed dark-only">
+            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
+              allowtransparency="true" allow="encrypted-media"></iframe>
+          </li>
+          <li class="spotify-embed light-only">
+            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
+              allowtransparency="true" allow="encrypted-media"></iframe>
+          </li>
+          <li>
+            <a onClick="switchStylesheets()">
+              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
+              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#what-happened">What happened</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#solutions">Solutions</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
+  <header>
+    <h1 class="title">
+      Elixir: Using Environment Variables
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2021-09-16
+    </p>
+    
+  </header>
+
+  <p><h2 id="context">Context</h2>
+<p>An environment variable is a widespread programming concept that refers to a value coming from the system, being read by an application at runtime. Elixir can be a bit surprising on that aspect for beginners.</p>
+<p>This is one way of accessing an environment variable:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">&gt; HELLO=world iex
+iex(1)&gt; System.get_env(&quot;HELLO&quot;)
+&quot;world&quot;
+</span></code></pre>
+<p>And the same call would work in your application source code.</p>
+<p>However, you may want to avoid scattering those calls in every corner, and use a config file instead to centralize your settings and your default values.</p>
+<p>Newer versions of Mix no longer generate config files by default, so you'd have to create one of those, like this:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">mix</span><span style="color:#c0c5ce;"> new test
+</span><span style="color:#96b5b4;">cd</span><span style="color:#c0c5ce;"> test
+</span><span style="color:#bf616a;">mkdir</span><span style="color:#c0c5ce;"> config
+</span><span style="color:#bf616a;">touch</span><span style="color:#c0c5ce;"> config/config.exs
+</span></code></pre>
+<p>And edit your <code>config/config.exs</code> file, like this:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#b48ead;">import </span><span style="color:#ebcb8b;">Config
+
+</span><span style="color:#c0c5ce;">config </span><span style="color:#a3be8c;">:test</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">hello: </span><span style="color:#ebcb8b;">System</span><span style="color:#c0c5ce;">.get_env(&quot;</span><span style="color:#a3be8c;">HELLO</span><span style="color:#c0c5ce;">&quot;)
+</span></code></pre>
+<p>And lastly, modify <code>lib/test.ex</code> like this, to actually use the key-value pair we defined:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">module </span><span style="color:#ebcb8b;">Test </span><span style="color:#b48ead;">do
+  </span><span style="color:#65737e;"># ...
+  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">hello </span><span style="color:#b48ead;">do
+    </span><span style="color:#ebcb8b;">Application</span><span style="color:#c0c5ce;">.get_env(</span><span style="color:#a3be8c;">:test</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">:hello</span><span style="color:#c0c5ce;">, &quot;</span><span style="color:#a3be8c;">default</span><span style="color:#c0c5ce;">&quot;)
+  </span><span style="color:#b48ead;">end
+end
+</span></code></pre>
+<p>Now, we want to produce a build, but let's define our environment variable just before we do that:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#b48ead;">export </span><span style="color:#bf616a;">HELLO</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">foo
+</span><span style="color:#bf616a;">MIX_ENV</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">prod </span><span style="color:#bf616a;">mix</span><span style="color:#c0c5ce;"> release
+</span></code></pre>
+<p>Now let's run an interactive terminal to our build, and let's override that env variable along the way:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">HELLO</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">bar </span><span style="color:#bf616a;">./_build/prod/rel/test/bin/test</span><span style="color:#c0c5ce;"> start_iex
+</span></code></pre>
+<p>There, calling <code>Test.hello</code> would return &quot;foo&quot;, not &quot;bar&quot;.</p>
+<p>You can easily get surprises when releasing your first Elixir app, because this is not something you can reproduce with <code>iex -S mix</code>.</p>
+<h2 id="what-happened">What happened</h2>
+<p>Well basically, <code>exs</code> files are script files: they're used at build or test times, and aren't present in your final build. When building your release, Mix interpreted <code>System.get_env</code> directly and hardcoded the value.</p>
+<h2 id="solutions">Solutions</h2>
+<p>One exception to that is the Elixir 1.11 addition <code>config/runtime.exs</code> file, meant to be &quot;compiled&quot; at runtime.</p>
+<p>Of course, you could argue that using <code>System.get_env</code> directly in your source code would work, but I would say this wouldn't be a great idea ;-)</p>
+<p>There's an alternative to <code>config/runtime.exs</code> though, <a href="https://hex.pm/packages/env">which is the <code>env</code> library</a>. It lets you define tuples in your config files, and a getter similar to <code>Application.get_env</code>:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#65737e;"># In your config files:
+</span><span style="color:#b48ead;">import </span><span style="color:#ebcb8b;">Config
+
+</span><span style="color:#c0c5ce;">config </span><span style="color:#a3be8c;">:test</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">hello: </span><span style="color:#c0c5ce;">{</span><span style="color:#a3be8c;">:system</span><span style="color:#c0c5ce;">, &quot;</span><span style="color:#a3be8c;">HELLO</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">world</span><span style="color:#c0c5ce;">&quot;}
+
+</span><span style="color:#65737e;"># In your codebase:
+</span><span style="color:#ebcb8b;">Env</span><span style="color:#c0c5ce;">.fetch(</span><span style="color:#a3be8c;">:test</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">:hello</span><span style="color:#c0c5ce;">)
+</span></code></pre>
+<p><em>Et voilà !</em> Hope this helps.</p>
+<p>If you want to know more about Elixir builds and releases, as always, <a href="https://hexdocs.pm/mix/1.12/Mix.Tasks.Release.html">the official documentation is a great place to start</a>.</p>
+</p>
+</article>
+
+    </div>
+
+    <footer>
+      <span>
+        Proudly written with
+        <a href="https://www.getzola.org/" target="_blank">Zola</a>
+      </span>
+    </footer>
+    <br>
+  </main>
+
+  <script type="text/javascript">
+    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=document.createElement("script");r.type="text/javascript",r.async=!0,r.src="https://cdn.heapanalytics.com/js/heap-"+e+".js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(r,a);for(var n=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],o=0;o<p.length;o++)heap[p[o]]=n(p[o])};
+    heap.load("4008293954");
+  </script>
+  <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+</html>
