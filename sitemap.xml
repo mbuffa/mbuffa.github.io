@@ -22,6 +22,9 @@
         <loc>https://mbuffa.github.io/tags/k8s/</loc>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/tags/macos/</loc>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/postgres/</loc>
     </url>
     <url>
@@ -60,5 +63,9 @@
     <url>
         <loc>https://mbuffa.github.io/tips/20210916-elixir-environment-variables/</loc>
         <lastmod>2021-09-16</lastmod>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tips/20211029-homebrew-bundles/</loc>
+        <lastmod>2021-10-29</lastmod>
     </url>
 </urlset>
