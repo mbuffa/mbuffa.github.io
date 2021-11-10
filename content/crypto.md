@@ -22,7 +22,7 @@ Please keep in mind that this whole article isn't financial advice. I just wante
 I currently have accounts on a dozen of exchanges and services. You may want to favor some depending on where you currently live and pay taxes, but this is the top platforms I'd recommend now:
 
 ### Bitpanda
-[Bitpanda][2] is a "all-in-one", relatively new actor that allows you to buy cryptos, derived products on stocks (so that you can buy a portion of a Apple stock every month instead of a whole one) and some other assets like gold. It also offers a banking card with a cashback in Bitcoin (provided you hold enough of their utility tokens first, that is) and ways to automatically allocate funds every month. Its utility token also has token burn and a fidelity program.
+[Bitpanda][2] is a "all-in-one", relatively new actor that allows you to buy cryptos, derived products on stocks (so that you can buy a portion of a Apple stock every month instead of a whole one) and some other assets like gold. It also offers a banking card with a cashback in Bitcoin (provided you hold enough of their utility tokens first, **and pay in crypto**, that is) and ways to automatically allocate funds every month. Its utility token also has token burn and a fidelity program.
 
 It's a very good place to start, especially for citizens of the European Union, and the UX is extremely smooth: it's one of the few platforms wich a painless KYC process (*Know Your Customer*, checking your ID and stuff) and they have several banking certifications in Europe, mainly Austria and France.
 
