@@ -1,0 +1,238 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+    <title>Kubectl: Useful shortcuts</title>
+  
+
+  
+    
+  
+
+  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
+  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/light.css" />
+
+  <meta name="description" content="Various and useful kubectl tips to ease your life on your Kubernetes cluster" />
+</head>
+<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function updateStylesheetToggler(mode) {
+      // ion-icon seems to apply `visibility:hidden` when it gets
+      // `display: none`, not sure why.
+      for (tag of getStylesheetTogglerTags()) {
+        if (tag.name == getIconNameForMode(mode)) {
+          tag.setAttribute("class", "stylesheet-toggler");
+          tag.style["visibility"] = "visible";
+        } else {
+          tag.setAttribute("class", "stylesheet-toggler no-display");
+          tag.style["visibility"] = "hidden";
+        }
+      }
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateStylesheetToggler(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+          break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+          break;
+
+          default:
+            activeMode = "dark";
+          break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateStylesheetToggler(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+  <main>
+    <div class='navbar'>
+      <nav>
+        <ul>
+        
+        
+          <li><a href="&#x2F;">Home</a></li>
+        
+          <li><a href="&#x2F;about&#x2F;">About</a></li>
+        
+          <li><a href="&#x2F;tags&#x2F;">Tags</a></li>
+        
+          <li><a href="&#x2F;crypto">Crypto</a></li>
+        
+          <li class="spotify-embed dark-only">
+            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
+              allowtransparency="true" allow="encrypted-media"></iframe>
+          </li>
+          <li class="spotify-embed light-only">
+            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
+              allowtransparency="true" allow="encrypted-media"></iframe>
+          </li>
+          <li>
+            <a onClick="switchStylesheets()">
+              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
+              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20211220-kubectl-shortcuts/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20211220-kubectl-shortcuts/#a-good-entrypoint">A good entrypoint</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20211220-kubectl-shortcuts/#a-simple-way-to-open-a-tty-to-your-pod">A simple way to open a TTY to your pod</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20211220-kubectl-shortcuts/#accessing-multiple-apps-logs">Accessing multiple apps logs</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
+  <header>
+    <h1 class="title">
+      Kubectl: Useful shortcuts
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2021-12-20
+    </p>
+    
+  </header>
+
+  <p><h2 id="context">Context</h2>
+<p><code>kubectl</code> is the command line tool for accessing and interacting with your Kubernetes cluster. It's quite intuitive and easy-to-use, but here is a small summary of some very useful commands to get you started if you're new to Kube.</p>
+<p>You should already know a few basics about building a Docker container and firing a simple deployment on Kubernetes though. This won't help you much if you don't know Kubernetes at all :-)</p>
+<p>Anyway, here's a quick catch-up:</p>
+<ul>
+<li>To deploy a basic app on Kube, you would typically write a <em>Deployment</em>, featuring a template with a list of <em>Container</em>s.</li>
+<li>Once applied, this <em>Deployment</em> will have an associated <em>ReplicaSet</em> linked to the template you specified, and managed by Kube.</li>
+<li>Each <em>ReplicaSet</em> will then create <em>Pod</em>s accordingly (depending on the amount of replicas you set).</li>
+<li>And finally, each <em>Pod</em> will wrap the <em>Container</em>s you specified in the aforementioned template.</li>
+<li>Additionally, <em>Service</em>s will provide a single <strong>Endpoint</strong> to your app <strong>inside</strong> your cluster, while <em>Ingress</em>es will provide access from <strong>outside</strong> your cluster, redirecting traffic to the <strong>Service</strong>.</li>
+</ul>
+<p>I'll try to update this article if I discover or remember some good shortcuts. It would be pretty long and tedious if it was a full tutorial, so I'll keep this light.</p>
+<h2 id="a-good-entrypoint">A good entrypoint</h2>
+<p><code>kubectl explain</code> is here to help you. You can use it on any kind of ressources inside Kubernetes:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">kubectl</span><span style="color:#c0c5ce;"> explain deployments
+</span></code></pre>
+<p>This is really useful, especially when combined with some IDE plugins. VSCode has some that add snippets, and even a cluster visualizer that lets you browse all your ressources from inside your editor! You can easily learn something about a new type of ressource you didn't know about.</p>
+<h2 id="a-simple-way-to-open-a-tty-to-your-pod">A simple way to open a TTY to your pod</h2>
+<p>You may already know that you can open a terminal over SSH by simply running:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">kubectl</span><span style="color:#c0c5ce;"> exec</span><span style="color:#bf616a;"> -it</span><span style="color:#c0c5ce;"> my-app-1234-5678 -- /bin/sh
+</span></code></pre>
+<p>If you're deploying quite often, the replicaset attached to your deployment will change, and pods will be recreated. Therefore, opening a new TTY can be tedious.</p>
+<p>But fortunately, you can use the service as a shortcut:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">kubectl</span><span style="color:#c0c5ce;"> exec</span><span style="color:#bf616a;"> -it</span><span style="color:#c0c5ce;"> service/my-app -- /bin/sh
+</span></code></pre><h2 id="accessing-multiple-apps-logs">Accessing multiple apps logs</h2>
+<p>You may know that you can access a container logs, either statically or continuously, by running this:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">kubectl </span><span style="color:#b48ead;">[</span><span style="color:#c0c5ce;">-f</span><span style="color:#b48ead;">]</span><span style="color:#c0c5ce;"> my-app-1234-5678 container_name
+</span></code></pre>
+<p>But yet again, the pod may be replaced, and you may be interested to fetch logs from multiple pods of the same app, or even logs coming from various apps, but serving a common purpose.</p>
+<p>You can do just that by adding <strong><a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">Labels</a></strong> to your ressources (especially deployments), and running the same command, but with <em>Label Selector</em>s instead:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">kubectl</span><span style="color:#c0c5ce;"> logs </span><span style="color:#b48ead;">[</span><span style="color:#c0c5ce;">-f</span><span style="color:#b48ead;">]</span><span style="color:#bf616a;"> -l</span><span style="color:#c0c5ce;"> app=my-app</span><span style="color:#bf616a;"> -c</span><span style="color:#c0c5ce;"> container_name
+</span></code></pre>
+<p>In fact, selectors can be used with many commands, including all <code>get</code> calls, to fetch ressources of different nature grouped by-whatever-your-semantic-grouping-is. No more <code>grep</code> :-)</p>
+</p>
+</article>
+
+    </div>
+
+    <footer>
+      <span>
+        Proudly written with
+        <a href="https://www.getzola.org/" target="_blank">Zola</a>
+      </span>
+    </footer>
+    <br>
+  </main>
+
+  <script type="text/javascript">
+    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=document.createElement("script");r.type="text/javascript",r.async=!0,r.src="https://cdn.heapanalytics.com/js/heap-"+e+".js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(r,a);for(var n=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],o=0;o<p.length;o++)heap[p[o]]=n(p[o])};
+    heap.load("4008293954");
+  </script>
+  <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+</html>
