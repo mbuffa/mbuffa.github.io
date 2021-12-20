@@ -206,7 +206,7 @@
 </span></code></pre><h2 id="accessing-multiple-apps-logs">Accessing multiple apps logs</h2>
 <p>You may know that you can access a container logs, either statically or continuously, by running this:</p>
 <pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">kubectl </span><span style="color:#b48ead;">[</span><span style="color:#c0c5ce;">-f</span><span style="color:#b48ead;">]</span><span style="color:#c0c5ce;"> my-app-1234-5678 container_name
+<code><span style="color:#bf616a;">kubectl</span><span style="color:#c0c5ce;"> logs </span><span style="color:#b48ead;">[</span><span style="color:#c0c5ce;">-f</span><span style="color:#b48ead;">]</span><span style="color:#c0c5ce;"> my-app-1234-5678 container_name
 </span></code></pre>
 <p>But yet again, the pod may be replaced, and you may be interested to fetch logs from multiple pods of the same app, or even logs coming from various apps, but serving a common purpose.</p>
 <p>You can do just that by adding <strong><a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">Labels</a></strong> to your ressources (especially deployments), and running the same command, but with <em>Label Selector</em>s instead:</p>
