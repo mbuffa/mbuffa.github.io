@@ -8,7 +8,7 @@
   <div class="tag-cards">
     {% for term in terms %}
       <div class="tag-card">
-        <a class="tag" href="{{ term.permalink | safe }}">{{ term.name }}</a>
+        <a href="{{ term.permalink | safe }}">{{ term.name }}</a>
       </div>
     {% endfor %}
   </div>

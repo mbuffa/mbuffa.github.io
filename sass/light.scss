@@ -49,10 +49,15 @@ body.light {
   }
 
   & > main {
+    // FIXME: There's a 1px difference between navbar and article.
     & > div.navbar {
       nav {
         background-color: $white;
         border-bottom: 1px solid black;
+        // Commented, because it's not looking good when scrolling down.
+        // border-bottom-left-radius: 6px;
+        // border-bottom-right-radius: 6px;
+        // box-shadow: 1px 1px 2px 2px $blue-darker;
 
         ul {
           li {
@@ -65,6 +70,11 @@ body.light {
               &.active {
                 color: black;
               }
+            }
+
+            a.css-switch, a.css-switch:visited {
+              background-color: transparent;
+              color: black;
             }
           }
         }
@@ -107,9 +117,9 @@ body.light {
 
     div.tag-cards {
       div.tag-card {
-        border: 1px solid #111;
-
         a {
+          border: 1px solid transparent;
+
           &:hover {
             background-color: $blue-light;
             color: $white;
@@ -120,14 +130,14 @@ body.light {
 
     div.main-content {
       .lonely {
-        border-radius: $border-radius;
+        // border-radius: $border-radius;
+        border-radius: 6px;
       }
 
       aside, article {
         border-collapse: collapse;
         border: 1px solid black;
-        box-shadow: 10px 10px 2px 2px $blue-darker;
-
+        box-shadow: 1px 1px 2px 2px $blue-darker;
         border-radius: $border-radius;
       }
 
