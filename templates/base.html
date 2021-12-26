@@ -77,8 +77,6 @@
     }
 
     function sendToIframe(iframe, message, url) {
-      console.log("pushing message");
-      console.log(message);
       iframe.contentWindow.postMessage(message, url);
     }
 

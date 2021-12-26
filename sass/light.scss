@@ -61,10 +61,6 @@ body.light {
       nav {
         background-color: $white;
         border-bottom: 1px solid black;
-        // Commented, because it's not looking good when scrolling down.
-        // border-bottom-left-radius: 6px;
-        // border-bottom-right-radius: 6px;
-        // box-shadow: 1px 1px 2px 2px $blue-darker;
 
         ul {
           li {
@@ -78,11 +74,6 @@ body.light {
                 color: black;
               }
             }
-
-            // a.css-switch, a.css-switch:visited {
-            //   background-color: transparent;
-            //   color: black;
-            // }
           }
         }
       }
