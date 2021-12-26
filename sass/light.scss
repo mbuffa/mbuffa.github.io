@@ -20,6 +20,13 @@ body.light {
   background-color: $blue;
   color: $black;
 
+  h1, h2 {
+    // background-color: silver;
+    background-color: #ddd;
+    border: 1px solid transparent;
+    border-radius: 6px;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     color: black;
   }
