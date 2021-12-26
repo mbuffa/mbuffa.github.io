@@ -153,5 +153,19 @@ body.light {
         border-right: 0;
       }
     }
+
+    footer {
+      color: white;
+
+      a, a:visited {
+        color: white;
+
+        &:hover {
+          color: white;
+          background-color: transparent;
+          text-decoration: none;
+        }
+      }
+    }
   }
 }
