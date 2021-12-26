@@ -58,6 +58,7 @@
       }
 
       updateStylesheetToggler(activeStylesheet);
+      updateGiscusStyle(activeStylesheet);
     }
 
     function getIconNameForMode(mode) {
@@ -65,6 +66,37 @@
         return "sunny";
       }
       return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
     }
 
     function switchStylesheets() {
@@ -90,6 +122,7 @@
 
       localStorage.setItem("active-stylesheet", activeMode);
       updateStylesheetToggler(activeMode);
+      updateGiscusStyle(activeMode);
     }
   </script>
 
@@ -111,6 +144,7 @@
         
           <li><a href="&#x2F;crypto">Crypto</a></li>
         
+          <!-- FIXME: Figure out what to do with it.
           <li class="spotify-embed dark-only">
             <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
               allowtransparency="true" allow="encrypted-media"></iframe>
@@ -118,9 +152,9 @@
           <li class="spotify-embed light-only">
             <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
               allowtransparency="true" allow="encrypted-media"></iframe>
-          </li>
+          </li> -->
           <li>
-            <a onClick="switchStylesheets()">
+            <a class="css-switch" onClick="switchStylesheets()">
               <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
               <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
             </a>
@@ -138,35 +172,35 @@
   <div class="tag-cards">
     
       <div class="tag-card">
-        <a class="tag" href="https://mbuffa.github.io/tags/dev/">dev</a>
+        <a href="https://mbuffa.github.io/tags/dev/">dev</a>
       </div>
     
       <div class="tag-card">
-        <a class="tag" href="https://mbuffa.github.io/tags/elixir/">elixir</a>
+        <a href="https://mbuffa.github.io/tags/elixir/">elixir</a>
       </div>
     
       <div class="tag-card">
-        <a class="tag" href="https://mbuffa.github.io/tags/erlang/">erlang</a>
+        <a href="https://mbuffa.github.io/tags/erlang/">erlang</a>
       </div>
     
       <div class="tag-card">
-        <a class="tag" href="https://mbuffa.github.io/tags/k8s/">k8s</a>
+        <a href="https://mbuffa.github.io/tags/k8s/">k8s</a>
       </div>
     
       <div class="tag-card">
-        <a class="tag" href="https://mbuffa.github.io/tags/macos/">macos</a>
+        <a href="https://mbuffa.github.io/tags/macos/">macos</a>
       </div>
     
       <div class="tag-card">
-        <a class="tag" href="https://mbuffa.github.io/tags/postgres/">postgres</a>
+        <a href="https://mbuffa.github.io/tags/postgres/">postgres</a>
       </div>
     
       <div class="tag-card">
-        <a class="tag" href="https://mbuffa.github.io/tags/rails/">rails</a>
+        <a href="https://mbuffa.github.io/tags/rails/">rails</a>
       </div>
     
       <div class="tag-card">
-        <a class="tag" href="https://mbuffa.github.io/tags/wsl/">wsl</a>
+        <a href="https://mbuffa.github.io/tags/wsl/">wsl</a>
       </div>
     
   </div>
