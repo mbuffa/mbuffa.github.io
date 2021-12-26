@@ -8,10 +8,15 @@ body {
   height: 100%;
 
   font-family: 'Lato', sans-serif;
-  font-size: xx-large;
+  font-size: large;
 
-  h1, h2, h3, h4, h5, h6 {
-    margin: 1em;
+  h1, h2, h3 {
+    margin: .5em;
+    padding: .5em;
+  }
+
+  h4, h5, h6 {
+    margin: .5em;
   }
 
   p {
@@ -56,36 +61,49 @@ body {
     overflow-x: hidden;
 
     & > div.navbar {
-      height: 103px;
-      margin-bottom: 1em;
+      height: 50px;
       position: sticky;
       top: -1px; // With 0px, position: sticky isn't applied.
-      width: 100%;
+      width: 90%;
+      margin: auto;
+      margin-bottom: 1em;
 
       nav {
+        height: 100%;
         width: 100%;
         position: relative;
 
         ul {
-          list-style-type: none;
-          width: 100%;
           display: flex;
-          margin: 0;
+          flex-flow: row nowrap;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          width: 99%;
+          margin: auto;
           padding: 0;
 
-          li {
-            flex-flow: row nowrap;
+          list-style-type: none;
 
+          li {
             a, a:visited {
-              display: block;
-              padding: 1em;
+              display: inline-block;
+              padding: 5px 16px;
               text-decoration: none;
 
               &:hover {
                 text-decoration: none;
               }
 
+              border: 1px solid;
+              border-radius: 6px;
+              border-color: transparent;
+
               // &.active {}
+            }
+
+            a.css-switch {
+              padding: 5px;
             }
 
             &.spotify-embed {
@@ -106,7 +124,7 @@ body {
     table.articles {
       width: 100%;
 
-      font-size: xx-large;
+      font-size: large;
 
       td {
         line-height: 1.5em;
@@ -148,7 +166,7 @@ body {
 
         li a, li a:visited {
           display: inline-block;
-          padding: 1em;
+          padding: .5em;
           width: 100%;
           text-decoration: underline;
 
@@ -212,23 +230,21 @@ body {
       }
     }
 
-    a.tag {
-      display: block;
-      font-family: "Courier New", monospace, sans-serif;
-      text-decoration: none;
-    }
-
     div.tag-cards {
       display: flex;
       flex-flow: row wrap;
+      margin: auto;
+      width: 80%;
 
       div.tag-card {
         margin-right: 1ex;
 
         a {
-          padding: 1em;
+          padding: 5px 16px;
+          display: inline-block;
+          text-decoration: none;
 
-          // &:hover {}
+          border-radius: 6px;
         }
       }
     }
@@ -236,6 +252,7 @@ body {
     div.main-content {
       width: 90%;
       margin: auto;
+      margin-top: 2em;
 
       display: flex;
       flex-flow: row nowrap;
@@ -269,5 +286,11 @@ body {
         font-size: medium;
       }
     }
+  }
+
+  .giscus-frame {
+    display: block;
+    margin: auto;
+    width: 90%;
   }
 }

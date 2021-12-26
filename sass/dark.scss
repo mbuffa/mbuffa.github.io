@@ -83,6 +83,7 @@ body.dark {
       div.toc {
         li a {
           &:hover {
+            color: white;
             background-color: transparent;
           }
         }
