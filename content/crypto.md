@@ -1,5 +1,6 @@
 +++
 title = "Crypto"
+date = 2021-11-01
 description = "A short guide and a list of curated ressources to start investing or trading cryptocurrencies, such as Bitcoin or Ethereum"
 template = "article.html"
 +++
@@ -19,10 +20,10 @@ Please keep in mind that this whole article isn't financial advice. I just wante
 * ***DeFi*** Decentralized Finance bloomed over 2021. It's essentially a set of financing tools empowered by a blockchain protocol, where you can yield, swap and lend tokens without the help of a third party service (typically a Centralized Exchange, or CEX, by using a Decentralized Exchange, or DEX). There are a lot of DeFi platforms out there, and I do have tokens in staking and yield farming on Polkadot, Kusama, Solana and Sora, but I won't discuss it here as I think it should be completely avoided for beginners. It's quite easy to get into crypto Ponzi and lose everything.
 
 ## Where to buy
-I currently have accounts on a dozen of exchanges and services. You may want to favor some depending on where you currently live and pay taxes, but this is the top platforms I'd recommend now:
+I currently have accounts on a dozen of exchanges and services. You may want to favor some depending on where you currently live and pay taxes in, but those are the top platforms I'd recommend now:
 
 ### Bitpanda
-[Bitpanda][2] is a "all-in-one", relatively new actor that allows you to buy cryptos, derived products on stocks (so that you can buy a portion of a Apple stock every month instead of a whole one) and some other assets like gold. It also offers a banking card with a cashback in Bitcoin (provided you hold enough of their utility tokens first, **and pay in crypto**, that is) and ways to automatically allocate funds every month. Its utility token also has token burn and a fidelity program.
+[Bitpanda][2] is a "all-in-one", relatively new actor that allows you to buy cryptos, derived products on stocks (so that you can buy a portion of an Apple stock every month instead of a whole one) and some other assets like gold. It also offers a banking card with a cashback in Bitcoin (provided you hold enough of their utility tokens first, **and pay in crypto**, that is) and ways to automatically allocate funds every month. Its utility token also has token burn and a fidelity program.
 
 It's a very good place to start, especially for citizens of the European Union, and the UX is extremely smooth: it's one of the few platforms wich a painless KYC process (*Know Your Customer*, checking your ID and stuff) and they have several banking certifications in Europe, mainly Austria and France.
 
@@ -43,6 +44,15 @@ Of all the exchanges I registered on, KuCoin has probably one of the most painfu
 KuCoin is overhauling its referral program, so rewards may change in the future.
 
 [20% reduction on your trades on KuCoin][4].
+
+### Crypto.com
+I started using [Crypto.com][7] just a few months ago, because I was looking for a banking card allowing me to spend EUR and enjoy some form of cashback. Spending cryptocurrencies directly isn't interesting at all if you're a French citizen because law forces you to declare **every** conversion from any asset to EUR or USD.
+
+I discovered the platform early this year, but only started using it a few weeks ago. The mobile app lets you buy a handful of cryptocurrencies, various staking and liquidity possibilities, but most importantly, a VISA card with cashback on a large variety of transactions, plus additional bonuses once you complete the platform's terms (which is mainly holding a certain amount of their tokens during six months, currently), including a reimbursed Spotify or Netflix subscription.
+
+This is in my opinion the best deal available if you don't want to spend your cryptos, but simply want an attractive cashback. I'll drop another feedback if there's demand for it.
+
+[Earn 25 USD worth of $CRO when staking for a Crypto.com card][7]
 
 ## Other tools of note
 
@@ -70,3 +80,4 @@ Happy trading, and don't all-in on Doge or Shiba.
 [4]: https://www.kucoin.com/ucenter/signup?rcode=rJS6K8M
 [5]: https://www.cointracker.io/i/dDmh9aPZbBAH
 [6]: https://coinmarketcap.com/
+[7]: https://crypto.com/app/mwgsjgz3yx
