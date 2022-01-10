@@ -82,8 +82,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name:  MYAPP
-  annotations:
-    example.com/git-commit: $(CI_COMMIT_SHORT_SHA)
+spec:
+  template:
+    annotations:
+      example.com/git-commit: $(CI_COMMIT_SHORT_SHA)
 ```
 
 This can be pretty useful if, for example, you want to do a new deployment even if the docker image specified in that deployment hasn't changed.
@@ -129,9 +131,34 @@ configMapGenerator:
 vars: ...
 ```
 
-And at last, in our CI job, we can build that file:
+There's one more thing we need to do though. For the sake of testing your code locally, just create a file named `environment-properties.env` containing the following content:
+```
+CI_COMMIT_SHORT_SHA=unknown
+```
+(You should keep that file tracked in your CI, it would make debugging locally easier.)
+
+Running `kustomize build .` at this point would, still, keep that variable as-is. That's because we try to substitute a value in a field that Kustomize doesn't look in by default, probably for performance or security concerns.
+
+To fix this, we need to add a custom transformer. Put that in your Kustomization:
+```yaml
+configurations:
+  - env-var-transformer.yaml
+```
+
+And then create `env-var-transformer.yaml` with that content:
+```yaml
+varReference:
+  - kind: Deployment
+    path: spec/template/metadata/annotations
+```
+
+Now, running `kustomize build .` locally should give you the expected result.
+
+Finally, in our CI job, we can build that file:
 ```sh
 echo CI_COMMIT_SHORT_SHA=$CI_COMMIT_SHORT_SHA > environment-properties.env
+# And then, you just have to apply your changes:
+kustomize build . |kubectl apply -f -
 ```
 
 Now running `kustomize build .` would result in this :-)
@@ -145,9 +172,10 @@ metadata:
 ---
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  annotations:
-    example.com/git-commit: "123456"
+spec:
+  template:
+    annotations:
+      example.com/git-commit: "123456"
 ```
 
 Tada!
