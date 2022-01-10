@@ -271,8 +271,10 @@ namespace</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c
 kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
 metadata</span><span style="color:#c0c5ce;">:
   </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
-  annotations</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">example.com/git-commit</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">$(CI_COMMIT_SHORT_SHA)
+spec</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">template</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">annotations</span><span style="color:#c0c5ce;">:
+      </span><span style="color:#bf616a;">example.com/git-commit</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">$(CI_COMMIT_SHORT_SHA)
 </span></code></pre>
 <p>This can be pretty useful if, for example, you want to do a new deployment even if the docker image specified in that deployment hasn't changed.</p>
 <p>Running <code>kustomize build .</code> now would keep that line as-is.</p>
@@ -309,9 +311,29 @@ configMapGenerator</span><span style="color:#c0c5ce;">:
 
 vars</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">...
 </span></code></pre>
-<p>And at last, in our CI job, we can build that file:</p>
+<p>There's one more thing we need to do though. For the sake of testing your code locally, just create a file named <code>environment-properties.env</code> containing the following content:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">CI_COMMIT_SHORT_SHA=unknown
+</span></code></pre>
+<p>(You should keep that file tracked in your CI, it would make debugging locally easier.)</p>
+<p>Running <code>kustomize build .</code> at this point would, still, keep that variable as-is. That's because we try to substitute a value in a field that Kustomize doesn't look in by default, probably for performance or security concerns.</p>
+<p>To fix this, we need to add a custom transformer. Put that in your Kustomization:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">configurations</span><span style="color:#c0c5ce;">:
+  - </span><span style="color:#a3be8c;">env-var-transformer.yaml
+</span></code></pre>
+<p>And then create <code>env-var-transformer.yaml</code> with that content:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">varReference</span><span style="color:#c0c5ce;">:
+  - </span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
+    path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">spec/template/metadata/annotations
+</span></code></pre>
+<p>Now, running <code>kustomize build .</code> locally should give you the expected result.</p>
+<p>Finally, in our CI job, we can build that file:</p>
 <pre style="background-color:#2b303b;">
 <code><span style="color:#96b5b4;">echo</span><span style="color:#c0c5ce;"> CI_COMMIT_SHORT_SHA=$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA </span><span style="color:#c0c5ce;">&gt; environment-properties.env
+</span><span style="color:#65737e;"># And then, you just have to apply your changes:
+</span><span style="color:#c0c5ce;">kustomize build . |</span><span style="color:#bf616a;">kubectl</span><span style="color:#c0c5ce;"> apply</span><span style="color:#bf616a;"> -f</span><span style="color:#c0c5ce;"> -
 </span></code></pre>
 <p>Now running <code>kustomize build .</code> would result in this :-)</p>
 <pre style="background-color:#2b303b;">
@@ -324,9 +346,10 @@ metadata</span><span style="color:#c0c5ce;">:
 </span><span style="color:#c0c5ce;">---
 </span><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
 kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
-metadata</span><span style="color:#c0c5ce;">:
-  </span><span style="color:#bf616a;">annotations</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">example.com/git-commit</span><span style="color:#c0c5ce;">: &quot;</span><span style="color:#a3be8c;">123456</span><span style="color:#c0c5ce;">&quot;
+spec</span><span style="color:#c0c5ce;">:
+  </span><span style="color:#bf616a;">template</span><span style="color:#c0c5ce;">:
+    </span><span style="color:#bf616a;">annotations</span><span style="color:#c0c5ce;">:
+      </span><span style="color:#bf616a;">example.com/git-commit</span><span style="color:#c0c5ce;">: &quot;</span><span style="color:#a3be8c;">123456</span><span style="color:#c0c5ce;">&quot;
 </span></code></pre>
 <p>Tada!</p>
 <p>Kustomize has a predefined list of fields it'll actually replace corresponding patterns with environment variables. You can check this list <a href="https://github.com/kubernetes-sigs/kustomize/blob/a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce/api/konfig/builtinpluginconsts/varreference.go">directly in the repository</a>. If you want to do variable substitution in a field that is not in that list, you can follow the section <code>I want to put $VAR in some (currently disallowed) field</code> <a href="https://github.com/kubernetes-sigs/kustomize/issues/2052">on this Github issue</a>, which points to the aforementioned source file.</p>
