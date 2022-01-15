@@ -1,0 +1,356 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+    <title>Elixir: Getting started in 2022</title>
+  
+
+  
+    
+  
+
+  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
+  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/light.css" />
+
+  <meta name="description" content="A curated list of everything a beginner needs to become a pro with Elixir" />
+</head>
+<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function updateStylesheetToggler(mode) {
+      // ion-icon seems to apply `visibility:hidden` when it gets
+      // `display: none`, not sure why.
+      for (tag of getStylesheetTogglerTags()) {
+        if (tag.name == getIconNameForMode(mode)) {
+          tag.setAttribute("class", "stylesheet-toggler");
+          tag.style["visibility"] = "visible";
+        } else {
+          tag.setAttribute("class", "stylesheet-toggler no-display");
+          tag.style["visibility"] = "hidden";
+        }
+      }
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateStylesheetToggler(activeStylesheet);
+      updateGiscusStyle(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+          break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+          break;
+
+          default:
+            activeMode = "dark";
+          break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateStylesheetToggler(activeMode);
+      updateGiscusStyle(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+  <main>
+    <div class='navbar'>
+      <nav>
+        <ul>
+        
+        
+          <li><a href="&#x2F;">Home</a></li>
+        
+          <li><a href="&#x2F;about&#x2F;">About</a></li>
+        
+          <li><a href="&#x2F;tags&#x2F;">Tags</a></li>
+        
+          <li><a href="&#x2F;crypto">Crypto</a></li>
+        
+          <!-- FIXME: Figure out what to do with it.
+          <li class="spotify-embed dark-only">
+            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
+              allowtransparency="true" allow="encrypted-media"></iframe>
+          </li>
+          <li class="spotify-embed light-only">
+            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
+              allowtransparency="true" allow="encrypted-media"></iframe>
+          </li> -->
+          <li>
+            <a class="css-switch" onClick="switchStylesheets()">
+              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
+              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220115-elixir-getting-started/#what-s-elixir-and-why-should-i-learn-it">What&#x27;s Elixir, and why should I learn it?</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220115-elixir-getting-started/#learning-the-basics">Learning the basics</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220115-elixir-getting-started/#getting-your-hands-dirty">Getting your hands dirty</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220115-elixir-getting-started/#going-further-with-elixir-and-otp">Going further with Elixir and OTP</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220115-elixir-getting-started/#joining-the-community">Joining the community</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220115-elixir-getting-started/#notable-technologies">Notable technologies</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
+  <header>
+    <h1 class="title">
+      Elixir: Getting started in 2022
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2022-01-15
+    </p>
+    
+  </header>
+
+  <p><h2 id="what-s-elixir-and-why-should-i-learn-it">What's Elixir, and why should I learn it?</h2>
+<p>Elixir is a dynamic, functional programming language that relies on the versatility and robustness of Erlang/OTP (a platform built by Ericsson engineers in the late 80's to help building low-latency, distributed and fault-tolerant systems), and the expressivity and clarity of languages such as Ruby.</p>
+<p>I've been learning, writting and running Elixir applications in production since roughly 2019. Elixir itself would probably deserves a dedicated article as to why it's great (but not perfect), but since you're here, on this confidential page, I'll just list my top five highlights that make the language great, in my opinion:</p>
+<ul>
+<li>
+<p>It's <em>fast</em> in a lot of areas, runtime for a start, but not only: tests run almost instantly. If you come from a Ruby background (and especially Rails...), this might reconciliate you with TDD. Also, Docker images are ridiculously small (we're talking about a 13MB image, both for a boilerplate and a medium-sized application), especially compared to your 300MB NodeJS or 150MB Rails app, and applications are deployed very quickly.</p>
+</li>
+<li>
+<p>Elixir is a <em>functional</em> language. It might not be as much functional as some developers would like it to be (and I suspect most developers advocating for a specific language have their own definition of &quot;functional&quot;, anyway) but it has a lot of powerful features.
+Some languages (such as Rust) share the immutable data paradigm and a pattern matching operator, but Elixir goes a bit further on the latter, allowing you to use pattern matching combined with function overloads. And this is huge. Consider this Ruby message processor, and how it can be refactored in Elixir:</p>
+</li>
+</ul>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#65737e;"># This is some Ruby code.
+</span><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">Message
+  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">process</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">data</span><span style="color:#c0c5ce;">)
+    </span><span style="color:#b48ead;">case</span><span style="color:#c0c5ce;"> data.type </span><span style="color:#b48ead;">do
+      when </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">notification</span><span style="color:#c0c5ce;">&quot;
+        </span><span style="color:#65737e;"># Do something with data.subject
+        # ...
+      </span><span style="color:#b48ead;">when </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">business-object-update</span><span style="color:#c0c5ce;">&quot;
+        </span><span style="color:#65737e;"># Do something with data.subject (id and type)
+        # ...
+      </span><span style="color:#b48ead;">else
+        </span><span style="color:#ebcb8b;">Logger</span><span style="color:#c0c5ce;">.error(&quot;</span><span style="color:#a3be8c;">Unsupported type for </span><span style="color:#c0c5ce;">#{data.</span><span style="color:#96b5b4;">inspect</span><span style="color:#c0c5ce;">}&quot;)
+        </span><span style="color:#65737e;"># ...
+    </span><span style="color:#b48ead;">end
+  end
+end
+</span></code></pre><pre style="background-color:#2b303b;">
+<code><span style="color:#65737e;"># And this is some Elixir code.
+</span><span style="color:#b48ead;">defmodule </span><span style="color:#ebcb8b;">Message </span><span style="color:#b48ead;">do
+  require </span><span style="color:#ebcb8b;">Logger
+
+  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">process</span><span style="color:#c0c5ce;">(%{</span><span style="color:#d08770;">type: </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">notification</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#d08770;">subject:</span><span style="color:#c0c5ce;"> message}) </span><span style="color:#b48ead;">do
+    </span><span style="color:#65737e;"># ...
+  </span><span style="color:#b48ead;">end
+
+  def </span><span style="color:#8fa1b3;">process</span><span style="color:#c0c5ce;">(%{</span><span style="color:#d08770;">type: </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">business-object-update</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#d08770;">subject:</span><span style="color:#c0c5ce;"> %{</span><span style="color:#d08770;">id:</span><span style="color:#c0c5ce;"> id, </span><span style="color:#d08770;">type:</span><span style="color:#c0c5ce;"> type}}) </span><span style="color:#b48ead;">do
+    </span><span style="color:#65737e;"># ...
+  </span><span style="color:#b48ead;">end
+
+  def </span><span style="color:#8fa1b3;">process</span><span style="color:#c0c5ce;">(data) </span><span style="color:#b48ead;">do
+    </span><span style="color:#ebcb8b;">Logger</span><span style="color:#c0c5ce;">.error(&quot;</span><span style="color:#a3be8c;">Unsupported type for #{</span><span style="color:#c0c5ce;">inspect(data)}&quot;)
+    </span><span style="color:#65737e;"># ...
+  </span><span style="color:#b48ead;">end
+end
+</span></code></pre>
+<p>You can of course leverage this in a lot of situations, but it basically allows you to split your logic into separate definitions, that usually gets less clutter over time. It also makes writing recursive functions a lot clearer.</p>
+<ul>
+<li>Elixir also has the pipe operator, which allows you to redirect the result of a statement toward the next one. So instead of writing:</li>
+</ul>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">number = </span><span style="color:#d08770;">1
+</span><span style="color:#c0c5ce;">multiply = </span><span style="color:#b48ead;">fn</span><span style="color:#c0c5ce;"> x -&gt; x * </span><span style="color:#d08770;">2 </span><span style="color:#b48ead;">end
+</span><span style="color:#ebcb8b;">IO</span><span style="color:#c0c5ce;">.inspect(multiply(number))
+</span></code></pre>
+<p>You can just write:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">number = </span><span style="color:#d08770;">1
+</span><span style="color:#c0c5ce;">multiply = </span><span style="color:#b48ead;">fn</span><span style="color:#c0c5ce;"> x -&gt; x * </span><span style="color:#d08770;">2 </span><span style="color:#b48ead;">end
+</span><span style="color:#c0c5ce;">number
+|&gt; multiply()
+|&gt; </span><span style="color:#ebcb8b;">IO</span><span style="color:#c0c5ce;">.inspect
+</span></code></pre>
+<p>And of course, it gets very handy when coupled with pattern matching, situations where you have to build a query with Ecto... It's very powerful, mindblowing, and a lot of languages try to implement their own version of the pipe operator.</p>
+<ul>
+<li>
+<p>Erlang/OTP is <em>insanely</em> powerful, and the fault-tolerancy is no joke. It gets a bit of time and a lot of practice to master the supervision tree and all the debugging tools that Erlang comes with, but then it lets you build fast, reliable apps with simpler stacks, distributed nodes and realtime capabilities handling an insane traffic. Say goodbye to that Sidekiq or Celery worker. You get everything to run synchronous and asynchronous tasks immediately and can do it on the same, single instance that handles your HTTP requests.</p>
+</li>
+<li>
+<p>Elixir is <em>readable</em>. There are exceptions, with some packages relying a lot on macros (which I've been hating since 2015), but in the vast majority of libraries, you can just go and check the implementation yourself, there's no ouf-of-control metaprogramming bullshit, no over-engineered module bloats. Also, since it's functional, IDE tools (such as Dialyzer) can usually do a very good job at listing all occurrences of a function call, or finding the definition.</p>
+</li>
+</ul>
+<p>From my humble point of view, I don't think Elixir is perfect (ExUnit is a bit frustrating compared to RSpec for example, and sometimes I really want Rust enums...), but it's easily one of the languages I love the most to write in, with the best frustration/productivity ratio.</p>
+<p>I wrote that article to help beginners getting started with Elixir and its ecosystem. I'll update that page as best as I can. Feedback would be greatly appreciated!</p>
+<h2 id="learning-the-basics">Learning the basics</h2>
+<p><a href="https://elixir-lang.org/getting-started/introduction.html">The official &quot;Getting Started&quot; Elixir guide</a> is a great place to start.</p>
+<p>Alternatively, if you prefer video content, <a href="https://www.youtube.com/channel/UCwRXb5dUK4cvsHbx-rGzSgw">Derek Banas</a> regularly publishes great content on his youtube channel and does a fantastic job at introducing languages and frameworks. His <a href="https://www.youtube.com/watch?v=pBNOavRoNL0">video on Elixir</a> is an excellent starting point if you already have experience as a programmer and want to grasp the syntax very quickly.</p>
+<div class="video-embed">
+    <iframe src="https://www.youtube.com/embed/pBNOavRoNL0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div>
+<p>This is the path I chose since I prefer to get started quickly and improve over time.</p>
+<p><a href="https://elixircasts.io/">ElixirCasts</a> is the Elixir equivalent of the awesome RailsCast from Ryan Bates. High quality content there.</p>
+<h2 id="getting-your-hands-dirty">Getting your hands dirty</h2>
+<p>You can just go and <a href="https://try-elixir.herokuapp.com/">try Elixir online</a>.</p>
+<p>Elixir also has <a href="https://livebook.dev/">interactive notebooks</a> with LiveBook!</p>
+<p>You can also install Elixir on your computer (that's a requirement if you want to use LiveBook locally and without Docker). My preference goes to <a href="https://asdf-vm.com/">ASDF</a>. Once installed, you can get the <a href="https://github.com/asdf-vm/asdf-erlang">Erlang plugin</a> and the <a href="https://github.com/asdf-vm/asdf-elixir">Elixir plugin</a>, and install one version of Elixir built for the Erlang OTP version you installed. For example:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#bf616a;">asdf</span><span style="color:#c0c5ce;"> install erlang 24.1
+</span><span style="color:#bf616a;">asdf</span><span style="color:#c0c5ce;"> install elixir 1.13.0-otp-24
+</span></code></pre>
+<p>The Elixir compiler produces artifacts that'll run on BEAM, the current Erlang Virtual Machine. That's why you need to install both.</p>
+<h2 id="going-further-with-elixir-and-otp">Going further with Elixir and OTP</h2>
+<p>The Pragmatic Studio has a great online course <a href="https://pragmaticstudio.com/elixir#buy">focusing on Elixir &amp; OTP</a>. If you want to build a strong knowledge about the internal workings of Elixir and Erlang, this is a really strong source. I have yet to finish the last third of it but have already saved up a lot of time and frustration compared to people learning on the fly, and being scared to build anything that goes beyond simple CRUD applications.</p>
+<p><a href="https://pragprog.com/">The Pragmatic Bookshelf</a> is also regularly quoted as providing great material if you prefer a more traditional way of learning.</p>
+<h2 id="joining-the-community">Joining the community</h2>
+<p>Don't hesitate to join <a href="https://elixir-lang.slack.com/">the official Slack</a> and say hi!</p>
+<p>The <a href="https://elixirforum.com/">Elixir Forum</a> is also worth mentioning. It's usually a very good way to share issues and solutions.</p>
+<p>If you're on Twitter, it's usually a good idea to follow the official <a href="https://twitter.com/elixirlang">Elixir account</a> there.</p>
+<h2 id="notable-technologies">Notable technologies</h2>
+<ul>
+<li>Check out <a href="https://www.phoenixframework.org/">Phoenix</a> for a fully-featured Web framework, including Ecto, a fantastic ORM.</li>
+<li>Keep an eye on <a href="https://dockyard.com/blog/2018/12/12/phoenix-liveview-interactive-real-time-apps-no-need-to-write-javascript">LiveView</a>, the tech behind LiveBook. It's basically a Rails + Turbolinks alternative, but with working WebSockets.</li>
+<li>Consider <a href="https://www.rabbitmq.com/">RabbitMQ</a>, one of the most widely deployed and trusted message broker, for your services oriented architecture.</li>
+<li>If you're into data science and machine learning, you'll be interested by <a href="https://github.com/elixir-nx">Nx</a> :-)</li>
+</ul>
+</p>
+  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+    crossorigin="anonymous" async>
+  </script>
+</article>
+
+    </div>
+
+    <footer>
+      <span>
+        Proudly written with
+        <a href="https://www.getzola.org/" target="_blank">Zola</a>
+      </span>
+    </footer>
+    <br>
+  </main>
+
+  <script type="text/javascript">
+    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=document.createElement("script");r.type="text/javascript",r.async=!0,r.src="https://cdn.heapanalytics.com/js/heap-"+e+".js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(r,a);for(var n=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],o=0;o<p.length;o++)heap[p[o]]=n(p[o])};
+    heap.load("4008293954");
+  </script>
+  <script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+</html>
