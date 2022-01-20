@@ -8,6 +8,12 @@ template = "article.html"
 ## Disclaimer
 Please keep in mind that this whole article isn't financial advice. I just wanted to setup a quick *101* on the subject, until I eventually publish general purpose articles on investing and trading.
 
+Also, I *won't* tell you which specific token to buy, or when to buy and when to sell. This is your decision to make.
+
+But as a general advice, I would say that you should probably avoid going on anything that is related to the BSC (Binance Smart Chain). Most scams start there as literally anyone can create a token there for cheap, profit for relatively low gas fees (compared to Ethereum) and disappear just before the crypto ponzi crumbles. BSC no longer has this monopoly but shitcoins there are prolific.
+
+Bitcoin and Ethereum are incredible. The technology behind many altcoins is very promising, but many platforms allowing you to invest and trade are predatory: do *not* go on those platforms if you have some kind of a background with addictions to gambling. I recommend a few platforms below that I both consider beginner-friendly and with the least predatory practices
+
 ## Techniques and vocabulary
 * ***DCA*** [Dollar-Cost Averaging][0] is an approach that boils down to invest a fraction of your savings on a regular basis, so that your investment isn't too exposed to brutal variations of the market. This way, it doesn't really matter if you buy the market top, and you can stop thinking "I'll buy after the next collapse* and delaying your investments for months or years. If you don't have time, energy or motivation for trading, you should definitely use that technique.
 
@@ -15,7 +21,7 @@ Please keep in mind that this whole article isn't financial advice. I just wante
 
 * ***Spot Trading, Futures, Leveraged Tokens...*** If you start investing in cryptos, you'll most likely issue Spot Orders, which is a simple Offering-Demand contract that is executed when two actors meet an agreement price on the market. I really recommend that you stay away from all complex tools (that includes futures, leveraged tokens, and especially DeFi Yielding) unless you really, *really* know what you're doing (or want to lose everything).
 
-* ***Staking*** Staking consists of giving your tokens to a blockchain protocol. In return, your tokens generate interests after a while, usually between a yearly 4 to 20%, depending on the token and on whether or not your tokens are free to claim or locked for a period. This is a relatively safe approach since you're guaranteed to see your tokens back, and it's generally prefered over simply holding your tokens on a wallet. However, market price variations still apply to your tokens, so you may end up losing money in the very long run (or on the contrary, earning a lot).
+* ***Staking*** Staking consists of delegating your tokens to a blockchain protocol, so that it can generate new blocks. In return, your tokens generate interests after a while, usually between a yearly 4 to 20% rate, depending on the token and on whether or not your tokens are free to claim or locked for a short period. This is a relatively safe approach since you're guaranteed to see your tokens back, and it's generally prefered over simply holding your tokens on a wallet. However, market price variations still apply to your tokens, so you may end up losing money in the very long run (or on the contrary, earning a lot).
 
 * ***DeFi*** Decentralized Finance bloomed over 2021. It's essentially a set of financing tools empowered by a blockchain protocol, where you can yield, swap and lend tokens without the help of a third party service (typically a Centralized Exchange, or CEX, by using a Decentralized Exchange, or DEX). There are a lot of DeFi platforms out there, and I do have tokens in staking and yield farming on Polkadot, Kusama, Solana and Sora, but I won't discuss it here as I think it should be completely avoided for beginners. It's quite easy to get into crypto Ponzi and lose everything.
 
