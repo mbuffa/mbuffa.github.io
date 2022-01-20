@@ -59,7 +59,7 @@ You can of course leverage this in a lot of situations, but it basically allows 
 
 Also, a typo usually means a crash in the Ruby version. A typo in the Elixir variant just won't match (and in many cases, won't even compile at all) and the fallback will be used instead.
 
-* Elixir also has the pipe operator, which allows you to redirect the result of a statement toward the next one. So instead of writing:
+* Elixir also has the pipe operator, which allows you to redirect the result of a statement toward the next one, as its first argument. So instead of writing:
 ```elixir
 number = 1
 multiply = fn x -> x * 2 end
@@ -75,7 +75,7 @@ number
 |> IO.inspect
 ```
 
-And of course, it gets very handy when coupled with pattern matching, situations where you have to build a query with Ecto... It's very powerful, mindblowing, and a lot of languages try to implement their own version of the pipe operator.
+The example here is simplistic, but it gets very handy when coupled with pattern matching, situations where you have to build a query with Ecto... It's very powerful, even mindblowing, and a lot of languages try to implement their own version of the pipe operator.
 
 * Erlang/OTP is *insanely* powerful, and the fault-tolerancy is no joke. It gets a bit of time and a lot of practice to master the supervision tree and all the debugging tools that Erlang comes with, but then it lets you build fast, reliable apps with simpler stacks, distributed nodes and realtime capabilities handling an insane traffic. Say goodbye to that Sidekiq or Celery worker. You get everything to run synchronous and asynchronous tasks immediately and can do it on the same, single instance that handles your HTTP requests.
 
