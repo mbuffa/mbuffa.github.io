@@ -57,6 +57,8 @@ end
 
 You can of course leverage this in a lot of situations, but it basically allows you to split your logic into separate definitions, that usually gets less clutter over time. It also makes writing recursive functions a lot clearer.
 
+Also, a typo usually means a crash in the Ruby version. A typo in the Elixir variant just won't match (and in many cases, won't even compile at all) and the fallback will be used instead.
+
 * Elixir also has the pipe operator, which allows you to redirect the result of a statement toward the next one. So instead of writing:
 ```elixir
 number = 1
