@@ -4,7 +4,7 @@
   
 
   
-    <title>Maxime Buffa</title>
+    <title>Kubernetes: Creating and using Operators</title>
   
 
   
@@ -17,7 +17,7 @@
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
   <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
-  <meta name="description" content="My personal website with tips and rants." />
+  <meta name="description" content="A beginner guide to solve some issues with operators" />
 </head>
 <!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -165,43 +165,79 @@
 
     <div class="main-content">
       
-<article class="lonely">
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220122-kubernetes-operators/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220122-kubernetes-operators/#solving-this-with-an-operator">Solving this with an Operator</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220122-kubernetes-operators/#the-don-t-reinvent-the-wheel-way">The Don&#x27;t-Reinvent-The-Wheel way</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/tips/20220122-kubernetes-operators/#the-do-it-yourself-way">The Do-It-Yourself way</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
   <header>
-    <h3>Pages tagged with "k8s"</h3>
+    <h1 class="title">
+      Kubernetes: Creating and using Operators
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2022-01-22
+    </p>
+    
   </header>
-  <table class="articles">
-    <tbody>
-      
-      <tr>
-        <td>2022-01-22</td>
-        <td>
-          <a href="https://mbuffa.github.io/tips/20220122-kubernetes-operators/">Kubernetes: Creating and using Operators</a>
-        </td>
-      </tr>
-      
-      <tr>
-        <td>2021-12-20</td>
-        <td>
-          <a href="https://mbuffa.github.io/tips/20211220-kubectl-shortcuts/">Kubectl: Useful shortcuts</a>
-        </td>
-      </tr>
-      
-      <tr>
-        <td>2021-07-20</td>
-        <td>
-          <a href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/">Kustomize: Using Environment Variables</a>
-        </td>
-      </tr>
-      
-      <tr>
-        <td>2020-10-21</td>
-        <td>
-          <a href="https://mbuffa.github.io/tips/20201022-elixir-clustering-on-kubernetes/">Elixir: Clustering on Kubernetes</a>
-        </td>
-      </tr>
-      
-    </tbody>
-  </table>
+
+  <p><h2 id="context">Context</h2>
+<p>I recently had to deploy a variant of an existing application, with a small set of common REST APIs with additional endpoints, and a few specific applications to fit the business needs of that product. I encountered an issue though: my ingress configuration (using Traefik) needed to have access to my certificate in that same namespace. I'm pretty sure Kubernetes namespaces are completely isolated compartments, but I tried to access that secret in my default namespace nonetheless, without success.</p>
+<p>Also, that certificate would be renewed every once in a while.</p>
+<p>So I basically had three solutions:</p>
+<ul>
+<li>Copy the secret manually, initially and then after each certificate update</li>
+<li>Update the certificate update procedure, so that the person updating it would also update the one in my namespace</li>
+<li>Copy the secret on a regular basis, either with a Kubernetes CronJob or a deployed app</li>
+</ul>
+<p>The first solution was too error-prone. I'd rather write and validate a script once and schedule it, rather than trusting my self in six months, with clouded memory and human nature.</p>
+<p>The second solution would have required me to have access to that update procedure, and having anyone deploying in a new namespace the obligation to update that procedure (or warn about it) for each new namespace. Not really resilient to human errors and not scalable by definition.</p>
+<p>The third solution was the most tempting, but I found a more elegant and equally reliable way to do this.</p>
+<h2 id="solving-this-with-an-operator">Solving this with an Operator</h2>
+<p>A <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes Operator</a> is a fancy word for applications subscribing to the Kubernetes event loop and executing some code in return. Classic PubSub.</p>
+<p>Operators aren't a ressource as can be Pods, Deployments or ConfigMaps. They're just deployed apps with a certain design, and there are several ways to create one.</p>
+<h2 id="the-don-t-reinvent-the-wheel-way">The Don't-Reinvent-The-Wheel way</h2>
+<p>In my case, I wanted to have something running in a reanosably short timespan. There are ways to build your own operator &quot;from scratch&quot; (at least, without <a href="https://youtu.be/zSgiXGELjbc">having to invent the universe</a>), but I went for an &quot;out-of-the-box&quot; solution called <a href="https://github.com/flant/shell-operator">shell-operator</a>, allowing you to write a simple YAML manifest for the subscription, and some UNIX shell scripting for the code execution.</p>
+<p>The README is pretty straightforward and does a very good job, so I won't elaborate step-by-step on this. There are even examples, <a href="https://github.com/flant/shell-operator/tree/main/examples/101-monitor-pods">such as this one</a>. I wouldn't do a better job than the author himself. Advertising the use of Operators is the best I can do here :-)</p>
+<p>Anyway, you basically end up with a Dockerfile, a shell script both used to create the subscription hook and the code execution (in which you can of course run <code>kubectl apply -f</code> if it has the required permissions), and you only have to build your new container and deploy it.</p>
+<p>In my case, I ended up having a specific deployment for every namespace I deployed (and that is intended to not be a temporary namespace, and have a lifetime superior to the renewal period). I could have deployed only one operator and have it update the secret in all namespaces at once, but that basically killed the principle of compartmented and independant namespaces.</p>
+<h2 id="the-do-it-yourself-way">The Do-It-Yourself way</h2>
+<p>I also like to master what's happening and have a low-level understanding of things, so I'll try to update this article (or create a new one) about creating your own operator soon. Yeah, sorry, that section is currently a scam.</p>
+</p>
+  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+    crossorigin="anonymous" async>
+  </script>
 </article>
 
     </div>
