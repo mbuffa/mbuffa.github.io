@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<article class="lonely">
+  <header>
+    <h1 class="title">
+      {{ page.title }}
+    </h1>
+    {% if page.date %}
+    <p class="subtitle">
+      Published on {{ page.date | date(format="%Y-%m-%d") }}
+    </p>
+    {% endif %}
+  </header>
+
+  <p>{{ page.content | safe }}</p>
+</article>
+{% endblock content %}
