@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="lonely">
+  <header>
+    <h3>Bookmarks tagged with "{{ term.name }}"</h3>
+  </header>
+  <table class="articles">
+    <tbody>
+      {% for page in term.pages %}
+      <tr>
+        <td>{{ page.date }}</td>
+        <td>
+          <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</article>
+{% endblock content %}

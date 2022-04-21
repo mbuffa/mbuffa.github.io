@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="lonely">
+  <header>
+    <h3>Bookmarks</h3>
+  </header>
+  <div class="tag-cards">
+    {% for term in terms %}
+      <div class="tag-card">
+        <a href="{{ term.permalink | safe }}">{{ term.name }}</a>
+      </div>
+    {% endfor %}
+  </div>
+</article>
+{% endblock content %}
