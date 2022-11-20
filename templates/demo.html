@@ -42,9 +42,11 @@
   </header>
 
   {% if page.extra.wasm is defined %}
-    <canvas id="glcanvas" tabindex='1'></canvas>
+    <div class=""video-embed">
+      <canvas id="glcanvas" tabindex='1'></canvas>
+    </div>
     <script src="https://not-fl3.github.io/miniquad-samples/mq_js_bundle.js"></script>
-    <script>load("{{ page.extra.wasm }}");</script>
+    <script>load("{{ page.extra.wasm | safe }}");</script>
   {% endif %}
 
   {% if page.extra.url is defined %}

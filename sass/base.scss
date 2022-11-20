@@ -48,7 +48,11 @@ body {
 
   #glcanvas {
     margin: auto;
-    width: 100%;
+    display: block;
+    min-width: 400px;
+    min-height: 400px;
+    max-width: 640px;
+    max-height: 480px;
     border: 1px solid white;
     background-color: black;
     z-index: 10;
