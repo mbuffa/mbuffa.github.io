@@ -4,7 +4,7 @@
   
 
   
-    <title>Maxime Buffa</title>
+    <title>A* (A Star) Live Demo</title>
   
 
   
@@ -165,22 +165,78 @@
 
     <div class="main-content">
       
-<article class="lonely">
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-astar-live-demo/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-astar-live-demo/#what-is-a">What is A*?</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-astar-live-demo/#demo">Demo</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-astar-live-demo/#repo">Repo</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
   <header>
-    <h3>Pages tagged with "postgres"</h3>
+    <h1 class="title">
+      A* (A Star) Live Demo
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2022-11-20
+    </p>
+    
   </header>
-  <table class="articles">
-    <tbody>
-      
-      <tr>
-        <td>2021-07-06</td>
-        <td>
-          <a href="https://mbuffa.github.io/tips/20210706-postgres-filtering-with-count/">Postgres: Filtering with COUNT()</a>
-        </td>
-      </tr>
-      
-    </tbody>
-  </table>
+
+  
+
+  
+
+  
+    <img src="&#x2F;assets&#x2F;screenshots&#x2F;demos&#x2F;astar&#x2F;2022-11-20_16-48-00.png" />
+  
+
+  <p><h2 id="context">Context</h2>
+<p>This is a live demonstration of the A* pathfinding algorithm implemented in Elixir using LiveView. The implementation itself is a functional step-by-step version of the famous A* algorithm, which is most commonly used in video games.</p>
+<p>I hacked the original version of this demo over a weekend in Feb 2021, ingesting a lot of content about pathing, and a bit about LiveView, in order to showcase it during an internal talk at Pandascore. I got back to it and refactored the whole thing later to clean it up.</p>
+<p>Please keep in mind that this is, however, not a perfect example of algorithmic efficiency (there's a lot of linear search through lists and it could probably be better), and that there might be mistakes or imprecisions about my implementation.</p>
+<h2 id="what-is-a">What is A*?</h2>
+<div class="video-embed">
+    <iframe src="https://www.youtube.com/embed/-L-WgKMFuhE" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div>
+<h2 id="demo">Demo</h2>
+<p>Head over <a href="https://path-demo.fly.dev">Fly.io</a>.</p>
+<p>You control the robot. Pick a target, find the path, and walk the path.</p>
+<h2 id="repo">Repo</h2>
+<p>Source code is available on <a href="https://github.com/mbuffa/elixir-pathfinding-demo">Github</a>.</p>
+</p>
+  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+    crossorigin="anonymous" async>
+  </script>
 </article>
 
     </div>

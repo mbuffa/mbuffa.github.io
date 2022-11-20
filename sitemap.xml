@@ -11,7 +11,17 @@
         <lastmod>2021-11-01</lastmod>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/demos/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/demos/20221120-astar-live-demo/</loc>
+        <lastmod>2022-11-20</lastmod>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/demo/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/dev/</loc>
@@ -24,6 +34,9 @@
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/k8s/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/liveview/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/macos/</loc>
