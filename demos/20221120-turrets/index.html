@@ -4,7 +4,7 @@
   
 
   
-    <title>Maxime Buffa</title>
+    <title>Turrets</title>
   
 
   
@@ -165,29 +165,143 @@
 
     <div class="main-content">
       
-<article class="lonely">
+
+
+<aside>
+  <div class="toc">
+    <ol>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-turrets/#controls">Controls</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-turrets/#how-to-play">How to play</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-turrets/#context">Context</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-turrets/#goals">Goals</a>
+        
+      </li>
+      
+      <li>
+        <a href="https://mbuffa.github.io/demos/20221120-turrets/#history">History</a>
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article>
+
   <header>
-    <h3>Pages tagged with "rust"</h3>
+    <h1 class="title">
+      Turrets
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2022-11-20
+    </p>
+    
   </header>
-  <table class="articles">
-    <tbody>
-      
-      <tr>
-        <td>2022-11-20</td>
-        <td>
-          <a href="https://mbuffa.github.io/demos/20221120-turrets/">Turrets</a>
-        </td>
-      </tr>
-      
-      <tr>
-        <td>2022-09-10</td>
-        <td>
-          <a href="https://mbuffa.github.io/demos/20220910-dino-jump/">Dino Jump</a>
-        </td>
-      </tr>
-      
-    </tbody>
-  </table>
+
+  
+    <div class=""video-embed">
+      <canvas id="glcanvas" tabindex='1'></canvas>
+    </div>
+    <script src="https://not-fl3.github.io/miniquad-samples/mq_js_bundle.js"></script>
+    <script>load("/assets/demos/wasm/turret.wasm");</script>
+  
+
+  
+
+  
+
+  <p><p><a href="https://www.twitch.tv/relakksmakks">Follow the dev on Twitch</a></p>
+<h2 id="controls">Controls</h2>
+<ul>
+<li>Left mouse click: Place regular turret</li>
+<li>Right mouse click: Place laser turret</li>
+<li>Escape: Take manual control of standing by turrets</li>
+<li>Escape again: Take the turret back to automatic mode</li>
+</ul>
+<h2 id="how-to-play">How to play</h2>
+<p>There's neither winning nor losing mechanic at the moment, so you can take your time :D</p>
+<ul>
+<li>Targets will spawn from the top of the screen</li>
+<li>You can place turrets to destroy them; each turret has its own sensor and <code>will shoot automatically</code></li>
+<li>Place turrets using your muse: left click deploys a <code>regular turret</code>, right click deploys a <code>laser beam turret</code></li>
+<li>Regular turrets shoot projectiles at a medium pace (for 20 damage)</li>
+<li>Laser Beam turrets concentrate a beam on their target, inflicting low damage constantly</li>
+<li>Targets have 100 health points</li>
+</ul>
+<h2 id="context">Context</h2>
+<p>It's been a while since I wanted to prototype a small turret, similar to what can be found in Team Fortress 2:</p>
+<div class="video_embed">
+    <iframe src="https://www.youtube.com/embed/E6Aa0j3pQUc" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div>
+<p>The idea was basically to have a Turret featuring those characteristics:</p>
+<ul>
+<li>Separate Sensor and Cannon, with the Sensor moving left to right (60 degrees on each side)</li>
+<li>A basic AI able to operate the turret, switching its internal state and rotating the cannon to the next target</li>
+</ul>
+<p>And that's pretty much it. I didn't intend to make anything playable out of it, but I may end up refactoring on a regular basis and adding new features, as it's much funnier than I initially expected.</p>
+<p>Using Rust and Macroquad was truly a bless, although I'm still unsure on how to solve some issues I encountered. I approached Rust in 2015 initially, but got back to it only very recently, and both the language and its tooling are amazing. Macroquad is a fantastic library to prototype games, as well.</p>
+<p>I will probably continue streaming game dev, either this prototype, or new ones, so please <a href="https://www.twitch.tv/relakksmakks">head over to Twitch</a> if you're interested in that!</p>
+<h2 id="goals">Goals</h2>
+<p>Those items are on my To-Do list:</p>
+<ul>
+<li>Add more sounds and replace my awful placeholders (once I figured out how to make samples); got any SimCity 2000 vibe with that laser beam sound :D?</li>
+<li>As suggested on my Twitch channel, implement a network of sensors with a simple PubSub design, allowing one turret to alert the other ones; possibly adding the possibility to deploy Sensors directly as well</li>
+<li>Fix the laser beam collision detection (currently, if a target appears between a laser beam turret and its target, nothing happens)</li>
+<li>Fix the annoying right click behavior on that page (yeah, I know)</li>
+<li>Possibly refactor and make a game out of it, like a tower defense</li>
+</ul>
+<h2 id="history">History</h2>
+<ul>
+<li>
+<p>2022-11-20: Laser beam turrets!</p>
+</li>
+<li>
+<p>2022-11-15: More bug fixes</p>
+<ul>
+<li>Introduction of an Assets store</li>
+<li>Fixed target spawns</li>
+</ul>
+</li>
+<li>
+<p>2022-11-08: Various bug fixes</p>
+<ul>
+<li>Turrets can now follow their target</li>
+<li>Some sounds were added</li>
+</ul>
+</li>
+<li>
+<p>2022-11-07: Initial implementation</p>
+<ul>
+<li>One turret in the center of the screen, with a sensor moving left to right</li>
+<li>A functional cannon (manual)</li>
+<li>A functional AI, using the sensor to detect targets and rotating the cannon to shoot at them</li>
+<li>Target spawns from the top of the screen</li>
+</ul>
+</li>
+</ul>
+</p>
+  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+    crossorigin="anonymous" async>
+  </script>
 </article>
 
     </div>
