@@ -54,7 +54,7 @@
   {% endif %}
 
   {% if page.extra.screenshot is defined %}
-    <img src="{{ page.extra.screenshot }}" />
+    <img src="{{ page.extra.screenshot | safe }}" />
   {% endif %}
 
   <p>{{ page.content | safe }}</p>

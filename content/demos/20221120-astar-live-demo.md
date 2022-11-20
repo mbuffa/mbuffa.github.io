@@ -5,7 +5,8 @@ date = 2022-11-20
 tags = ["demo", "elixir", "liveview"]
 [extra]
 # url = "https://path-demo.fly.dev/"
-screenshot = "/assets/demos/screenshots/astar/2022-11-20_16-48-00.png"
+screenshot = "/assets/demos/screenshots/astar/2022-11-20_20-49-44.png"
+
 +++
 
 ## Context
