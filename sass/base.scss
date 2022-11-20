@@ -46,6 +46,14 @@ body {
     white-space: pre-wrap;
   }
 
+  #glcanvas {
+    margin: auto;
+    width: 100%;
+    border: 1px solid white;
+    background-color: black;
+    z-index: 10;
+  }
+
   .no-display {
     display: none;
   }
