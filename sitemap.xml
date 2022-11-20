@@ -14,6 +14,10 @@
         <loc>https://mbuffa.github.io/demos/</loc>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/demos/20220910-dino-jump/</loc>
+        <lastmod>2022-09-10</lastmod>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/demos/20221120-astar-live-demo/</loc>
         <lastmod>2022-11-20</lastmod>
     </url>
@@ -42,10 +46,16 @@
         <loc>https://mbuffa.github.io/tags/macos/</loc>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/tags/macroquad/</loc>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/postgres/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/rails/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/rust/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/wsl/</loc>
