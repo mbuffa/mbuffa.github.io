@@ -5,7 +5,7 @@ date = 2022-11-20
 tags = ["demo", "elixir", "liveview"]
 [extra]
 # url = "https://path-demo.fly.dev/"
-screenshot = "/assets/screenshots/demos/astar/2022-11-20_16-48-00.png"
+screenshot = "/assets/demos/screenshots/astar/2022-11-20_16-48-00.png"
 +++
 
 ## Context
@@ -19,7 +19,7 @@ Please keep in mind that this is, however, not a perfect example of algorithmic 
 {{ youtube(id="-L-WgKMFuhE", class="video-embed") }}
 
 ## Demo
-Head over [Fly.io](https://path-demo.fly.dev).
+Head over to [Fly.io](https://path-demo.fly.dev).
 
 You control the robot. Pick a target, find the path, and walk the path.
 
