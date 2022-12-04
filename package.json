@@ -11,8 +11,11 @@
   },
   "watch": {
     "watch": {
-      "patterns": ["templates/**/**"],
-      "extensions": "html",
+      "patterns": [
+        "styles/**/**",
+        "templates/**/**"
+      ],
+      "extensions": "css,html",
       "quiet": true
     }
   },
