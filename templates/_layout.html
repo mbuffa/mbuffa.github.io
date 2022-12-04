@@ -21,14 +21,19 @@
 
   <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
+
+  <!--
   <link class="stylesheet" rel="stylesheet" href="/base.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
   <link class="stylesheet" rel="stylesheet" href="/light.css" />
+  -->
+  
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
 
   <meta name="description" content="{{ meta_description }}" />
 </head>
 <!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
-<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+<body class="stylesheet-mode overflow-hidden h-full" onload="loadActiveStylesheet()">
   <script type="text/javascript">
     function getStylesheetModeTags() {
       return document.getElementsByClassName("stylesheet-mode");
@@ -138,32 +143,9 @@
   <div id='stars'></div>
   <div id='stars2'></div>
   <div id='stars3'></div>
-  <main>
-    <div class='navbar'>
-      <nav>
-        <ul>
-        {% set navbar = load_data(path="content/navbar.csv") %}
-        {% for link in navbar["records"] %}
-          <li><a href="{{ link.0 }}">{{ link.1 }}</a></li>
-        {% endfor %}
-          <!-- FIXME: Figure out what to do with it.
-          <li class="spotify-embed dark-only">
-            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li>
-          <li class="spotify-embed light-only">
-            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li> -->
-          <li>
-            <a class="css-switch" onClick="switchStylesheets()">
-              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
-              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
+
+  <main class="m-auto max-w-2xl h-screen overflow-y-scroll overflow-x-hidden">
+    {% include "layout/navbar.html" %}
 
     <div class="main-content">
       {% block content %} {% endblock %}
