@@ -2,8 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
+div.main-content {
+  @media screen and (max-width: 1499px) {
+    flex-flow: column wrap;
+  }
+}
+
+div.main-content aside .toc {
+  @media screen and (max-width: 1499px) {
+    position: static;
+  }
+}
+
+div.main-content aside, article {
+  @media screen and (max-width: 1499px) {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 html {
   font-family: 'Lato', sans-serif;
-  font-size: x-large;
-  font-weight: bolder;
+  /* font-size: x-large; */
+  /* font-weight: bolder; */
+  font-size: medium;
+}
+
+/* Migrate those rules to Tailwind */
+h1, h2, h3 {
+  margin: .5em;
+  padding: .5em;
+}
+
+h4, h5, h6 {
+  margin: .5em;
+}
+
+div.markdown-content img {
+  margin: auto;
+  display: flex;
+  max-width: 90%;
+}
+
+div.markdown-content img[src$="#cropped"] {
+  object-fit: scale-down;
+  width: 600px;
+}
+
+div.markdown-content ol, div.markdown-content ul {
+  margin: 1em;
+}
+
+div.markdown-content ul {
+  list-style-type: "- ";
+}
+
+div.markdown-content li {
+  margin: 1em;
+}
+
+div.markdown-content div.video-embed {
+  display: flex;
+  width: 100%;
+}
+
+div.markdown-content div.video-embed iframe {
+  margin: auto;
+  width: 600px;
+  height: 400px;
+}
+
+.w-125 {
+  width: 31.25rem; /* 500px */
+}
+
+.max-h-120 {
+  max-height: 30rem;/* 480px */
+}
+
+.min-w-100 {
+  min-width: 25rem; /* 400px */
+}
+
+.min-h-100 {
+  min-height: 25rem; /* 400px */
+}
+
+.top-50 {
+  top: 200px;
 }

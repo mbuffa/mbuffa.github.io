@@ -1,0 +1,5 @@
+{% macro link(href, title) %}
+  <a class="inline-block p-1 w-full underline hover:no-underline" href="{{href | safe}}">
+    {{ title }}
+  </a>
+{% endmacro link %}

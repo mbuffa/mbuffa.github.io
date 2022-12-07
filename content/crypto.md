@@ -2,7 +2,7 @@
 title = "Crypto"
 date = 2021-11-01
 description = "A short guide and a list of curated ressources to start investing or trading cryptocurrencies, such as Bitcoin or Ethereum"
-template = "article.html"
+template = "articles/article.html"
 +++
 
 ## Disclaimer
