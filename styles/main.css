@@ -2,27 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-div.main-content {
-  @media screen and (max-width: 1499px) {
-    flex-flow: column wrap;
-  }
-}
-
-div.main-content aside .toc {
-  @media screen and (max-width: 1499px) {
-    position: static;
-  }
-}
-
-div.main-content aside, article {
-  @media screen and (max-width: 1499px) {
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
 html {
-  font-family: 'Lato', sans-serif;
+  font-family: 'Lato', sans-serif, system-ui, -apple-system;
   /* font-size: x-large; */
   /* font-weight: bolder; */
   font-size: medium;
@@ -72,8 +53,16 @@ div.markdown-content div.video-embed iframe {
   height: 400px;
 }
 
+.w-120 {
+  width: 30rem; /* 480px */
+}
+
 .w-125 {
   width: 31.25rem; /* 500px */
+}
+
+.min-w-120 {
+  min-width: 30rem; /* 480px */
 }
 
 .max-h-120 {
