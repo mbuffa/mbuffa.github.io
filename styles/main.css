@@ -9,16 +9,6 @@ html {
   font-size: medium;
 }
 
-/* Migrate those rules to Tailwind */
-h1, h2, h3 {
-  margin: .5em;
-  padding: .5em;
-}
-
-h4, h5, h6 {
-  margin: .5em;
-}
-
 div.markdown-content img {
   margin: auto;
   display: flex;
@@ -51,6 +41,49 @@ div.markdown-content div.video-embed iframe {
   margin: auto;
   width: 600px;
   height: 400px;
+}
+
+div.markdown-content h1,
+div.markdown-content h2,
+div.markdown-content h3,
+div.markdown-content h4,
+div.markdown-content h5,
+div.markdown-content h6 {
+  margin: 1rem;
+  padding: 1rem;
+  font-weight: bolder;
+}
+
+div.markdown-content h1 {
+  font-size: xx-large;
+}
+
+div.markdown-content h2 {
+  font-size: x-large;
+}
+
+div.markdown-content h3 {
+  font-size: larger;
+}
+
+div.markdown-content h4 {
+  font-size: large;
+}
+
+div.markdown-content h5 {
+  font-size: medium;
+}
+
+div.markdown-content h6 {
+  font-weight: bold;
+}
+
+div.markdown-content p {
+  line-height: 1.625; /* Tailwind 'relaxed' */
+}
+
+div.markdown-content ul {
+  list-style-type:circle;
 }
 
 .w-120 {

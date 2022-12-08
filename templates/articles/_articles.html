@@ -1,0 +1,22 @@
+{% macro articles_list(title, list) %}
+<article class="w-full">
+  <header>
+    <h1 class="m-2 p-2 font-bold text-xl">{{ title }}</h1>
+  </header>
+
+  <table class="w-full">
+    <tbody>
+      {% for list_item in list %}
+      <tr class="leading-10">
+        <td class="w-1/6 p-0.5 pr-2 text-right">{{ list_item.date }}</td>
+        <td class="w-5/6">
+          <a
+            class="underline hover:no-underline" 
+            href="{{ list_item.permalink | safe }}">{{ list_item.title }}</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</article>
+{% endmacro articles_list %}

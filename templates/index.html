@@ -1,30 +1,8 @@
 {% extends "_layout.html" %}
 
-{% block content %}
-<article class="lonely">
-  <header>
-    <h1 class="title m-2 p-2">Tips & Thoughts</h1>
-  </header>
+{% import "articles/_articles.html" as macros %}
 
-  {% set section = get_section(path="tips/_index.md") %}
-    <table class="articles">
-      <tbody>
-        {% for page in section.pages %}
-        <tr>
-          <td>{{ page.date }}</td>
-          <td>
-            <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
-          </td>
-          <!-- <td>
-            {% for tag in page.taxonomies["tags"] %}
-              <div>
-                <a class="tag" href="/tags/{{ tag }}">{{ tag }}</a>
-              </div>
-            {% endfor %}
-          </td> -->
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-</article>
+{% block content %}
+{% set section = get_section(path="tips/_index.md") %}
+{{ macros::articles_list(title="Tips & Thoughts", list=section.pages) }}
 {% endblock content %}
