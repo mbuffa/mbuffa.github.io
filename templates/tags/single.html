@@ -1,21 +1,7 @@
 {% extends "_layout.html" %}
+{% import "articles/_articles.html" as macros %}
 
 {% block content %}
-<article class="lonely">
-  <header>
-    <h3>Pages tagged with "{{ term.name }}"</h3>
-  </header>
-  <table class="articles">
-    <tbody>
-      {% for page in term.pages %}
-      <tr>
-        <td>{{ page.date }}</td>
-        <td>
-          <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</article>
+{% set term_title = "Pages tagged as '" ~ term.name ~ "'" %}
+{{ macros::articles_list(title=term_title, list=term.pages) }}
 {% endblock content %}

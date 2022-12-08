@@ -1,0 +1,11 @@
+{% macro tags(terms) %}
+  <p class="max-w-fit">
+    {% for term in terms %}
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/{{term}}">
+        {{ term }}
+      </a>
+    {% endfor %}
+  </p>
+{% endmacro tags %}

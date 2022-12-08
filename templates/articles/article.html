@@ -1,6 +1,7 @@
 {% extends "_layout.html" %}
 
 {% import "articles/_toc_link.html" as macros %}
+{% import "articles/_tags.html" as tags %}
 
 {% block content %}
 
@@ -14,13 +15,16 @@
 <article class="w-full lg:w-4/6 pt-1 pb-1">
 {% endif %}
   <header class="text-center">
-    <h1 class="title">
+    <h1 class="text-2xl font-bold m-2 p-2">
       {{ page.title }}
     </h1>
     {% if page.date %}
     <p class="subtitle">
       Published on {{ page.date | date(format="%Y-%m-%d") }}
     </p>
+    {% endif %}
+    {% if page.taxonomies["tags"] %}
+      {{ tags::tags(terms=page.taxonomies["tags"]) }}
     {% endif %}
   </header>
 
