@@ -9,6 +9,11 @@ html {
   font-size: medium;
 }
 
+body {
+  overflow: hidden;
+  height: 100vh;
+}
+
 div.markdown-content img {
   margin: auto;
   display: flex;
