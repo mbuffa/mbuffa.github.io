@@ -1,18 +1,25 @@
-<div class="sticky h-12 w-11/12 m-auto mb-1 -top-px">
+<div class="sticky h-12 w-11/12 m-auto mb-1 -top-px dark:bg-neutral-900 dark:bg-opacity-80">
   <nav class="h-full w-full relative">
     <ul class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
     {% set navbar = load_data(path="content/navbar.csv") %}
     {% for link in navbar["records"] %}
       <li>
-        <a class="inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent"
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
            href="{{ link.0 }}"
         >{{ link.1 }}</a>
       </li>
     {% endfor %}
       <li class="ml-auto">
-        <a class="inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent" onClick="switchStylesheets()">
-          <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
-          <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
+        <a
+          class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block" name="sunny"></ion-icon>
         </a>
       </li>
     </ul>

@@ -29,11 +29,15 @@
   -->
   
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
 
   <meta name="description" content="{{ meta_description }}" />
 </head>
 <!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
-<body class="stylesheet-mode overflow-hidden h-full" onload="loadActiveStylesheet()">
+<body
+  class="stylesheet-mode overflow-hidden h-full"
+  onload="loadActiveStylesheet()"
+>
   <script type="text/javascript">
     function getStylesheetModeTags() {
       return document.getElementsByClassName("stylesheet-mode");
@@ -41,20 +45,6 @@
 
     function getStylesheetTogglerTags() {
       return document.getElementsByClassName("stylesheet-toggler");
-    }
-
-    function updateStylesheetToggler(mode) {
-      // ion-icon seems to apply `visibility:hidden` when it gets
-      // `display: none`, not sure why.
-      for (tag of getStylesheetTogglerTags()) {
-        if (tag.name == getIconNameForMode(mode)) {
-          tag.setAttribute("class", "stylesheet-toggler");
-          tag.style["visibility"] = "visible";
-        } else {
-          tag.setAttribute("class", "stylesheet-toggler no-display");
-          tag.style["visibility"] = "hidden";
-        }
-      }
     }
 
     function loadActiveStylesheet() {
@@ -70,7 +60,6 @@
         elem.setAttribute("class", classes);
       }
 
-      updateStylesheetToggler(activeStylesheet);
       updateGiscusStyle(activeStylesheet);
     }
 
@@ -134,7 +123,6 @@
       }
 
       localStorage.setItem("active-stylesheet", activeMode);
-      updateStylesheetToggler(activeMode);
       updateGiscusStyle(activeMode);
     }
   </script>
@@ -144,7 +132,7 @@
   <div id='stars2'></div>
   <div id='stars3'></div>
 
-  <main class="m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden">
+  <main class="m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden dark:text-white">
     {% include "layout/navbar.html" %}
 
     <div class="main-content

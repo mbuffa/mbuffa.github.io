@@ -94,6 +94,25 @@ div.markdown-content a:hover {
   text-decoration: none;
 }
 
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6 {
+  color: rgb(249, 115, 22);
+  text-shadow: 2px 2px black;
+}
+
+body.dark pre, body.dark code {
+  background-color: rgba(17, 17, 17, 9) !important;
+}
+
+body.dark pre {
+  border: 1px solid white;
+  border-top-width: 6px;
+}
+
 .w-120 {
   width: 30rem; /* 480px */
 }

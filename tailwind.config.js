@@ -4,6 +4,7 @@ module.exports = {
     './templates/**/*.html'
   ],
   darkMode: "class",
+  colors: {},
   theme: {
     extend: {},
   },

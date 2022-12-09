@@ -8,7 +8,11 @@
   <ul class="flex flex-row flex-wrap">
     {% for term in terms %}
       <li class="m-2 p-2">
-        <a class="underline hover:no-underline" href="{{ term.permalink | safe }}">{{ term.name }}</a>
+        <a
+          class="
+            underline hover:no-underline
+            dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+          href="{{ term.permalink | safe }}">{{ term.name }}</a>
       </li>
     {% endfor %}
   </ul>
