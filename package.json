@@ -2,7 +2,6 @@
   "name": "mbuffa.github.io",
   "version": "1.0.0",
   "description": "This is my humble homepage built with [Zola](https://www.getzola.org/documentation/deployment/github-pages/).",
-  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "npx npm-watch",
@@ -20,10 +19,11 @@
     }
   },
   "author": "Maxime Buffa",
-  "license": "",
   "dependencies": {
     "autoprefixer": "^10.4.13",
-    "npm-watch": "^0.11.0",
     "tailwindcss": "^3.2.4"
+  },
+  "devDependencies": {
+    "npm-watch": "^0.11.0"
   }
 }
