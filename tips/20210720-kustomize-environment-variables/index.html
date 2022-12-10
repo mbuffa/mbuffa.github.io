@@ -11,15 +11,14 @@
     
   
 
-  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
-  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
-  <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
   <meta name="description" content="Using Environment Variables in your Kubernetes manifests" />
 </head>
-<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<!-- FIXME: The onload is here to "fix" the icon display. -->
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
   <script type="text/javascript">
     function getStylesheetModeTags() {
@@ -28,20 +27,6 @@
 
     function getStylesheetTogglerTags() {
       return document.getElementsByClassName("stylesheet-toggler");
-    }
-
-    function updateStylesheetToggler(mode) {
-      // ion-icon seems to apply `visibility:hidden` when it gets
-      // `display: none`, not sure why.
-      for (tag of getStylesheetTogglerTags()) {
-        if (tag.name == getIconNameForMode(mode)) {
-          tag.setAttribute("class", "stylesheet-toggler");
-          tag.style["visibility"] = "visible";
-        } else {
-          tag.setAttribute("class", "stylesheet-toggler no-display");
-          tag.style["visibility"] = "hidden";
-        }
-      }
     }
 
     function loadActiveStylesheet() {
@@ -57,7 +42,6 @@
         elem.setAttribute("class", classes);
       }
 
-      updateStylesheetToggler(activeStylesheet);
       updateGiscusStyle(activeStylesheet);
     }
 
@@ -121,7 +105,6 @@
       }
 
       localStorage.setItem("active-stylesheet", activeMode);
-      updateStylesheetToggler(activeMode);
       updateGiscusStyle(activeMode);
     }
   </script>
@@ -130,59 +113,127 @@
   <div id='stars'></div>
   <div id='stars2'></div>
   <div id='stars3'></div>
-  <main>
-    <div class='navbar'>
-      <nav>
-        <ul>
-        
-        
-          <li><a href="&#x2F;">Home</a></li>
-        
-          <li><a href="&#x2F;demos">Demos</a></li>
-        
-          <li><a href="&#x2F;tags">Tags</a></li>
-        
-          <li><a href="&#x2F;contact">Contact</a></li>
-        
-          <!-- FIXME: Figure out what to do with it.
-          <li class="spotify-embed dark-only">
-            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li>
-          <li class="spotify-embed light-only">
-            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li> -->
-          <li>
-            <a class="css-switch" onClick="switchStylesheets()">
-              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
-              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
 
-    <div class="main-content">
+  <main
+    class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white
+    "
+  >
+    <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+    
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;"
+        >Home</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;demos"
+        >Demos</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;tags"
+        >Tags</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;contact"
+        >Contact</a>
+      </li>
+    
+      <li class="ml-auto">
+        <a
+          class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block" name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+    <div class="
+      w-11/12 m-auto mt-2
+      flex justify-center
+      flex-col flex-wrap
+      lg:flex-row lg:flex-nowrap
+      dark:bg-black dark:bg-opacity-60
+    ">
       
 
 
-<aside>
-  <div class="toc">
-    <ol>
+  <aside class="w-full lg:w-2/6">
+  <div class="sticky flex top-50">
+    <ol class="ml-6 list-decimal">
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#context">Context</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#context">
+    Context
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#prerequisites">Prerequisites</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#prerequisites">
+    Prerequisites
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#let-s-get-started">Let&#x27;s get started</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20210720-kustomize-environment-variables/#let-s-get-started">
+    Let&#x27;s get started
+  </a>
+
         
       </li>
       
@@ -192,10 +243,10 @@
 
 
 
-<article>
+<article class="w-full lg:w-4/6 pt-1 pb-1">
 
-  <header>
-    <h1 class="title">
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
       Kustomize: Using Environment Variables
     </h1>
     
@@ -203,173 +254,183 @@
       Published on 2021-07-20
     </p>
     
+    
+      
+  <p class="max-w-fit">
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/k8s">
+        k8s
+      </a>
+    
+  </p>
+
+    
   </header>
 
-  <p><h2 id="context">Context</h2>
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
 <p>Using environment variables in your Kubernetes manifests built with Kustomize may be a bit tedious, but I recently found how you can actually use some.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>I won't go into too much details about Kubernetes manifests, or deploying on Kubernetes in general. I learned as I went, mostly by looking at examples and documentation. If you're looking for tutorials or courses, there are pretty good resources available for free. <a href="https://prefetch.net/blog/2019/10/16/the-beginners-guide-to-creating-kubernetes-manifests/">This great article</a> gives some very useful tips to learn by doing, and there's even <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-interactive/">an official interactive tutorial</a>.</p>
 <p>And, of course, you also need to know Docker :-)</p>
 <h2 id="let-s-get-started">Let's get started</h2>
 <p>Let's take this stripped down deployment example, named <code>deployment.yaml</code>:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
-kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
-metadata</span><span style="color:#c0c5ce;">:
-  </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
-  namespace</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">default
-  labels</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">app</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
-spec</span><span style="color:#c0c5ce;">:
-  </span><span style="color:#bf616a;">selector</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">matchLabels</span><span style="color:#c0c5ce;">:
-      </span><span style="color:#bf616a;">app</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">MYAPP
-  replicas</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">1
-  </span><span style="color:#bf616a;">template</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">spec</span><span style="color:#c0c5ce;">:
-      </span><span style="color:#bf616a;">containers</span><span style="color:#c0c5ce;">:
-      - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
-        image</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP:latest
-        resources</span><span style="color:#c0c5ce;">:
-          </span><span style="color:#bf616a;">requests</span><span style="color:#c0c5ce;">:
-            </span><span style="color:#bf616a;">cpu</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">100m
-            memory</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">100Mi
-          limits</span><span style="color:#c0c5ce;">:
-            </span><span style="color:#bf616a;">cpu</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">100m
-            memory</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">100Mi
-        env</span><span style="color:#c0c5ce;">:
-        - </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">DB_HOST
-          valueFrom</span><span style="color:#c0c5ce;">:
-            </span><span style="color:#bf616a;">configMapKeyRef</span><span style="color:#c0c5ce;">:
-              </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">MYAPP
-              key</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">DB_HOST
-        ports</span><span style="color:#c0c5ce;">:
-        - </span><span style="color:#bf616a;">containerPort</span><span style="color:#c0c5ce;">:  </span><span style="color:#d08770;">80
-          </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
-      restartPolicy</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">Always
-</span></code></pre>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: apps&#x2F;v1
+kind: Deployment
+metadata:
+  name:  MYAPP
+  namespace: default
+  labels:
+    app:  MYAPP
+spec:
+  selector:
+    matchLabels:
+      app: MYAPP
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name:  MYAPP
+        image:  MYAPP:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: MYAPP
+              key: DB_HOST
+        ports:
+        - containerPort:  80
+          name:  MYAPP
+      restartPolicy: Always
+</code></pre>
 <p>You would typically associate this with a <code>Kustomization.yaml</code> file:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">resources</span><span style="color:#c0c5ce;">:
-  - </span><span style="color:#a3be8c;">deployment.yaml
-</span></code></pre>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
+  - deployment.yaml
+</code></pre>
 <p>This file allows you to define values shared across multiple resources (like services, jobs, ingresses...), either by editing it directly, like this:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">resources</span><span style="color:#c0c5ce;">:
-  - </span><span style="color:#bf616a;">deployment.yaml
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
+  - deployment.yaml
 
-namespace</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">web
-</span></code></pre>
+namespace: web
+</code></pre>
 <p>...or programmatically, for example, in your CI:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">$</span><span style="color:#c0c5ce;"> kustomize edit set namespace web
-</span></code></pre>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">$ kustomize edit set namespace web
+</code></pre>
 <p>Running <code>kustomize build .</code> in the directory containing your kustomization and deployment would result in an output that you could apply directly with <code>kubectl apply</code>. Just run <code>kustomize build . | kubectl apply -f -</code> and you're good to go.</p>
 <p>Now let's say we want to add an annotation at build time in our CI with an environment variable, like this:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
-kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
-metadata</span><span style="color:#c0c5ce;">:
-  </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">:  </span><span style="color:#bf616a;">MYAPP
-spec</span><span style="color:#c0c5ce;">:
-  </span><span style="color:#bf616a;">template</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">annotations</span><span style="color:#c0c5ce;">:
-      </span><span style="color:#bf616a;">example.com/git-commit</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">$(CI_COMMIT_SHORT_SHA)
-</span></code></pre>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: apps&#x2F;v1
+kind: Deployment
+metadata:
+  name:  MYAPP
+spec:
+  template:
+    annotations:
+      example.com&#x2F;git-commit: $(CI_COMMIT_SHORT_SHA)
+</code></pre>
 <p>This can be pretty useful if, for example, you want to do a new deployment even if the docker image specified in that deployment hasn't changed.</p>
 <p>Running <code>kustomize build .</code> now would keep that line as-is.</p>
 <p>In that case, you <em>could</em> add an annotation programmatically, like this:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">kustomize</span><span style="color:#c0c5ce;"> edit add annotation example.com/git_commit:$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA
-</span></code></pre>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">kustomize edit add annotation example.com&#x2F;git_commit:$CI_COMMIT_SHORT_SHA
+</code></pre>
 <p>But then all your resources would be affected, mearning that your service and ingress would also be redeployed in that example. In some cases, you really want to scope your changes.</p>
 <p>To use environment variables, you need to specify them in your <code>Kustomization</code>, in a <code>vars:</code> section:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">resources</span><span style="color:#c0c5ce;">:
-  - </span><span style="color:#bf616a;">deployment.yaml
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
+  - deployment.yaml
 
-vars</span><span style="color:#c0c5ce;">:
-- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA
-  objref</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">ConfigMap
-    name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">environment-variables
-    apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">v1
-  fieldref</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">fieldpath</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">data.CI_COMMIT_SHORT_SHA
-</span></code></pre>
+vars:
+- name: CI_COMMIT_SHORT_SHA
+  objref:
+    kind: ConfigMap
+    name: environment-variables
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CI_COMMIT_SHORT_SHA
+</code></pre>
 <p>Each variable defined here must have a name and references to let Kustomize know where it's supposed to get that value. In that example, I'm using a <code>configMap</code>, which is often the best option to store configuration.</p>
 <p>While we could definitely define a <code>ConfigMap</code> ourselves as part of our <code>Resources</code>, we would lose the ability to define that variable at build time.</p>
 <p>That's why we want to build a <code>ConfigMap</code> programmatically, by sourcing a file we'll create in our CI:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">resources</span><span style="color:#c0c5ce;">:
-  - </span><span style="color:#bf616a;">deployment.yaml
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
+  - deployment.yaml
 
-configMapGenerator</span><span style="color:#c0c5ce;">:
-- </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">environment-variables
-  envs</span><span style="color:#c0c5ce;">: [</span><span style="color:#a3be8c;">environment-properties.env</span><span style="color:#c0c5ce;">]
-  </span><span style="color:#bf616a;">behavior</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">create
+configMapGenerator:
+- name: environment-variables
+  envs: [environment-properties.env]
+  behavior: create
 
-vars</span><span style="color:#c0c5ce;">: </span><span style="color:#d08770;">...
-</span></code></pre>
+vars: ...
+</code></pre>
 <p>There's one more thing we need to do though. For the sake of testing your code locally, just create a file named <code>environment-properties.env</code> containing the following content:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">CI_COMMIT_SHORT_SHA=unknown
-</span></code></pre>
+<pre><code>CI_COMMIT_SHORT_SHA=unknown
+</code></pre>
 <p>(You should keep that file tracked in your CI, it would make debugging locally easier.)</p>
 <p>Running <code>kustomize build .</code> at this point would, still, keep that variable as-is. That's because we try to substitute a value in a field that Kustomize doesn't look in by default, probably for performance or security concerns.</p>
 <p>To fix this, we need to add a custom transformer. Put that in your Kustomization:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">configurations</span><span style="color:#c0c5ce;">:
-  - </span><span style="color:#a3be8c;">env-var-transformer.yaml
-</span></code></pre>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">configurations:
+  - env-var-transformer.yaml
+</code></pre>
 <p>And then create <code>env-var-transformer.yaml</code> with that content:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">varReference</span><span style="color:#c0c5ce;">:
-  - </span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
-    path</span><span style="color:#c0c5ce;">: </span><span style="color:#a3be8c;">spec/template/metadata/annotations
-</span></code></pre>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">varReference:
+  - kind: Deployment
+    path: spec&#x2F;template&#x2F;metadata&#x2F;annotations
+</code></pre>
 <p>Now, running <code>kustomize build .</code> locally should give you the expected result.</p>
 <p>Finally, in our CI job, we can build that file:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#96b5b4;">echo</span><span style="color:#c0c5ce;"> CI_COMMIT_SHORT_SHA=$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA </span><span style="color:#c0c5ce;">&gt; environment-properties.env
-</span><span style="color:#65737e;"># And then, you just have to apply your changes:
-</span><span style="color:#c0c5ce;">kustomize build . |</span><span style="color:#bf616a;">kubectl</span><span style="color:#c0c5ce;"> apply</span><span style="color:#bf616a;"> -f</span><span style="color:#c0c5ce;"> -
-</span></code></pre>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">echo CI_COMMIT_SHORT_SHA=$CI_COMMIT_SHORT_SHA &gt; environment-properties.env
+# And then, you just have to apply your changes:
+kustomize build . |kubectl apply -f -
+</code></pre>
 <p>Now running <code>kustomize build .</code> would result in this :-)</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">v1
-data</span><span style="color:#c0c5ce;">:
-  </span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA</span><span style="color:#c0c5ce;">: &quot;</span><span style="color:#a3be8c;">123456</span><span style="color:#c0c5ce;">&quot;
-</span><span style="color:#bf616a;">kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">ConfigMap
-metadata</span><span style="color:#c0c5ce;">:
-  </span><span style="color:#bf616a;">name</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">environment-variables-2t266m664k
-</span><span style="color:#c0c5ce;">---
-</span><span style="color:#bf616a;">apiVersion</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">apps/v1
-kind</span><span style="color:#c0c5ce;">: </span><span style="color:#bf616a;">Deployment
-spec</span><span style="color:#c0c5ce;">:
-  </span><span style="color:#bf616a;">template</span><span style="color:#c0c5ce;">:
-    </span><span style="color:#bf616a;">annotations</span><span style="color:#c0c5ce;">:
-      </span><span style="color:#bf616a;">example.com/git-commit</span><span style="color:#c0c5ce;">: &quot;</span><span style="color:#a3be8c;">123456</span><span style="color:#c0c5ce;">&quot;
-</span></code></pre>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: v1
+data:
+  CI_COMMIT_SHORT_SHA: &quot;123456&quot;
+kind: ConfigMap
+metadata:
+  name: environment-variables-2t266m664k
+---
+apiVersion: apps&#x2F;v1
+kind: Deployment
+spec:
+  template:
+    annotations:
+      example.com&#x2F;git-commit: &quot;123456&quot;
+</code></pre>
 <p>Tada!</p>
 <p>Kustomize has a predefined list of fields it'll actually replace corresponding patterns with environment variables. You can check this list <a href="https://github.com/kubernetes-sigs/kustomize/blob/a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce/api/konfig/builtinpluginconsts/varreference.go">directly in the repository</a>. If you want to do variable substitution in a field that is not in that list, you can follow the section <code>I want to put $VAR in some (currently disallowed) field</code> <a href="https://github.com/kubernetes-sigs/kustomize/issues/2052">on this Github issue</a>, which points to the aforementioned source file.</p>
 <p>Hope this will help some people stumbling around here.</p>
-</p>
-  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
-    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
-    crossorigin="anonymous" async>
-  </script>
+
+  </div>
+
+  
+    <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+      data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+      data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+      crossorigin="anonymous" async>
+    </script>
+  
 </article>
 
     </div>
 
-    <footer>
-      <span>
-        Proudly written with
-        <a href="https://www.getzola.org/" target="_blank">Zola</a>
-      </span>
-    </footer>
+    <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://www.getzola.org/" target="_blank">Zola</a> and <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+  </span>
+</footer>
     <br>
   </main>
 

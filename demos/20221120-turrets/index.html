@@ -11,15 +11,14 @@
     
   
 
-  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
-  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
-  <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
   <meta name="description" content="My personal website with tips and rants." />
 </head>
-<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<!-- FIXME: The onload is here to "fix" the icon display. -->
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
   <script type="text/javascript">
     function getStylesheetModeTags() {
@@ -28,20 +27,6 @@
 
     function getStylesheetTogglerTags() {
       return document.getElementsByClassName("stylesheet-toggler");
-    }
-
-    function updateStylesheetToggler(mode) {
-      // ion-icon seems to apply `visibility:hidden` when it gets
-      // `display: none`, not sure why.
-      for (tag of getStylesheetTogglerTags()) {
-        if (tag.name == getIconNameForMode(mode)) {
-          tag.setAttribute("class", "stylesheet-toggler");
-          tag.style["visibility"] = "visible";
-        } else {
-          tag.setAttribute("class", "stylesheet-toggler no-display");
-          tag.style["visibility"] = "hidden";
-        }
-      }
     }
 
     function loadActiveStylesheet() {
@@ -57,7 +42,6 @@
         elem.setAttribute("class", classes);
       }
 
-      updateStylesheetToggler(activeStylesheet);
       updateGiscusStyle(activeStylesheet);
     }
 
@@ -121,7 +105,6 @@
       }
 
       localStorage.setItem("active-stylesheet", activeMode);
-      updateStylesheetToggler(activeMode);
       updateGiscusStyle(activeMode);
     }
   </script>
@@ -130,74 +113,166 @@
   <div id='stars'></div>
   <div id='stars2'></div>
   <div id='stars3'></div>
-  <main>
-    <div class='navbar'>
-      <nav>
-        <ul>
-        
-        
-          <li><a href="&#x2F;">Home</a></li>
-        
-          <li><a href="&#x2F;demos">Demos</a></li>
-        
-          <li><a href="&#x2F;tags">Tags</a></li>
-        
-          <li><a href="&#x2F;contact">Contact</a></li>
-        
-          <!-- FIXME: Figure out what to do with it.
-          <li class="spotify-embed dark-only">
-            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li>
-          <li class="spotify-embed light-only">
-            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li> -->
-          <li>
-            <a class="css-switch" onClick="switchStylesheets()">
-              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
-              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
 
-    <div class="main-content">
+  <main
+    class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white
+    "
+  >
+    <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+    
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;"
+        >Home</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;demos"
+        >Demos</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;tags"
+        >Tags</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;contact"
+        >Contact</a>
+      </li>
+    
+      <li class="ml-auto">
+        <a
+          class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block" name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+    <div class="
+      w-11/12 m-auto mt-2
+      flex justify-center
+      flex-col flex-wrap
+      lg:flex-row lg:flex-nowrap
+      dark:bg-black dark:bg-opacity-60
+    ">
       
 
 
-<aside>
-  <div class="toc">
-    <ol>
+  <aside class="w-full lg:w-2/6">
+  <div class="sticky flex top-50">
+    <ol class="ml-6 list-decimal">
       
       <li>
-        <a href="https://mbuffa.github.io/demos/20221120-turrets/#controls">Controls</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/demos/20221120-turrets/#controls">
+    Controls
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/demos/20221120-turrets/#how-to-play">How to play</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/demos/20221120-turrets/#how-to-play">
+    How to play
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/demos/20221120-turrets/#context">Context</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/demos/20221120-turrets/#context">
+    Context
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/demos/20221120-turrets/#goals">Goals</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/demos/20221120-turrets/#goals">
+    Goals
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/demos/20221120-turrets/#history">History</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/demos/20221120-turrets/#history">
+    History
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/demos/20221120-turrets/#repo">Repo</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/demos/20221120-turrets/#repo">
+    Repo
+  </a>
+
         
       </li>
       
@@ -207,10 +282,10 @@
 
 
 
-<article>
+<article class="w-full lg:w-4/6 pt-1 pb-1">
 
-  <header>
-    <h1 class="title">
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
       Turrets
     </h1>
     
@@ -218,11 +293,36 @@
       Published on 2022-11-20
     </p>
     
+    
+      
+  <p class="max-w-fit">
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/demo">
+        demo
+      </a>
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/rust">
+        rust
+      </a>
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/macroquad">
+        macroquad
+      </a>
+    
+  </p>
+
+    
   </header>
 
   
     <div class=""video-embed">
-      <canvas id="glcanvas" tabindex='1'></canvas>
+      <canvas id="glcanvas" class="m-auto block min-w-100 min-h-100 max-w-screen-sm max-h-120 border border-solid border-white z-10" tabindex='1'></canvas>
     </div>
     <script src="https://not-fl3.github.io/miniquad-samples/mq_js_bundle.js"></script>
     <script>load("/assets/demos/wasm/turret.wasm");</script>
@@ -232,7 +332,8 @@
 
   
 
-  <p><p><a href="https://www.twitch.tv/relakksmakks">Follow the dev on Twitch</a></p>
+  <div class="markdown-content">
+    <p><a href="https://www.twitch.tv/relakksmakks">Follow the dev on Twitch</a></p>
 <h2 id="controls">Controls</h2>
 <ul>
 <li>Left mouse click: Place regular turret</li>
@@ -253,7 +354,7 @@
 <h2 id="context">Context</h2>
 <p>It's been a while since I wanted to prototype a small turret, similar to what can be found in Team Fortress 2:</p>
 <div class="video_embed">
-    <iframe src="https://www.youtube.com/embed/E6Aa0j3pQUc" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    <iframe src="https://www.youtube-nocookie.com/embed/E6Aa0j3pQUc" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 </div>
 <p>The idea was basically to have a Turret featuring those characteristics:</p>
 <ul>
@@ -303,22 +404,25 @@
 </ul>
 <h2 id="repo">Repo</h2>
 <p>Source code is available on <a href="https://github.com/mbuffa/game-prototypes/tree/01-turret/01-turret">Github</a></p>
-</p>
-  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
-    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
-    crossorigin="anonymous" async>
-  </script>
+
+  </div>
+
+  
+    <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+      data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+      data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+      crossorigin="anonymous" async>
+    </script>
+  
 </article>
 
     </div>
 
-    <footer>
-      <span>
-        Proudly written with
-        <a href="https://www.getzola.org/" target="_blank">Zola</a>
-      </span>
-    </footer>
+    <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://www.getzola.org/" target="_blank">Zola</a> and <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+  </span>
+</footer>
     <br>
   </main>
 

@@ -11,15 +11,14 @@
     
   
 
-  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
-  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
-  <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
   <meta name="description" content="My personal website with tips and rants." />
 </head>
-<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<!-- FIXME: The onload is here to "fix" the icon display. -->
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
   <script type="text/javascript">
     function getStylesheetModeTags() {
@@ -28,20 +27,6 @@
 
     function getStylesheetTogglerTags() {
       return document.getElementsByClassName("stylesheet-toggler");
-    }
-
-    function updateStylesheetToggler(mode) {
-      // ion-icon seems to apply `visibility:hidden` when it gets
-      // `display: none`, not sure why.
-      for (tag of getStylesheetTogglerTags()) {
-        if (tag.name == getIconNameForMode(mode)) {
-          tag.setAttribute("class", "stylesheet-toggler");
-          tag.style["visibility"] = "visible";
-        } else {
-          tag.setAttribute("class", "stylesheet-toggler no-display");
-          tag.style["visibility"] = "hidden";
-        }
-      }
     }
 
     function loadActiveStylesheet() {
@@ -57,7 +42,6 @@
         elem.setAttribute("class", classes);
       }
 
-      updateStylesheetToggler(activeStylesheet);
       updateGiscusStyle(activeStylesheet);
     }
 
@@ -121,7 +105,6 @@
       }
 
       localStorage.setItem("active-stylesheet", activeMode);
-      updateStylesheetToggler(activeMode);
       updateGiscusStyle(activeMode);
     }
   </script>
@@ -130,54 +113,114 @@
   <div id='stars'></div>
   <div id='stars2'></div>
   <div id='stars3'></div>
-  <main>
-    <div class='navbar'>
-      <nav>
-        <ul>
-        
-        
-          <li><a href="&#x2F;">Home</a></li>
-        
-          <li><a href="&#x2F;demos">Demos</a></li>
-        
-          <li><a href="&#x2F;tags">Tags</a></li>
-        
-          <li><a href="&#x2F;contact">Contact</a></li>
-        
-          <!-- FIXME: Figure out what to do with it.
-          <li class="spotify-embed dark-only">
-            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li>
-          <li class="spotify-embed light-only">
-            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li> -->
-          <li>
-            <a class="css-switch" onClick="switchStylesheets()">
-              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
-              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
 
-    <div class="main-content">
+  <main
+    class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white
+    "
+  >
+    <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+    
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;"
+        >Home</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;demos"
+        >Demos</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;tags"
+        >Tags</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;contact"
+        >Contact</a>
+      </li>
+    
+      <li class="ml-auto">
+        <a
+          class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block" name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+    <div class="
+      w-11/12 m-auto mt-2
+      flex justify-center
+      flex-col flex-wrap
+      lg:flex-row lg:flex-nowrap
+      dark:bg-black dark:bg-opacity-60
+    ">
       
 
 
-<aside>
-  <div class="toc">
-    <ol>
+  <aside class="w-full lg:w-2/6">
+  <div class="sticky flex top-50">
+    <ol class="ml-6 list-decimal">
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/#context">Context</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/#context">
+    Context
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/#how">How</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200815-rails-deprecate-activerecord-attribute/#how">
+    How
+  </a>
+
         
       </li>
       
@@ -187,10 +230,10 @@
 
 
 
-<article>
+<article class="w-full lg:w-4/6 pt-1 pb-1">
 
-  <header>
-    <h1 class="title">
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
       Rails: Deprecate an ActiveRecord attribute
     </h1>
     
@@ -198,9 +241,29 @@
       Published on 2020-08-15
     </p>
     
+    
+      
+  <p class="max-w-fit">
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/rails">
+        rails
+      </a>
+    
+  </p>
+
+    
   </header>
 
-  <p><h2 id="context">Context</h2>
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
 <p>When working on a growing application relying on a database, it is not uncommon to have a data model that collects dust: some of its data may become obsolete, but you may not want to delete it just yet, because you may need to migrate it, prepare its deletion later or keep it as history.</p>
 <p>You might want to flag this data as deprecated, so that no one (including you) would rely on this no longer updated or relevant data.</p>
 <h2 id="how">How</h2>
@@ -213,47 +276,47 @@
 <li>shaming your coworkers on Slack with a bot message</li>
 </ul>
 <p>But let's keep it simple for the time being:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#65737e;"># app/deprecators/field_deprecator.rb
-</span><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">FieldDeprecator
-  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">deprecation_warning</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">field</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">replacement</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">_caller_backtrace </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">nil</span><span style="color:#c0c5ce;">)
-    message = &quot;#{field}</span><span style="color:#a3be8c;"> is deprecated, please favor </span><span style="color:#c0c5ce;">#{replacement}&quot;
-    </span><span style="color:#ebcb8b;">Kernel</span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">warn</span><span style="color:#c0c5ce;"> message
-  </span><span style="color:#b48ead;">end
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby"># app&#x2F;deprecators&#x2F;field_deprecator.rb
+class FieldDeprecator
+  def deprecation_warning(field, replacement, _caller_backtrace = nil)
+    message = &quot;#{field} is deprecated, please favor #{replacement}&quot;
+    Kernel.warn message
+  end
 end
-</span></code></pre>
+</code></pre>
 <p>We're not respecting the semantics of the second argument, but hey, this is duck-typing :trollface:</p>
 <p>Then, all we have to do is to add a call to this class method in our model:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">Racoon </span><span style="color:#eff1f5;">&lt; </span><span style="color:#a3be8c;">ApplicationRecord
-</span><span style="color:#c0c5ce;">  deprecate \
-    </span><span style="color:#a3be8c;">owner_id: </span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">Racoon#caretaker_id</span><span style="color:#c0c5ce;">&#39;,
-    </span><span style="color:#65737e;"># ... any other attribute you need to deprecate.
-    </span><span style="color:#a3be8c;">deprecator: </span><span style="color:#ebcb8b;">FieldDeprecator</span><span style="color:#c0c5ce;">.</span><span style="color:#8fa1b3;">new
-</span><span style="color:#b48ead;">end
-</span></code></pre>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">class Racoon &lt; ApplicationRecord
+  deprecate \
+    owner_id: &#x27;Racoon#caretaker_id&#x27;,
+    # ... any other attribute you need to deprecate.
+    deprecator: FieldDeprecator.new
+end
+</code></pre>
 <p>With our current deprecator, this would output a warning message everytime this field is being read and updated:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">&gt; Racoon.first.owner_id
+<pre><code>&gt; Racoon.first.owner_id
 owner_id is deprecated, please favor Racoon#caretaker_id
-</span></code></pre>
+</code></pre>
 <p><em>Et voilà.</em></p>
-</p>
-  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
-    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
-    crossorigin="anonymous" async>
-  </script>
+
+  </div>
+
+  
+    <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+      data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+      data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+      crossorigin="anonymous" async>
+    </script>
+  
 </article>
 
     </div>
 
-    <footer>
-      <span>
-        Proudly written with
-        <a href="https://www.getzola.org/" target="_blank">Zola</a>
-      </span>
-    </footer>
+    <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://www.getzola.org/" target="_blank">Zola</a> and <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+  </span>
+</footer>
     <br>
   </main>
 

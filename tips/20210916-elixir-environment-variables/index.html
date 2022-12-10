@@ -11,15 +11,14 @@
     
   
 
-  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
-  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
-  <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
   <meta name="description" content="A short guide about dealing with environment variables in your Elixir project" />
 </head>
-<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<!-- FIXME: The onload is here to "fix" the icon display. -->
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
   <script type="text/javascript">
     function getStylesheetModeTags() {
@@ -28,20 +27,6 @@
 
     function getStylesheetTogglerTags() {
       return document.getElementsByClassName("stylesheet-toggler");
-    }
-
-    function updateStylesheetToggler(mode) {
-      // ion-icon seems to apply `visibility:hidden` when it gets
-      // `display: none`, not sure why.
-      for (tag of getStylesheetTogglerTags()) {
-        if (tag.name == getIconNameForMode(mode)) {
-          tag.setAttribute("class", "stylesheet-toggler");
-          tag.style["visibility"] = "visible";
-        } else {
-          tag.setAttribute("class", "stylesheet-toggler no-display");
-          tag.style["visibility"] = "hidden";
-        }
-      }
     }
 
     function loadActiveStylesheet() {
@@ -57,7 +42,6 @@
         elem.setAttribute("class", classes);
       }
 
-      updateStylesheetToggler(activeStylesheet);
       updateGiscusStyle(activeStylesheet);
     }
 
@@ -121,7 +105,6 @@
       }
 
       localStorage.setItem("active-stylesheet", activeMode);
-      updateStylesheetToggler(activeMode);
       updateGiscusStyle(activeMode);
     }
   </script>
@@ -130,59 +113,127 @@
   <div id='stars'></div>
   <div id='stars2'></div>
   <div id='stars3'></div>
-  <main>
-    <div class='navbar'>
-      <nav>
-        <ul>
-        
-        
-          <li><a href="&#x2F;">Home</a></li>
-        
-          <li><a href="&#x2F;demos">Demos</a></li>
-        
-          <li><a href="&#x2F;tags">Tags</a></li>
-        
-          <li><a href="&#x2F;contact">Contact</a></li>
-        
-          <!-- FIXME: Figure out what to do with it.
-          <li class="spotify-embed dark-only">
-            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li>
-          <li class="spotify-embed light-only">
-            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li> -->
-          <li>
-            <a class="css-switch" onClick="switchStylesheets()">
-              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
-              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
 
-    <div class="main-content">
+  <main
+    class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white
+    "
+  >
+    <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+    
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;"
+        >Home</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;demos"
+        >Demos</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;tags"
+        >Tags</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;contact"
+        >Contact</a>
+      </li>
+    
+      <li class="ml-auto">
+        <a
+          class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block" name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+    <div class="
+      w-11/12 m-auto mt-2
+      flex justify-center
+      flex-col flex-wrap
+      lg:flex-row lg:flex-nowrap
+      dark:bg-black dark:bg-opacity-60
+    ">
       
 
 
-<aside>
-  <div class="toc">
-    <ol>
+  <aside class="w-full lg:w-2/6">
+  <div class="sticky flex top-50">
+    <ol class="ml-6 list-decimal">
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#context">Context</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#context">
+    Context
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#what-happened">What happened</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#what-happened">
+    What happened
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#solutions">Solutions</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20210916-elixir-environment-variables/#solutions">
+    Solutions
+  </a>
+
         
       </li>
       
@@ -192,10 +243,10 @@
 
 
 
-<article>
+<article class="w-full lg:w-4/6 pt-1 pb-1">
 
-  <header>
-    <h1 class="title">
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
       Elixir: Using Environment Variables
     </h1>
     
@@ -203,49 +254,63 @@
       Published on 2021-09-16
     </p>
     
+    
+      
+  <p class="max-w-fit">
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/elixir">
+        elixir
+      </a>
+    
+  </p>
+
+    
   </header>
 
-  <p><h2 id="context">Context</h2>
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
 <p>An environment variable is a widespread programming concept that refers to a value coming from the system, being read by an application at runtime. Elixir can be a bit surprising on that aspect for beginners.</p>
 <p>This is one way of accessing an environment variable:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">&gt; HELLO=world iex
+<pre><code>&gt; HELLO=world iex
 iex(1)&gt; System.get_env(&quot;HELLO&quot;)
 &quot;world&quot;
-</span></code></pre>
+</code></pre>
 <p>And the same call would work in your application source code.</p>
 <p>However, you may want to avoid scattering those calls in every corner, and use a config file instead to centralize your settings and your default values.</p>
 <p>Newer versions of Mix no longer generate config files by default, so you'd have to create one of those, like this:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">mix</span><span style="color:#c0c5ce;"> new test
-</span><span style="color:#96b5b4;">cd</span><span style="color:#c0c5ce;"> test
-</span><span style="color:#bf616a;">mkdir</span><span style="color:#c0c5ce;"> config
-</span><span style="color:#bf616a;">touch</span><span style="color:#c0c5ce;"> config/config.exs
-</span></code></pre>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">mix new test
+cd test
+mkdir config
+touch config&#x2F;config.exs
+</code></pre>
 <p>And edit your <code>config/config.exs</code> file, like this:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#b48ead;">import </span><span style="color:#ebcb8b;">Config
+<pre data-lang="elixir" class="language-elixir "><code class="language-elixir" data-lang="elixir">import Config
 
-</span><span style="color:#c0c5ce;">config </span><span style="color:#a3be8c;">:test</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">hello: </span><span style="color:#ebcb8b;">System</span><span style="color:#c0c5ce;">.get_env(&quot;</span><span style="color:#a3be8c;">HELLO</span><span style="color:#c0c5ce;">&quot;)
-</span></code></pre>
+config :test, hello: System.get_env(&quot;HELLO&quot;)
+</code></pre>
 <p>And lastly, modify <code>lib/test.ex</code> like this, to actually use the key-value pair we defined:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">module </span><span style="color:#ebcb8b;">Test </span><span style="color:#b48ead;">do
-  </span><span style="color:#65737e;"># ...
-  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">hello </span><span style="color:#b48ead;">do
-    </span><span style="color:#ebcb8b;">Application</span><span style="color:#c0c5ce;">.get_env(</span><span style="color:#a3be8c;">:test</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">:hello</span><span style="color:#c0c5ce;">, &quot;</span><span style="color:#a3be8c;">default</span><span style="color:#c0c5ce;">&quot;)
-  </span><span style="color:#b48ead;">end
+<pre data-lang="elixir" class="language-elixir "><code class="language-elixir" data-lang="elixir">module Test do
+  # ...
+  def hello do
+    Application.get_env(:test, :hello, &quot;default&quot;)
+  end
 end
-</span></code></pre>
+</code></pre>
 <p>Now, we want to produce a build, but let's define our environment variable just before we do that:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#b48ead;">export </span><span style="color:#bf616a;">HELLO</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">foo
-</span><span style="color:#bf616a;">MIX_ENV</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">prod </span><span style="color:#bf616a;">mix</span><span style="color:#c0c5ce;"> release
-</span></code></pre>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">export HELLO=foo
+MIX_ENV=prod mix release
+</code></pre>
 <p>Now let's run an interactive terminal to our build, and let's override that env variable along the way:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#bf616a;">HELLO</span><span style="color:#c0c5ce;">=</span><span style="color:#a3be8c;">bar </span><span style="color:#bf616a;">./_build/prod/rel/test/bin/test</span><span style="color:#c0c5ce;"> start_iex
-</span></code></pre>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">HELLO=bar .&#x2F;_build&#x2F;prod&#x2F;rel&#x2F;test&#x2F;bin&#x2F;test start_iex
+</code></pre>
 <p>There, calling <code>Test.hello</code> would return &quot;foo&quot;, not &quot;bar&quot;.</p>
 <p>You can easily get surprises when releasing your first Elixir app, because this is not something you can reproduce with <code>iex -S mix</code>.</p>
 <h2 id="what-happened">What happened</h2>
@@ -254,33 +319,35 @@ end
 <p>One exception to that is the Elixir 1.11 addition <code>config/runtime.exs</code> file, meant to be &quot;compiled&quot; at runtime.</p>
 <p>Of course, you could argue that using <code>System.get_env</code> directly in your source code would work, but I would say this wouldn't be a great idea ;-)</p>
 <p>There's an alternative to <code>config/runtime.exs</code> though, <a href="https://hex.pm/packages/env">which is the <code>env</code> library</a>. It lets you define tuples in your config files, and a getter similar to <code>Application.get_env</code>:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#65737e;"># In your config files:
-</span><span style="color:#b48ead;">import </span><span style="color:#ebcb8b;">Config
+<pre data-lang="elixir" class="language-elixir "><code class="language-elixir" data-lang="elixir"># In your config files:
+import Config
 
-</span><span style="color:#c0c5ce;">config </span><span style="color:#a3be8c;">:test</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">hello: </span><span style="color:#c0c5ce;">{</span><span style="color:#a3be8c;">:system</span><span style="color:#c0c5ce;">, &quot;</span><span style="color:#a3be8c;">HELLO</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">world</span><span style="color:#c0c5ce;">&quot;}
+config :test, hello: {:system, &quot;HELLO&quot;, &quot;world&quot;}
 
-</span><span style="color:#65737e;"># In your codebase:
-</span><span style="color:#ebcb8b;">Env</span><span style="color:#c0c5ce;">.fetch(</span><span style="color:#a3be8c;">:test</span><span style="color:#c0c5ce;">, </span><span style="color:#a3be8c;">:hello</span><span style="color:#c0c5ce;">)
-</span></code></pre>
+# In your codebase:
+Env.fetch(:test, :hello)
+</code></pre>
 <p><em>Et voilà !</em> Hope this helps.</p>
 <p>If you want to know more about Elixir builds and releases, as always, <a href="https://hexdocs.pm/mix/1.12/Mix.Tasks.Release.html">the official documentation is a great place to start</a>.</p>
-</p>
-  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
-    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
-    crossorigin="anonymous" async>
-  </script>
+
+  </div>
+
+  
+    <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+      data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+      data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+      crossorigin="anonymous" async>
+    </script>
+  
 </article>
 
     </div>
 
-    <footer>
-      <span>
-        Proudly written with
-        <a href="https://www.getzola.org/" target="_blank">Zola</a>
-      </span>
-    </footer>
+    <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://www.getzola.org/" target="_blank">Zola</a> and <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+  </span>
+</footer>
     <br>
   </main>
 

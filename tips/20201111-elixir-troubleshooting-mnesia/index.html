@@ -11,15 +11,14 @@
     
   
 
-  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
-  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
-  <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
   <meta name="description" content="An Elixir tutorial to use Erlang&#x27;s :mnesia in your cluster." />
 </head>
-<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<!-- FIXME: The onload is here to "fix" the icon display. -->
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
   <script type="text/javascript">
     function getStylesheetModeTags() {
@@ -28,20 +27,6 @@
 
     function getStylesheetTogglerTags() {
       return document.getElementsByClassName("stylesheet-toggler");
-    }
-
-    function updateStylesheetToggler(mode) {
-      // ion-icon seems to apply `visibility:hidden` when it gets
-      // `display: none`, not sure why.
-      for (tag of getStylesheetTogglerTags()) {
-        if (tag.name == getIconNameForMode(mode)) {
-          tag.setAttribute("class", "stylesheet-toggler");
-          tag.style["visibility"] = "visible";
-        } else {
-          tag.setAttribute("class", "stylesheet-toggler no-display");
-          tag.style["visibility"] = "hidden";
-        }
-      }
     }
 
     function loadActiveStylesheet() {
@@ -57,7 +42,6 @@
         elem.setAttribute("class", classes);
       }
 
-      updateStylesheetToggler(activeStylesheet);
       updateGiscusStyle(activeStylesheet);
     }
 
@@ -121,7 +105,6 @@
       }
 
       localStorage.setItem("active-stylesheet", activeMode);
-      updateStylesheetToggler(activeMode);
       updateGiscusStyle(activeMode);
     }
   </script>
@@ -130,79 +113,179 @@
   <div id='stars'></div>
   <div id='stars2'></div>
   <div id='stars3'></div>
-  <main>
-    <div class='navbar'>
-      <nav>
-        <ul>
-        
-        
-          <li><a href="&#x2F;">Home</a></li>
-        
-          <li><a href="&#x2F;demos">Demos</a></li>
-        
-          <li><a href="&#x2F;tags">Tags</a></li>
-        
-          <li><a href="&#x2F;contact">Contact</a></li>
-        
-          <!-- FIXME: Figure out what to do with it.
-          <li class="spotify-embed dark-only">
-            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li>
-          <li class="spotify-embed light-only">
-            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li> -->
-          <li>
-            <a class="css-switch" onClick="switchStylesheets()">
-              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
-              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
 
-    <div class="main-content">
+  <main
+    class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white
+    "
+  >
+    <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+    
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;"
+        >Home</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;demos"
+        >Demos</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;tags"
+        >Tags</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;contact"
+        >Contact</a>
+      </li>
+    
+      <li class="ml-auto">
+        <a
+          class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block" name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+    <div class="
+      w-11/12 m-auto mt-2
+      flex justify-center
+      flex-col flex-wrap
+      lg:flex-row lg:flex-nowrap
+      dark:bg-black dark:bg-opacity-60
+    ">
       
 
 
-<aside>
-  <div class="toc">
-    <ol>
+  <aside class="w-full lg:w-2/6">
+  <div class="sticky flex top-50">
+    <ol class="ml-6 list-decimal">
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#context">Context</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#context">
+    Context
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#some-useful-links">Some useful links</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#some-useful-links">
+    Some useful links
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#let-s-create-a-sample-project">Let&#x27;s create a sample project</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#let-s-create-a-sample-project">
+    Let&#x27;s create a sample project
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#initializing-mnesia">Initializing Mnesia</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#initializing-mnesia">
+    Initializing Mnesia
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#inserting-data">Inserting data</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#inserting-data">
+    Inserting data
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#a-few-important-notes-for-releases">A few important notes for releases...</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#a-few-important-notes-for-releases">
+    A few important notes for releases...
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#conclusion">Conclusion</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20201111-elixir-troubleshooting-mnesia/#conclusion">
+    Conclusion
+  </a>
+
         
       </li>
       
@@ -212,10 +295,10 @@
 
 
 
-<article>
+<article class="w-full lg:w-4/6 pt-1 pb-1">
 
-  <header>
-    <h1 class="title">
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
       Elixir: Troubleshooting Mnesia
     </h1>
     
@@ -223,9 +306,35 @@
       Published on 2020-11-11
     </p>
     
+    
+      
+  <p class="max-w-fit">
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/elixir">
+        elixir
+      </a>
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/erlang">
+        erlang
+      </a>
+    
+  </p>
+
+    
   </header>
 
-  <p><h2 id="context">Context</h2>
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
 <p>Mnesia is a powerful DBMS implemented in Erlang which you can use in your Elixir application.</p>
 <p>Why would you want to do that?</p>
 <ul>
@@ -243,23 +352,20 @@
 <p>You can also check <a href="/tips/20201022-elixir-clustering-on-kubernetes/">my article on deploying an Elixir cluster on Kubernetes</a> since I give a few details on how to set up a simple local cluster. I'll do it more quickly here anyway.</p>
 <h2 id="let-s-create-a-sample-project">Let's create a sample project</h2>
 <p>Let's create a simple project to try out Mnesia locally. We'll need to run a small cluster, so we'll throw in one specific library.</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$ mix new clustertest
+<pre><code>$ mix new clustertest
 $ cd clustertest
-</span></code></pre>
+</code></pre>
 <p>And let's head out to <code>mix.exs</code> to add <code>libcluster</code>:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;"># In mix.exs
+<pre><code># In mix.exs
 defp deps do
   [
     {:libcluster, &quot;~&gt; 3.2.1&quot;},
   ]
 end
-</span></code></pre>
+</code></pre>
 <p>And let's define a very simple Supervisor. This will get our ClusterSupervisor
 started, with a simple configuration for our local experiments!</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;"># In mix.exs:
+<pre><code># In mix.exs:
 def application do
   [
     mod: {Clustertest.Application, []},
@@ -267,7 +373,7 @@ def application do
   ]
 end
 
-# In lib/clustertest/application.ex
+# In lib&#x2F;clustertest&#x2F;application.ex
 defmodule Clustertest.Application do
   use Application
 
@@ -287,27 +393,25 @@ defmodule Clustertest.Application do
     |&gt; Supervisor.start_link(strategy: :one_for_one)
   end
 end
-</span></code></pre>
+</code></pre>
 <p>This will get you started with a small cluster of two nodes. <code>Epmd</code> is
 perfectly fit for our example here, since we just have to specify a few hosts.</p>
 <p>Now, let's open two shells and start two instances:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;"># In one shell
+<pre><code># In one shell
 iex --name a@127.0.0.1 -S mix
 
 # In another one
 iex --name b@127.0.0.1 -S mix
-</span></code></pre>
+</code></pre>
 <p>Now, running <code>Node.list()</code> in each REPL should give you exactly one atom:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">&gt; [:&quot;b@127.0.0.1&quot;]
+<pre><code>&gt; [:&quot;b@127.0.0.1&quot;]
 
 &gt; [:&quot;a@127.0.0.1&quot;]
-</span></code></pre><h2 id="initializing-mnesia">Initializing Mnesia</h2>
+</code></pre>
+<h2 id="initializing-mnesia">Initializing Mnesia</h2>
 <p>Now, let's start actually using Mnesia. We'll pretend we're running a small wildlife protection office taking care of local racoons.</p>
 <p>Also, for the sake of simplicity, we'll add it directly to the children of our app. There's no need for complexity for hello world code :)</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;"># In lib/clustertest/application.ex
+<pre><code># In lib&#x2F;clustertest&#x2F;application.ex
 defmodule Clustertest.Application do
   use Application
 
@@ -323,7 +427,7 @@ defmodule Clustertest.Application do
   end
 end
 
-# In lib/clustertest/store/racoon.ex
+# In lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex
 defmodule Clustertest.Store.Racoon do
   use GenServer
 
@@ -378,22 +482,19 @@ defmodule Clustertest.Store.Racoon do
   end
 
 end
-</span></code></pre>
+</code></pre>
 <p>There are a few important things to note here.</p>
 <p>First, you <em>need</em> to create a schema <em>before</em> starting Mnesia. This is really important. Try switching the two lines to see what happens.</p>
 <p>Then, you're free to create your table. Both schema and table can be already created when you run your app, since Mnesia keeps RAM and disk copies, depending on how you configure it. By the way, you should have noticed there are now two new folders in your project directory:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$ ls
+<pre><code>$ ls
 Mnesia.a@127.0.0.1
 Mnesia.b@127.0.0.1
-</span></code></pre>
+</code></pre>
 <p>Hmm, let's see if Mnesia is properly configured. Type this in a terminal:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">$ :mnesia.info()
-</span></code></pre>
+<pre><code>$ :mnesia.info()
+</code></pre>
 <p>This will be your best friend for debugging Mnesia :)</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">---&gt; Processes holding locks &lt;---
+<pre><code>---&gt; Processes holding locks &lt;---
 ---&gt; Processes waiting for locks &lt;---
 ---&gt; Participant transactions &lt;---
 ---&gt; Coordinator transactions &lt;---
@@ -402,29 +503,28 @@ Mnesia.b@127.0.0.1
 Elixir.Racoon  : with 0        records occupying 305      words of mem
 schema         : with 2        records occupying 535      words of mem
 ===&gt; System info in version &quot;4.17&quot;, debug level = none &lt;===
-opt_disc. Directory &quot;/home/makks/code/mbuffa/clustertest/Mnesia.a@127.0.0.1&quot; is used.
+opt_disc. Directory &quot;&#x2F;home&#x2F;makks&#x2F;code&#x2F;mbuffa&#x2F;clustertest&#x2F;Mnesia.a@127.0.0.1&quot; is used.
 use fallback at restart = false
-running db nodes   = [&#39;a@127.0.0.1&#39;]
+running db nodes   = [&#x27;a@127.0.0.1&#x27;]
 stopped db nodes   = []
 master node tables = []
 remote             = []
-ram_copies         = [&#39;Elixir.Racoon&#39;]
+ram_copies         = [&#x27;Elixir.Racoon&#x27;]
 disc_copies        = [schema]
 disc_only_copies   = []
-[{&#39;a@127.0.0.1&#39;,disc_copies}] = [schema]
-[{&#39;a@127.0.0.1&#39;,ram_copies}] = [&#39;Elixir.Racoon&#39;]
+[{&#x27;a@127.0.0.1&#x27;,disc_copies}] = [schema]
+[{&#x27;a@127.0.0.1&#x27;,ram_copies}] = [&#x27;Elixir.Racoon&#x27;]
 3 transactions committed, 0 aborted, 0 restarted, 2 logged to disc
 0 held locks, 0 in queue; 0 local transactions, 0 remote
 0 transactions waits for other nodes: []
 :ok
-</span></code></pre>
+</code></pre>
 <p>Hmm, looking at <code>running db nodes</code>, we're only running two Mnesia nodes independently. We want to connect them, but we have to do it ourselves when new nodes are connected.</p>
 <p>Let's go back to our Store and add a bit of code:</p>
 <ul>
 <li>We want to be notified when new nodes connect...</li>
 </ul>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">defmodule Clustertest.Store.Racoon do
+<pre><code>defmodule Clustertest.Store.Racoon do
   use GenServer
 
   [...]
@@ -440,12 +540,11 @@ disc_only_copies   = []
 
   [...]
 end
-</span></code></pre>
+</code></pre>
 <ul>
 <li>...And we want to configure Mnesia to use extra nodes, create a table copy on the other node, and remove the other node when connection is lost.</li>
 </ul>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">defmodule Clustertest.Store.Racoon do
+<pre><code>defmodule Clustertest.Store.Racoon do
   [...]
 
   def handle_info({:nodeup, node}, state) do
@@ -501,50 +600,46 @@ end
     end
   end
 end
-</span></code></pre>
+</code></pre>
 <p>Now, restarting our two nodes should raise an error:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">17:20:34.541 [error] GenServer #PID&lt;0.213.0&gt; terminating
+<pre><code>17:20:34.541 [error] GenServer #PID&lt;0.213.0&gt; terminating
 ** (MatchError) no match of right hand side value: {:ok, []}
-    (clustertest 0.1.0) lib/clustertest/store/racoon.ex:46: Clustertest.Store.Racoon.connect_mnesia_to_cluster/0
-    (clustertest 0.1.0) lib/clustertest/store/racoon.ex:30: Clustertest.Store.Racoon.handle_info/2
-    (stdlib 3.13) gen_server.erl:680: :gen_server.try_dispatch/4
-    (stdlib 3.13) gen_server.erl:756: :gen_server.handle_msg/6
-    (stdlib 3.13) proc_lib.erl:226: :proc_lib.init_p_do_apply/3
+    (clustertest 0.1.0) lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex:46: Clustertest.Store.Racoon.connect_mnesia_to_cluster&#x2F;0
+    (clustertest 0.1.0) lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex:30: Clustertest.Store.Racoon.handle_info&#x2F;2
+    (stdlib 3.13) gen_server.erl:680: :gen_server.try_dispatch&#x2F;4
+    (stdlib 3.13) gen_server.erl:756: :gen_server.handle_msg&#x2F;6
+    (stdlib 3.13) proc_lib.erl:226: :proc_lib.init_p_do_apply&#x2F;3
 Last message: {:nodeup, :&quot;b@127.0.0.1&quot;}
 State: %{}
-</span></code></pre>
+</code></pre>
 <p>Why is <code>:mnesia.change_config(:extra_db_nodes, Node.list())</code> returning <code>:ok</code> with an empty array?</p>
 <p>Well, you can't really guess, and silent errors is why Mnesia can be difficult to work with for the first time.</p>
 <p>In fact, Mnesia requires that you create an identical schema on each of your nodes, sharing the same cookie. By calling <code>setup_store()</code> and its <code>:mnesia.create_schema()</code>, you're creating two conflicting schemas Mnesia can't resolve.</p>
 <p>Let's remove <code>setup_store()</code> completely (and <code>ensure_schema_exists()</code> too). If we need to be able to deploy single nodes (locally for example) we can still define an environment variable to decide what to do. But this is off-topic.</p>
 <p>Also, remember those two folders that popped up in your directory? Remove those folders. Those may contain conflicting schemas.</p>
 <p>Now, let's restart our two REPLs.</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">17:35:48.049 [error] GenServer #PID&lt;0.213.0&gt; terminating
+<pre><code>17:35:48.049 [error] GenServer #PID&lt;0.213.0&gt; terminating
 ** (MatchError) no match of right hand side value: {:ok, []}
-    (clustertest 0.1.0) lib/clustertest/store/racoon.ex:34: Clustertest.Store.Racoon.connect_mnesia_to_cluster/0
-    (clustertest 0.1.0) lib/clustertest/store/racoon.ex:18: Clustertest.Store.Racoon.handle_info/2
-    (stdlib 3.13) gen_server.erl:680: :gen_server.try_dispatch/4
-    (stdlib 3.13) gen_server.erl:756: :gen_server.handle_msg/6
-    (stdlib 3.13) proc_lib.erl:226: :proc_lib.init_p_do_apply/3
+    (clustertest 0.1.0) lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex:34: Clustertest.Store.Racoon.connect_mnesia_to_cluster&#x2F;0
+    (clustertest 0.1.0) lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex:18: Clustertest.Store.Racoon.handle_info&#x2F;2
+    (stdlib 3.13) gen_server.erl:680: :gen_server.try_dispatch&#x2F;4
+    (stdlib 3.13) gen_server.erl:756: :gen_server.handle_msg&#x2F;6
+    (stdlib 3.13) proc_lib.erl:226: :proc_lib.init_p_do_apply&#x2F;3
 Last message: {:nodeup, :&quot;b@127.0.0.1&quot;}
 State: %{}
-</span></code></pre>
+</code></pre>
 <p>Well, you can't guess either, but Mnesia must be started as an application. Surprisingly enough, trying to use <code>:mnesia</code> functions wouldn't raise any errors.</p>
 <p>So let's head to our manifest and add <code>:mnesia</code> in a familiar place:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;"># In mix.exs
+<pre><code># In mix.exs
 def application do
   [
     mod: {Clustertest.Application, []},
     extra_applications: [:logger, :mnesia]
   ]
 end
-</span></code></pre>
+</code></pre>
 <p>Now let's check...</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">---&gt; Processes holding locks &lt;---
+<pre><code>---&gt; Processes holding locks &lt;---
 ---&gt; Processes waiting for locks &lt;---
 ---&gt; Participant transactions &lt;---
 ---&gt; Coordinator transactions &lt;---
@@ -552,28 +647,27 @@ end
 ---&gt; Active tables &lt;---
 schema         : with 2        records occupying 554      words of mem
 ===&gt; System info in version &quot;4.17&quot;, debug level = none &lt;===
-opt_disc. Directory &quot;/home/makks/code/mbuffa/clustertest/Mnesia.a@127.0.0.1&quot; is NOT used.
+opt_disc. Directory &quot;&#x2F;home&#x2F;makks&#x2F;code&#x2F;mbuffa&#x2F;clustertest&#x2F;Mnesia.a@127.0.0.1&quot; is NOT used.
 use fallback at restart = false
-running db nodes   = [&#39;b@127.0.0.1&#39;,&#39;a@127.0.0.1&#39;]
+running db nodes   = [&#x27;b@127.0.0.1&#x27;,&#x27;a@127.0.0.1&#x27;]
 stopped db nodes   = []
 master node tables = []
-remote             = [&#39;Elixir.Racoon&#39;]
+remote             = [&#x27;Elixir.Racoon&#x27;]
 ram_copies         = [schema]
 disc_copies        = []
 disc_only_copies   = []
-[{&#39;a@127.0.0.1&#39;,ram_copies},{&#39;b@127.0.0.1&#39;,disc_copies}] = [schema]
-[{&#39;b@127.0.0.1&#39;,ram_copies}] = [&#39;Elixir.Racoon&#39;]
+[{&#x27;a@127.0.0.1&#x27;,ram_copies},{&#x27;b@127.0.0.1&#x27;,disc_copies}] = [schema]
+[{&#x27;b@127.0.0.1&#x27;,ram_copies}] = [&#x27;Elixir.Racoon&#x27;]
 2 transactions committed, 0 aborted, 0 restarted, 0 logged to disc
 0 held locks, 0 in queue; 0 local transactions, 0 remote
 0 transactions waits for other nodes: []
-</span></code></pre>
+</code></pre>
 <p><img src="https://media.giphy.com/media/4xpB3eE00FfBm/giphy.gif" alt="" title="hooray" /></p>
 <p>See how <code>opt_disc</code> and <code>running db nodes</code> changed. But we have no data yet.</p>
 <h2 id="inserting-data">Inserting data</h2>
 <p>We'll add some code and make some changes so that we'll use a struct defined in <code>Types.Racoon</code>. The naming in my example isn't great, but basically, we're just adding serialization/deserialization functions to manipulate structs in our codebase, while Mnesia stores tuples.</p>
 <p>So we'll add two functions, <code>list()</code> and <code>create()</code>, and do a few changes on the table name.</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">defmodule Clustertest.Store.Racoon do
+<pre><code>defmodule Clustertest.Store.Racoon do
   [...]
 
   defmodule Types.Racoon do
@@ -654,10 +748,9 @@ disc_only_copies   = []
       {:aborted, {:already_exists, Types.Racoon, _node}} -&gt; :ok
     end
   end
-</span></code></pre>
+</code></pre>
 <p>Now let's test a few examples, after a REPL reset.</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;"># In your first shell:
+<pre><code># In your first shell:
 iex(a@127.0.0.1)3&gt; Clustertest.Store.Racoon.list()
 []
 iex(a@127.0.0.1)4&gt; Clustertest.Store.Racoon.create(%Clustertest.Store.Racoon.Types.Racoon{ id: 1, name: &quot;Ricky&quot;, caretaker_id: nil })
@@ -673,10 +766,9 @@ iex(b@127.0.0.1)4&gt; Clustertest.Store.Racoon.list()
     name: &quot;Ricky&quot;
   }
 ]
-</span></code></pre>
+</code></pre>
 <p>The <code>update</code>, <code>read</code>, and <code>delete</code> functions are quite straighforward. You can implement them yourself, but I'm adding those as a reference.</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">defmodule Clustertest.Store.Racoon do
+<pre><code>defmodule Clustertest.Store.Racoon do
   [...]
 
   def update(%Types.Racoon{ id: id } = new_state) when is_integer(id) do
@@ -715,11 +807,10 @@ iex(b@127.0.0.1)4&gt; Clustertest.Store.Racoon.list()
 
   [...]
 end
-</span></code></pre>
+</code></pre>
 <p>You can play around with this :) Note that creating data on one node, and creating the identical data on another node doesn't raise any issue, but do not create duplicates either.</p>
 <p>There's one issue remaining though: closing both REPLs clear the table. This is because we forgot to specify one option when calling <code>:mnesia.create_table</code>!</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">:mnesia.create_table(
+<pre><code>:mnesia.create_table(
   Types.Racoon,
   [
     attributes: [
@@ -730,27 +821,25 @@ end
     disc_copies: [Node.self()]
   ]
 )
-</span></code></pre>
+</code></pre>
 <p>Now we're good, and <code>:mnesia.info()</code> doesn't show an empty <code>disc_copies</code> anymore.</p>
 <h2 id="a-few-important-notes-for-releases">A few important notes for releases...</h2>
 <p>...and solving the &quot;bad cookie&quot; issue.</p>
 <p>Keep in mind that we've been using <code>iex</code> all along and that running a compiled application will raise a few differences.</p>
 <p>Remember the snippet I used for adding <code>:mnesia</code> to our running application?</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;"># In mix.exs
+<pre><code># In mix.exs
 def application do
   [
     mod: {Clustertest.Application, []},
     extra_applications: [:logger, :mnesia]
   ]
 end
-</span></code></pre>
+</code></pre>
 <p><img src="https://media.giphy.com/media/11CCn8sSFSm2kg/giphy.gif" alt="" title="I lied." /></p>
 <p>Well, it might cause you some trouble once you compile your release with <code>mix release</code> and your node starts.</p>
 <p>Thing is, adding libraries to <code>extra_applications</code> would start them automatically before your application does, so we have to specify
 that we only want to reference it in our release, to avoid :mnesia creating a schema and starting automatically.</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;"># In mix.exs
+<pre><code># In mix.exs
 def application do
   [
     mod: {Clustertest.Application, []},
@@ -758,10 +847,9 @@ def application do
     included_applications: [:mnesia]
   ]
 end
-</span></code></pre>
+</code></pre>
 <p>Thing is, I also had to revert my changes on <code>create_table</code> and remove the <code>disc_copies</code> option.</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">:mnesia.create_table(
+<pre><code>:mnesia.create_table(
   Types.Racoon,
   [
     attributes: [
@@ -771,7 +859,7 @@ end
     ]
   ]
 )
-</span></code></pre>
+</code></pre>
 <p>Now, <code>:mnesia.info()</code> will properly display a populated <code>disc_copies</code> option.</p>
 <p>I do not know why those differences between <code>iex</code> and compiled code exist. I may be doing something wrong, so please feel free to open an issue on the <a href="https://github.com/mbuffa/elixir-mnesia-example">repository</a> if you find why!</p>
 <h2 id="conclusion">Conclusion</h2>
@@ -780,22 +868,25 @@ end
 <p>Note that there's also the <a href="https://github.com/beardedeagle/mnesiac">Mnesiac</a> library, which is an Elixir layer on top of Mnesia. I prefer using low-level libraries directly, at least for learning, but it might be a good fit for production though.</p>
 <p>Last, but not least, I <a href="https://github.com/mbuffa/elixir-mnesia-example">created a repository</a> with a small and clear commit history, in case you want to tinker with it.</p>
 <p><em>Et voilà.</em></p>
-</p>
-  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
-    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
-    crossorigin="anonymous" async>
-  </script>
+
+  </div>
+
+  
+    <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+      data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+      data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+      crossorigin="anonymous" async>
+    </script>
+  
 </article>
 
     </div>
 
-    <footer>
-      <span>
-        Proudly written with
-        <a href="https://www.getzola.org/" target="_blank">Zola</a>
-      </span>
-    </footer>
+    <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://www.getzola.org/" target="_blank">Zola</a> and <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+  </span>
+</footer>
     <br>
   </main>
 

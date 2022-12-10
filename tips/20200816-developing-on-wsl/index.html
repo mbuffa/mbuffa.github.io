@@ -11,15 +11,14 @@
     
   
 
-  <!-- <link href="https://fonts.googleapis.com/css?family=Bellota+Text&display=swap" rel="stylesheet"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
-  <link class="stylesheet" rel="stylesheet" href="/base.css" />
+  
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
-  <link class="stylesheet" rel="stylesheet" href="/light.css" />
 
   <meta name="description" content="My personal website with tips and rants." />
 </head>
-<!-- FIXME: The onload is here to "fix" the icon display, but it sucks. -->
+<!-- FIXME: The onload is here to "fix" the icon display. -->
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
   <script type="text/javascript">
     function getStylesheetModeTags() {
@@ -28,20 +27,6 @@
 
     function getStylesheetTogglerTags() {
       return document.getElementsByClassName("stylesheet-toggler");
-    }
-
-    function updateStylesheetToggler(mode) {
-      // ion-icon seems to apply `visibility:hidden` when it gets
-      // `display: none`, not sure why.
-      for (tag of getStylesheetTogglerTags()) {
-        if (tag.name == getIconNameForMode(mode)) {
-          tag.setAttribute("class", "stylesheet-toggler");
-          tag.style["visibility"] = "visible";
-        } else {
-          tag.setAttribute("class", "stylesheet-toggler no-display");
-          tag.style["visibility"] = "hidden";
-        }
-      }
     }
 
     function loadActiveStylesheet() {
@@ -57,7 +42,6 @@
         elem.setAttribute("class", classes);
       }
 
-      updateStylesheetToggler(activeStylesheet);
       updateGiscusStyle(activeStylesheet);
     }
 
@@ -121,7 +105,6 @@
       }
 
       localStorage.setItem("active-stylesheet", activeMode);
-      updateStylesheetToggler(activeMode);
       updateGiscusStyle(activeMode);
     }
   </script>
@@ -130,105 +113,225 @@
   <div id='stars'></div>
   <div id='stars2'></div>
   <div id='stars3'></div>
-  <main>
-    <div class='navbar'>
-      <nav>
-        <ul>
-        
-        
-          <li><a href="&#x2F;">Home</a></li>
-        
-          <li><a href="&#x2F;demos">Demos</a></li>
-        
-          <li><a href="&#x2F;tags">Tags</a></li>
-        
-          <li><a href="&#x2F;contact">Contact</a></li>
-        
-          <!-- FIXME: Figure out what to do with it.
-          <li class="spotify-embed dark-only">
-            <iframe src="https://open.spotify.com/embed/playlist/2MyBJnnZpQzRy8VxSwPP5o" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li>
-          <li class="spotify-embed light-only">
-            <iframe src="https://open.spotify.com/embed/playlist/6Pkt3NRpbdhUzM20E4nXJk" width="300" height="80" frameborder="0"
-              allowtransparency="true" allow="encrypted-media"></iframe>
-          </li> -->
-          <li>
-            <a class="css-switch" onClick="switchStylesheets()">
-              <ion-icon class="stylesheet-toggler no-display" name="moon"></ion-icon>
-              <ion-icon class="stylesheet-toggler no-display" name="sunny"></ion-icon>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
 
-    <div class="main-content">
+  <main
+    class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white
+    "
+  >
+    <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+    
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;"
+        >Home</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;demos"
+        >Demos</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;tags"
+        >Tags</a>
+      </li>
+    
+      <li>
+        <a
+          class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+           href="&#x2F;contact"
+        >Contact</a>
+      </li>
+    
+      <li class="ml-auto">
+        <a
+          class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block" name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+    <div class="
+      w-11/12 m-auto mt-2
+      flex justify-center
+      flex-col flex-wrap
+      lg:flex-row lg:flex-nowrap
+      dark:bg-black dark:bg-opacity-60
+    ">
       
 
 
-<aside>
-  <div class="toc">
-    <ol>
+  <aside class="w-full lg:w-2/6">
+  <div class="sticky flex top-50">
+    <ol class="ml-6 list-decimal">
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#context">Context</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#context">
+    Context
+  </a>
+
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-good">The Good</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-good">
+    The Good
+  </a>
+
         
         <ol>
           
           <li>
-            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#seamless-development">Seamless development</a>
-          </li>
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#seamless-development">
+    Seamless development
+  </a>
+</li>
           
           <li>
-            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#you-can-use-docker">You can use Docker</a>
-          </li>
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#you-can-use-docker">
+    You can use Docker
+  </a>
+</li>
           
           <li>
-            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#accessing-files-between-linux-and-windows">Accessing files between Linux and Windows</a>
-          </li>
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#accessing-files-between-linux-and-windows">
+    Accessing files between Linux and Windows
+  </a>
+</li>
           
         </ol>
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-bad">The Bad</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-bad">
+    The Bad
+  </a>
+
         
         <ol>
           
           <li>
-            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#occasional-bugs-and-freezes">Occasional bugs and freezes</a>
-          </li>
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#occasional-bugs-and-freezes">
+    Occasional bugs and freezes
+  </a>
+</li>
           
           <li>
-            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#wondering-about-long-term-stability">Wondering about long-term stability</a>
-          </li>
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#wondering-about-long-term-stability">
+    Wondering about long-term stability
+  </a>
+</li>
           
         </ol>
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-ugly">The Ugly</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#the-ugly">
+    The Ugly
+  </a>
+
         
         <ol>
           
           <li>
-            <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#get-out-of-my-path">Get out of my $PATH</a>
-          </li>
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#get-out-of-my-path">
+    Get out of my $PATH
+  </a>
+</li>
           
         </ol>
         
       </li>
       
       <li>
-        <a href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#conclusion">Conclusion</a>
+        
+  <a
+    class="
+      inline-block p-1 w-full underline hover:no-underline
+    dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+    href="https://mbuffa.github.io/tips/20200816-developing-on-wsl/#conclusion">
+    Conclusion
+  </a>
+
         
       </li>
       
@@ -238,10 +341,10 @@
 
 
 
-<article>
+<article class="w-full lg:w-4/6 pt-1 pb-1">
 
-  <header>
-    <h1 class="title">
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
       Developing on WSL
     </h1>
     
@@ -249,9 +352,35 @@
       Published on 2020-08-16
     </p>
     
+    
+      
+  <p class="max-w-fit">
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/wsl">
+        wsl
+      </a>
+    
+      <a
+        class="inline-block m-1 p-1 underline hover:no-underline"
+        href="/tags/dev">
+        dev
+      </a>
+    
+  </p>
+
+    
   </header>
 
-  <p><h2 id="context">Context</h2>
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
 <p>The latest versions of Windows 10 have seen the maturation of WSL, the Windows Subsystem for Linux. Basically, it allows installing a Linux distribution that'll use a special Linux kernel running &quot;nativaly&quot; on Windows 10. It doesn't run on a virtualized environment, although it seems to use a Hyper-V volume for storage.</p>
 <p>Oh, and you can also use their shiny new <a href="https://github.com/microsoft/terminal">Terminal</a> for ultimate ease of use.</p>
 <h2 id="the-good">The Good</h2>
@@ -278,32 +407,34 @@ And sure, there's bugtracking through Github, but I think WSL as a whole is pret
 <h2 id="the-ugly">The Ugly</h2>
 <h3 id="get-out-of-my-path">Get out of my $PATH</h3>
 <p>To achieve a seemless integration with Windows, my Ubuntu installation has basically the whole Windows mess injected into its default $PATH:</p>
-<pre style="background-color:#2b303b;">
-<code><span style="color:#c0c5ce;">➜  / echo $PATH
-/home/makks/.asdf/shims:/home/makks/.asdf/bin:/home/makks/.cargo/bin:/home/makks/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/Git/cmd:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Users/Makks/.cargo/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Makks/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Makks.cargo/bin:/mnt/c/Users/Makks/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps
-</span></code></pre>
+<pre><code>➜  &#x2F; echo $PATH
+&#x2F;home&#x2F;makks&#x2F;.asdf&#x2F;shims:&#x2F;home&#x2F;makks&#x2F;.asdf&#x2F;bin:&#x2F;home&#x2F;makks&#x2F;.cargo&#x2F;bin:&#x2F;home&#x2F;makks&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin:&#x2F;usr&#x2F;games:&#x2F;usr&#x2F;local&#x2F;games:&#x2F;mnt&#x2F;c&#x2F;Windows&#x2F;system32:&#x2F;mnt&#x2F;c&#x2F;Windows:&#x2F;mnt&#x2F;c&#x2F;Windows&#x2F;System32&#x2F;Wbem:&#x2F;mnt&#x2F;c&#x2F;Windows&#x2F;System32&#x2F;WindowsPowerShell&#x2F;v1.0&#x2F;:&#x2F;mnt&#x2F;c&#x2F;Windows&#x2F;System32&#x2F;OpenSSH&#x2F;:&#x2F;mnt&#x2F;c&#x2F;Program Files&#x2F;NVIDIA Corporation&#x2F;NVIDIA NvDLISR:&#x2F;mnt&#x2F;c&#x2F;Program Files (x86)&#x2F;NVIDIA Corporation&#x2F;PhysX&#x2F;Common:&#x2F;mnt&#x2F;c&#x2F;Program Files&#x2F;Git&#x2F;cmd:&#x2F;mnt&#x2F;c&#x2F;WINDOWS&#x2F;system32:&#x2F;mnt&#x2F;c&#x2F;WINDOWS:&#x2F;mnt&#x2F;c&#x2F;WINDOWS&#x2F;System32&#x2F;Wbem:&#x2F;mnt&#x2F;c&#x2F;WINDOWS&#x2F;System32&#x2F;WindowsPowerShell&#x2F;v1.0&#x2F;:&#x2F;mnt&#x2F;c&#x2F;WINDOWS&#x2F;System32&#x2F;OpenSSH&#x2F;:&#x2F;mnt&#x2F;c&#x2F;Program Files&#x2F;Docker&#x2F;Docker&#x2F;resources&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;ProgramData&#x2F;DockerDesktop&#x2F;version-bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;.cargo&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;AppData&#x2F;Local&#x2F;Microsoft&#x2F;WindowsApps:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;AppData&#x2F;Local&#x2F;Programs&#x2F;Microsoft VS Code&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks.cargo&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;AppData&#x2F;Local&#x2F;GitHubDesktop&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;AppData&#x2F;Local&#x2F;Microsoft&#x2F;WindowsApps
+</code></pre>
 <p>Whish is... yeah. It itched me in many places when I saw this, and when I saw random DLLs popping in my autocompletion. But this is sadly probably the price to pay for this kind of integration.</p>
 <p><a href="https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/">There's a setting to disable this</a> (and even a few other things), but my distro just didn't cared about my feelings and refused to apply it. Judging by the comments section, I'm not alone in this situation.</p>
 <p>This kind of dirty black magic may annoy you if you want your distro to be 100% clean. But I guess you wouldn't want to use WSL in the first place in that was the case ;)</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>I'm very satisfied with WSL and its related developments so far. My primary reason for using it is the need for good UI and accessibility tools, because I have an extremely low vision (but I'll run into details in a future article) but it's also really satisfying to leverage a good CPU (in that case, a Ryzen 3800X) instead of the traditional coughing overpriced Macbook Pro any startup company grants its employees with.</p>
 <p>And of course, you can launch a game or two when you need a break.</p>
-</p>
-  <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
-    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
-    crossorigin="anonymous" async>
-  </script>
+
+  </div>
+
+  
+    <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+      data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+      data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+      crossorigin="anonymous" async>
+    </script>
+  
 </article>
 
     </div>
 
-    <footer>
-      <span>
-        Proudly written with
-        <a href="https://www.getzola.org/" target="_blank">Zola</a>
-      </span>
-    </footer>
+    <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://www.getzola.org/" target="_blank">Zola</a> and <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+  </span>
+</footer>
     <br>
   </main>
 
