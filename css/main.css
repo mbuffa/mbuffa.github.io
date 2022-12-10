@@ -14,6 +14,14 @@ body {
   height: 100vh;
 }
 
+body.dark {
+  background: radial-gradient(ellipse at bottom -200% right -100%, #fd7313 0%, #090A0F 100%);
+}
+
+body.light {
+  background: #e2e8f0; /* slate-200 */
+}
+
 div.markdown-content img {
   margin: auto;
   display: flex;

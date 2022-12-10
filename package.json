@@ -7,12 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "npx npm-watch",
     "watch": "npm run build",
-    "build": "npx tailwindcss -i ./styles/main.css -o ./public/main.css --minify"
+    "build": "npx tailwindcss -i ./css/main.css -o ./public/main.css --minify"
   },
   "watch": {
     "watch": {
       "patterns": [
-        "styles/**/**",
+        "css/**/**",
         "templates/**/**"
       ],
       "extensions": "css,html",
