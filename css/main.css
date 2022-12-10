@@ -107,6 +107,11 @@ div.markdown-content a:hover {
   text-decoration: none;
 }
 
+div.markdown-content pre {
+  margin: 1rem;
+  padding: .5rem;
+}
+
 body.dark h1,
 body.dark h2,
 body.dark h3,
