@@ -1,0 +1,7 @@
+{% extends "_layout.html" %}
+
+{% import "articles/_articles.html" as macros %}
+
+{% block content %}
+{{ macros::articles_list(title=section.title, list=section.pages) }}
+{% endblock content %}

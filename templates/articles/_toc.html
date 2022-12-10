@@ -1,0 +1,18 @@
+<aside class="w-full lg:w-2/6">
+  <div class="sticky flex top-50">
+    <ol class="ml-6 list-decimal">
+      {% for h1 in page.toc %}
+      <li>
+        {{ macros::link(href=h1.permalink, title=h1.title) }}
+        {% if h1.children %}
+        <ol>
+          {% for h2 in h1.children %}
+          <li>{{ macros::link(href=h2.permalink, title=h2.title) }}</li>
+          {% endfor %}
+        </ol>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</aside>

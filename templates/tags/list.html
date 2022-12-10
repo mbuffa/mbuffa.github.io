@@ -1,16 +1,20 @@
-{% extends "base.html" %}
+{% extends "_layout.html" %}
 
 {% block content %}
-<article class="lonely">
+<article class="w-full">
   <header>
-    <h3>Tags</h3>
+    <h1 class="m-2 p-2 font-bold text-xl">Tags</h1>
   </header>
-  <div class="tag-cards">
+  <ul class="flex flex-row flex-wrap">
     {% for term in terms %}
-      <div class="tag-card">
-        <a href="{{ term.permalink | safe }}">{{ term.name }}</a>
-      </div>
+      <li class="m-2 p-2">
+        <a
+          class="
+            underline hover:no-underline
+            dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+          href="{{ term.permalink | safe }}">{{ term.name }}</a>
+      </li>
     {% endfor %}
-  </div>
+  </ul>
 </article>
 {% endblock content %}

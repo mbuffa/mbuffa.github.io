@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: 'Lato', sans-serif, system-ui, -apple-system;
+  /* font-size: x-large; */
+  /* font-weight: bolder; */
+  font-size: medium;
+}
+
+body {
+  overflow: hidden;
+  height: 100vh;
+}
+
+body.dark {
+  background: radial-gradient(ellipse at bottom -200% right -100%, #fd7313 0%, #090A0F 100%);
+}
+
+body.light {
+  background: #e2e8f0; /* slate-200 */
+}
+
+div.markdown-content img {
+  margin: auto;
+  display: flex;
+  max-width: 90%;
+}
+
+div.markdown-content img[src$="#cropped"] {
+  object-fit: scale-down;
+  width: 600px;
+}
+
+div.markdown-content ol, div.markdown-content ul {
+  margin: 1em;
+}
+
+div.markdown-content ul {
+  list-style-type: "- ";
+}
+
+div.markdown-content li {
+  margin: 1em;
+}
+
+div.markdown-content div.video-embed {
+  display: flex;
+  width: 100%;
+}
+
+div.markdown-content div.video-embed iframe {
+  margin: auto;
+  width: 600px;
+  height: 400px;
+}
+
+div.markdown-content h1,
+div.markdown-content h2,
+div.markdown-content h3,
+div.markdown-content h4,
+div.markdown-content h5,
+div.markdown-content h6 {
+  margin: 1rem;
+  padding: 1rem;
+  font-weight: bolder;
+}
+
+div.markdown-content h1 {
+  font-size: xx-large;
+}
+
+div.markdown-content h2 {
+  font-size: x-large;
+}
+
+div.markdown-content h3 {
+  font-size: larger;
+}
+
+div.markdown-content h4 {
+  font-size: large;
+}
+
+div.markdown-content h5 {
+  font-size: medium;
+}
+
+div.markdown-content h6 {
+  font-weight: bold;
+}
+
+div.markdown-content p {
+  line-height: 1.625; /* Tailwind 'relaxed' */
+}
+
+div.markdown-content ul {
+  list-style-type:circle;
+}
+
+div.markdown-content a {
+  text-decoration: underline;
+}
+
+div.markdown-content a:hover {
+  text-decoration: none;
+}
+
+div.markdown-content pre {
+  margin: 1rem;
+  padding: .5rem;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6 {
+  color: rgb(249, 115, 22);
+  text-shadow: 2px 2px black;
+}
+
+body.dark pre, body.dark code {
+  background-color: rgba(17, 17, 17, 9) !important;
+}
+
+body.dark pre {
+  border: 1px solid white;
+  border-top-width: 6px;
+}
+
+.w-120 {
+  width: 30rem; /* 480px */
+}
+
+.w-125 {
+  width: 31.25rem; /* 500px */
+}
+
+.min-w-120 {
+  min-width: 30rem; /* 480px */
+}
+
+.max-h-120 {
+  max-height: 30rem;/* 480px */
+}
+
+.min-w-100 {
+  min-width: 25rem; /* 400px */
+}
+
+.min-h-100 {
+  min-height: 25rem; /* 400px */
+}
+
+.top-50 {
+  top: 200px;
+}

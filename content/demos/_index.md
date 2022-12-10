@@ -1,7 +1,7 @@
 +++
 title = "Demos"
 sort_by = "date"
-template = "articles.html"
-page_template = "demo.html"
+template = "articles/articles.html"
+page_template = "articles/article.html"
 path = "/demos"
 +++

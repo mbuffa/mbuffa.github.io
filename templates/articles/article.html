@@ -1,0 +1,59 @@
+{% extends "_layout.html" %}
+
+{% import "articles/_toc_link.html" as macros %}
+{% import "articles/_tags.html" as tags %}
+
+{% block content %}
+
+{% if page.toc | length > 1 %}
+  {% include "articles/_toc.html" %}
+{% endif %}
+
+{% if page.toc | length == 1 %}
+<article class="w-full">
+{% else %}
+<article class="w-full lg:w-4/6 pt-1 pb-1">
+{% endif %}
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      {{ page.title }}
+    </h1>
+    {% if page.date %}
+    <p class="subtitle">
+      Published on {{ page.date | date(format="%Y-%m-%d") }}
+    </p>
+    {% endif %}
+    {% if page.taxonomies["tags"] %}
+      {{ tags::tags(terms=page.taxonomies["tags"]) }}
+    {% endif %}
+  </header>
+
+  {% if page.extra.wasm is defined %}
+    <div class=""video-embed">
+      <canvas id="glcanvas" class="m-auto block min-w-100 min-h-100 max-w-screen-sm max-h-120 border border-solid border-white z-10" tabindex='1'></canvas>
+    </div>
+    <script src="https://not-fl3.github.io/miniquad-samples/mq_js_bundle.js"></script>
+    <script>load("{{ page.extra.wasm | safe }}");</script>
+  {% endif %}
+
+  {% if page.extra.url is defined %}
+    <iframe id="iframe" src="{{ page.extra.url }}" width="800" height="600"></iframe>
+  {% endif %}
+
+  {% if page.extra.screenshot is defined %}
+    <img src="{{ page.extra.screenshot | safe }}" />
+  {% endif %}
+
+  <div class="markdown-content">
+    {{ page.content | safe }}
+  </div>
+
+  {% if page.extra.commentable is not defined or page.extra.commentable is defined and page.extra.commentable %}
+    <script src="https://giscus.app/client.js" data-repo="mbuffa/mbuffa.github.io"
+      data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU=" data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+      data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-theme="dark" data-lang="en"
+      crossorigin="anonymous" async>
+    </script>
+  {% endif %}
+</article>
+{% endblock content %}

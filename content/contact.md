@@ -1,6 +1,8 @@
 +++
 title = "Contact"
-template = "article_no_comments.html"
+template = "articles/article.html"
+[extra]
+commentable = false
 +++
 
 My name is Maxime Buffa. I'm a software developer specialized in back-end and dev ops, and doing a bit of software experimentation as a hobbyist.

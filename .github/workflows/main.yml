@@ -4,7 +4,7 @@ on:
     branches: [ content ]
 
 env:
-  ZOLA_VERSION: v0.12.2
+  ZOLA_VERSION: v0.16.1
 
 jobs:
   build:
@@ -18,8 +18,8 @@ jobs:
       run: |
         # This is required to run `act` locally (default image doesn't include those).
         # See: https://github.com/nektos/act/issues/107
-        apt update && apt install -y git sudo
-        git config --global user.email "mbuffa@gmail.com"
+        apt update && apt install -y git sudo nodejs
+        git config --global user.email "mbuffa@users.noreply.github.com"
         git config --global user.name "Maxime Buffa"
 
     - name: Checkout Zola
@@ -28,6 +28,7 @@ jobs:
     - name: Build
       run: |
         cd $GITHUB_WORKSPACE
+        npm run build
         zola build
         cp vendor/* public/
 

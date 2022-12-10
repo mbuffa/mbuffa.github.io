@@ -1,7 +1,7 @@
 +++
 title = "Tips"
 sort_by = "date"
-template = "articles.html"
-page_template = "article.html"
+template = "articles/articles.html"
+page_template = "articles/article.html"
 path = "/"
 +++
