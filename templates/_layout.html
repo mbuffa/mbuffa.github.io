@@ -122,7 +122,12 @@
   <div id='stars2'></div>
   <div id='stars3'></div>
 
-  <main class="m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden dark:text-white">
+  <main
+    class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white
+    "
+  >
     {% include "layout/navbar.html" %}
 
     <div class="
@@ -130,6 +135,7 @@
       flex justify-center
       flex-col flex-wrap
       lg:flex-row lg:flex-nowrap
+      dark:bg-black dark:bg-opacity-60
     ">
       {% block content %} {% endblock %}
     </div>
