@@ -19,10 +19,7 @@
     }
   },
   "author": "Maxime Buffa",
-  "dependencies": {
-    "autoprefixer": "^10.4.13",
-    "tailwindcss": "^3.2.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "npm-watch": "^0.11.0"
   }
