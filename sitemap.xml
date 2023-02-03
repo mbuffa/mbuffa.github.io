@@ -26,6 +26,10 @@
         <lastmod>2022-11-20</lastmod>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/demos/20230126-spell-it/</loc>
+        <lastmod>2023-01-26</lastmod>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/</loc>
     </url>
     <url>
@@ -39,6 +43,9 @@
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/erlang/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/gamejam/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/k8s/</loc>
