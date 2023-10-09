@@ -19,7 +19,8 @@ body.dark {
 }
 
 body.light {
-  background: #e2e8f0; /* slate-200 */
+  background: #e2e8f0;
+  /* slate-200 */
 }
 
 div.markdown-content img {
@@ -33,7 +34,8 @@ div.markdown-content img[src$="#cropped"] {
   width: 600px;
 }
 
-div.markdown-content ol, div.markdown-content ul {
+div.markdown-content ol,
+div.markdown-content ul {
   margin: 1em;
 }
 
@@ -92,11 +94,12 @@ div.markdown-content h6 {
 }
 
 div.markdown-content p {
-  line-height: 1.625; /* Tailwind 'relaxed' */
+  line-height: 1.625;
+  /* Tailwind 'relaxed' */
 }
 
 div.markdown-content ul {
-  list-style-type:circle;
+  list-style-type: circle;
 }
 
 div.markdown-content a {
@@ -122,7 +125,8 @@ body.dark h6 {
   text-shadow: 2px 2px black;
 }
 
-body.dark pre, body.dark code {
+body.dark pre,
+body.dark code {
   background-color: rgba(17, 17, 17, 9) !important;
 }
 
@@ -132,29 +136,41 @@ body.dark pre {
 }
 
 .w-120 {
-  width: 30rem; /* 480px */
+  width: 30rem;
+  /* 480px */
 }
 
 .w-125 {
-  width: 31.25rem; /* 500px */
+  width: 31.25rem;
+  /* 500px */
 }
 
 .min-w-120 {
-  min-width: 30rem; /* 480px */
+  min-width: 30rem;
+  /* 480px */
 }
 
 .max-h-120 {
-  max-height: 30rem;/* 480px */
+  max-height: 30rem;
+  /* 480px */
 }
 
 .min-w-100 {
-  min-width: 25rem; /* 400px */
+  min-width: 25rem;
+  /* 400px */
 }
 
 .min-h-100 {
-  min-height: 25rem; /* 400px */
+  min-height: 25rem;
+  /* 400px */
 }
 
 .top-50 {
   top: 200px;
+}
+
+.w-192 {
+  width: 48rem
+    /* 768px */
+  ;
 }
