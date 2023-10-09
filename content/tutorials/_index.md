@@ -1,9 +1,9 @@
 +++
-title = "Demos"
+title = "Tutorials"
 sort_by = "date"
 template = "articles/articles.html"
 page_template = "articles/article.html"
-path = "/demos"
+path = "/"
 [extra]
-subtitle = "A few projects and WASM prototypes"
+subtitle = "Guides on specific topics"
 +++

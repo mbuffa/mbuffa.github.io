@@ -1,8 +1,9 @@
 {% extends "_layout.html" %}
 
-{% import "articles/_articles.html" as macros %}
-
 {% block content %}
-{% set section = get_section(path="tips/_index.md") %}
-{{ macros::articles_list(title="Tips & Thoughts", list=section.pages) }}
+<div class="w-full flex flex-col">
+  {% include "_tutorials.html" %}
+  {% include "_tips.html" %}
+  {% include "_demos.html" %}
+</div>
 {% endblock content %}

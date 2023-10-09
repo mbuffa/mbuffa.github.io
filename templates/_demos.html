@@ -1,8 +1,8 @@
-{% extends "_layout.html" %}
-
 {% import "articles/_articles.html" as macros %}
 
 {% block content %}
+{% set section = get_section(path="demos/_index.md") %}
 {{ macros::articles_list(title=section.title, subtitle=section.extra.subtitle,
-list=section.pages) }}
+list=section.pages)
+}}
 {% endblock content %}
