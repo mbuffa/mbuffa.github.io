@@ -5,7 +5,7 @@
   
 
   
-  <title>Maxime Buffa</title>
+  <title>Kubernetes: Creating and using Operators</title>
   
 
   
@@ -19,7 +19,7 @@
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
 
-  <meta name="description" content="My personal website with tips and rants." />
+  <meta name="description" content="A beginner guide to solve some issues with operators" />
 </head>
 
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -206,67 +206,132 @@
         
 
 
-<article class="w-full">
-  <table class="w-full">
-    <thead>
-      <tr>
-        <th></th>
-        <th class="text-left">
-          <h1 class="m-2 p-2 inline-block font-bold text-2xl">Pages tagged with &#x27;elixir&#x27;</h1>
-          <aside
-            class="m-2 p-2 inline-block font-normal dark:font-thin dark:text-white text-black">
-            
-          </aside>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
+<aside class="p-4 w-full lg:w-3/12">
+  <div class="sticky flex top-50 justify-end">
+    <ol class="ml-6 list-decimal text-right">
       
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white">2022-11-20</td>
-        <td class="w-5/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/demos/20221120-astar-live-demo/">A* (A Star) Live Demo</a>
-        </td>
-      </tr>
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/tutorials/20220122-kubernetes-operators/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
       
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white">2021-09-16</td>
-        <td class="w-5/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/tutorials/20210916-elixir-environment-variables/">Elixir: Using Environment Variables</a>
-        </td>
-      </tr>
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/tutorials/20220122-kubernetes-operators/#solving-this-with-an-operator" title="Solving this with an Operator">
+  Solving this with an Operator
+</a>
+
+        
+      </li>
       
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white">2020-11-11</td>
-        <td class="w-5/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/tutorials/20201111-elixir-troubleshooting-mnesia/">Elixir: Troubleshooting Mnesia</a>
-        </td>
-      </tr>
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/tutorials/20220122-kubernetes-operators/#the-don-t-reinvent-the-wheel-way" title="The Don&#x27;t-Reinvent-The-Wheel way">
+  The Don&#x27;t-Reinvent-The-Wheel way
+</a>
+
+        
+      </li>
       
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white">2020-10-21</td>
-        <td class="w-5/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/tutorials/20201022-elixir-clustering-on-kubernetes/">Elixir: Clustering on Kubernetes</a>
-        </td>
-      </tr>
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/tutorials/20220122-kubernetes-operators/#the-do-it-yourself-way" title="The Do-It-Yourself way">
+  The Do-It-Yourself way
+</a>
+
+        
+      </li>
       
-    </tbody>
-  </table>
-</article>
+    </ol>
+  </div>
+</aside>
 
 
+
+  <article class="w-full lg:w-9/12 pt-1 pb-1">
+    
+    <header class="text-center">
+      <h1 class="text-2xl font-bold m-2 p-2">
+        Kubernetes: Creating and using Operators
+      </h1>
+      
+      <p class="subtitle">
+        Published on 2022-01-22
+      </p>
+      
+      
+      
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/k8s">
+    k8s
+  </a>
+  
+</p>
+
+      
+    </header>
+
+    
+
+    
+
+    
+
+    <div class="markdown-content">
+      <h2 id="context">Context</h2>
+<p>I recently had to deploy a variant of an existing application, with a small set of common REST APIs with additional endpoints, and a few specific applications to fit the business needs of that product. I encountered an issue though: my ingress configuration (using Traefik) needed to have access to my certificate in that same namespace. I'm pretty sure Kubernetes namespaces are completely isolated compartments, but I tried to access that secret in my default namespace nonetheless, without success.</p>
+<p>Also, that certificate would be renewed every once in a while.</p>
+<p>So I basically had three solutions:</p>
+<ul>
+<li>Copy the secret manually, initially and then after each certificate update</li>
+<li>Update the certificate update procedure, so that the person updating it would also update the one in my namespace</li>
+<li>Copy the secret on a regular basis, either with a Kubernetes CronJob or a deployed app</li>
+</ul>
+<p>The first solution was too error-prone. I'd rather write and validate a script once and schedule it, rather than trusting my self in six months, with clouded memory and human nature.</p>
+<p>The second solution would have required me to have access to that update procedure, and having anyone deploying in a new namespace the obligation to update that procedure (or warn about it) for each new namespace. Not really resilient to human errors and not scalable by definition.</p>
+<p>The third solution was the most tempting, but I found a more elegant and equally reliable way to do this.</p>
+<h2 id="solving-this-with-an-operator">Solving this with an Operator</h2>
+<p>A <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes Operator</a> is a fancy word for applications subscribing to the Kubernetes event loop and executing some code in return. Classic PubSub.</p>
+<p>Operators aren't a ressource as can be Pods, Deployments or ConfigMaps. They're just deployed apps with a certain design, and there are several ways to create one.</p>
+<h2 id="the-don-t-reinvent-the-wheel-way">The Don't-Reinvent-The-Wheel way</h2>
+<p>In my case, I wanted to have something running in a reanosably short timespan. There are ways to build your own operator &quot;from scratch&quot; (at least, without <a href="https://youtu.be/zSgiXGELjbc">having to invent the universe</a>), but I went for an &quot;out-of-the-box&quot; solution called <a href="https://github.com/flant/shell-operator">shell-operator</a>, allowing you to write a simple YAML manifest for the subscription, and some UNIX shell scripting for the code execution.</p>
+<p>The README is pretty straightforward and does a very good job, so I won't elaborate step-by-step on this. There are even examples, <a href="https://github.com/flant/shell-operator/tree/main/examples/101-monitor-pods">such as this one</a>. I wouldn't do a better job than the author himself. Advertising the use of Operators is the best I can do here :-)</p>
+<p>Anyway, you basically end up with a Dockerfile, a shell script both used to create the subscription hook and the code execution (in which you can of course run <code>kubectl apply -f</code> if it has the required permissions), and you only have to build your new container and deploy it.</p>
+<p>In my case, I ended up having a specific deployment for every namespace I deployed (and that is intended to not be a temporary namespace, and have a lifetime superior to the renewal period). I could have deployed only one operator and have it update the secret in all namespaces at once, but that basically killed the principle of compartmented and independant namespaces.</p>
+<h2 id="the-do-it-yourself-way">The Do-It-Yourself way</h2>
+<p>I also like to master what's happening and have a low-level understanding of things, so I'll try to update this article (or create a new one) about creating your own operator soon. Yeah, sorry, that section is currently a scam.</p>
+
+    </div>
+
+    
+    <script src="https://giscus.app/client.js"
+      data-repo="mbuffa/mbuffa.github.io"
+      data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+      data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+      data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+      data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+      </script>
+    
+  </article>
+  
       </div>
 
       <footer class="mt-20 p-4 text-center text-xs font-normal">

@@ -5,7 +5,7 @@
   
 
   
-  <title>Spell It</title>
+  <title>Kustomize: Using Environment Variables</title>
   
 
   
@@ -19,7 +19,7 @@
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
 
-  <meta name="description" content="My personal website with tips and rants." />
+  <meta name="description" content="Using Environment Variables in your Kubernetes manifests" />
 </head>
 
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -215,31 +215,7 @@
 <a class="
     inline-block px-2 text-sm w-full underline hover:no-underline
   dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/demos/20230126-spell-it/#controls" title="Controls">
-  Controls
-</a>
-
-        
-      </li>
-      
-      <li>
-        
-<a class="
-    inline-block px-2 text-sm w-full underline hover:no-underline
-  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/demos/20230126-spell-it/#how-to-play" title="How to play">
-  How to play
-</a>
-
-        
-      </li>
-      
-      <li>
-        
-<a class="
-    inline-block px-2 text-sm w-full underline hover:no-underline
-  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/demos/20230126-spell-it/#context" title="Context">
+  href="https://mbuffa.github.io/tutorials/20210720-kustomize-environment-variables/#context" title="Context">
   Context
 </a>
 
@@ -251,8 +227,8 @@
 <a class="
     inline-block px-2 text-sm w-full underline hover:no-underline
   dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/demos/20230126-spell-it/#goals" title="Goals">
-  Goals
+  href="https://mbuffa.github.io/tutorials/20210720-kustomize-environment-variables/#prerequisites" title="Prerequisites">
+  Prerequisites
 </a>
 
         
@@ -263,20 +239,8 @@
 <a class="
     inline-block px-2 text-sm w-full underline hover:no-underline
   dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/demos/20230126-spell-it/#history" title="History">
-  History
-</a>
-
-        
-      </li>
-      
-      <li>
-        
-<a class="
-    inline-block px-2 text-sm w-full underline hover:no-underline
-  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/demos/20230126-spell-it/#repo" title="Repo">
-  Repo
+  href="https://mbuffa.github.io/tutorials/20210720-kustomize-environment-variables/#let-s-get-started" title="Let&#x27;s get started">
+  Let&#x27;s get started
 </a>
 
         
@@ -292,11 +256,11 @@
     
     <header class="text-center">
       <h1 class="text-2xl font-bold m-2 p-2">
-        Spell It
+        Kustomize: Using Environment Variables
       </h1>
       
       <p class="subtitle">
-        Published on 2023-01-26
+        Published on 2021-07-20
       </p>
       
       
@@ -304,23 +268,8 @@
 <p class="max-w-fit m-auto">
   
   <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/demo">
-    demo
-  </a>
-  
-  <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/rust">
-    rust
-  </a>
-  
-  <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/macroquad">
-    macroquad
-  </a>
-  
-  <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/gamejam">
-    gamejam
+    href="/tags/k8s">
+    k8s
   </a>
   
 </p>
@@ -329,62 +278,148 @@
     </header>
 
     
-    <div class="video-embed">
-      <canvas id="glcanvas"
-        class="m-auto block min-w-100 min-h-100 max-w-screen-sm max-h-120 border border-solid border-white z-10"
-        tabindex='1'></canvas>
-    </div>
-    <script
-      src="https://not-fl3.github.io/miniquad-samples/mq_js_bundle.js"></script>
-    <script>load("/assets/demos/wasm/spell-it.wasm");</script>
-    
 
     
 
     
 
     <div class="markdown-content">
-      <p><a href="https://relakksmakks.itch.io/spell-it">Play the game and read the GDD on Itch.io</a></p>
-<h2 id="controls">Controls</h2>
-<ul>
-<li>Alphabetical letters on your keyboard</li>
-</ul>
-<h2 id="how-to-play">How to play</h2>
-<ul>
-<li>You'll face encounters with various numbers of enemies, in turn-based sequences</li>
-<li>Pick a spell on your spellbook on the left, and type it when it's your turn to act</li>
-<li>Once all enemies are defeated, you can automatically go to the next fight</li>
-<li>Keep in mind that you have a spell raising your shield, healing you, and dealing damage in two ways: mono target and multi target...</li>
-<li>...And that mono target spells always affect the left-most creature :)</li>
-</ul>
-<h2 id="context">Context</h2>
-<p>I created this prototype for the Pirate Software 11th Game Jam organized by Thor during January 2023. The event was a 2 weeks game jam including the elaboration of a game design document, and the development of the game itself. To participate, you had to make assets on your own without any use of licensed material or AI generated content.</p>
-<p>Since this was my first jam, I joined solo to see how far I would go. I initially planned to implement Speech-To-Text with CoquiSTT (and even full first person dungeon crawler mechanics), but finally reduced the scope of the project to a text-based MVP.</p>
-<p>The theme was &quot;Unusual Magic&quot; :) So I started drafting a document to think how this could be interpreted, with the following question in mind: <em>What's a usual way of representing magic in fictions?</em> And after a few ideas, I was excited about the idea of using voice recognition for throwing spells.</p>
-<h2 id="goals">Goals</h2>
-<p>Those items are on my To-Do list:</p>
-<ul>
-<li>Adding sounds :)</li>
-<li>Testing Speech-To-Text with CoquiSTT and a custom trained model</li>
-<li>Adding ambient samples or MIDI tracks (once I have learned how to make basic and decent soundtracks)</li>
-<li>Going 3D for the Scene Rendering</li>
-<li>Add low poly 3D models</li>
-<li>Rewrite with Bevy</li>
-<li>Add a Speed spell</li>
-<li>Adding better AI, with monster Spells, charged attacks, moves and buffs</li>
-</ul>
-<h2 id="history">History</h2>
-<ul>
-<li>2023-01-26: Initial Itch.io release
-<ul>
-<li>Turn-based combats with sequences based on entities speed</li>
-<li>List of stages featuring a various number of enemies</li>
-<li>Very Basic AI (creatures always do a simple attack)</li>
-</ul>
-</li>
-</ul>
-<h2 id="repo">Repo</h2>
-<p>Source code is available on <a href="https://github.com/mbuffa/game-prototypes/tree/master/02-spell-it">Github</a></p>
+      <h2 id="context">Context</h2>
+<p>Using environment variables in your Kubernetes manifests built with Kustomize may be a bit tedious, but I recently found how you can actually use some.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>I won't go into too much details about Kubernetes manifests, or deploying on Kubernetes in general. I learned as I went, mostly by looking at examples and documentation. If you're looking for tutorials or courses, there are pretty good resources available for free. <a href="https://prefetch.net/blog/2019/10/16/the-beginners-guide-to-creating-kubernetes-manifests/">This great article</a> gives some very useful tips to learn by doing, and there's even <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-interactive/">an official interactive tutorial</a>.</p>
+<p>And, of course, you also need to know Docker :-)</p>
+<h2 id="let-s-get-started">Let's get started</h2>
+<p>Let's take this stripped down deployment example, named <code>deployment.yaml</code>:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: apps&#x2F;v1
+kind: Deployment
+metadata:
+  name:  MYAPP
+  namespace: default
+  labels:
+    app:  MYAPP
+spec:
+  selector:
+    matchLabels:
+      app: MYAPP
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name:  MYAPP
+        image:  MYAPP:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: MYAPP
+              key: DB_HOST
+        ports:
+        - containerPort:  80
+          name:  MYAPP
+      restartPolicy: Always
+</code></pre>
+<p>You would typically associate this with a <code>Kustomization.yaml</code> file:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
+  - deployment.yaml
+</code></pre>
+<p>This file allows you to define values shared across multiple resources (like services, jobs, ingresses...), either by editing it directly, like this:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
+  - deployment.yaml
+
+namespace: web
+</code></pre>
+<p>...or programmatically, for example, in your CI:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">$ kustomize edit set namespace web
+</code></pre>
+<p>Running <code>kustomize build .</code> in the directory containing your kustomization and deployment would result in an output that you could apply directly with <code>kubectl apply</code>. Just run <code>kustomize build . | kubectl apply -f -</code> and you're good to go.</p>
+<p>Now let's say we want to add an annotation at build time in our CI with an environment variable, like this:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: apps&#x2F;v1
+kind: Deployment
+metadata:
+  name:  MYAPP
+spec:
+  template:
+    annotations:
+      example.com&#x2F;git-commit: $(CI_COMMIT_SHORT_SHA)
+</code></pre>
+<p>This can be pretty useful if, for example, you want to do a new deployment even if the docker image specified in that deployment hasn't changed.</p>
+<p>Running <code>kustomize build .</code> now would keep that line as-is.</p>
+<p>In that case, you <em>could</em> add an annotation programmatically, like this:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">kustomize edit add annotation example.com&#x2F;git_commit:$CI_COMMIT_SHORT_SHA
+</code></pre>
+<p>But then all your resources would be affected, mearning that your service and ingress would also be redeployed in that example. In some cases, you really want to scope your changes.</p>
+<p>To use environment variables, you need to specify them in your <code>Kustomization</code>, in a <code>vars:</code> section:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
+  - deployment.yaml
+
+vars:
+- name: CI_COMMIT_SHORT_SHA
+  objref:
+    kind: ConfigMap
+    name: environment-variables
+    apiVersion: v1
+  fieldref:
+    fieldpath: data.CI_COMMIT_SHORT_SHA
+</code></pre>
+<p>Each variable defined here must have a name and references to let Kustomize know where it's supposed to get that value. In that example, I'm using a <code>configMap</code>, which is often the best option to store configuration.</p>
+<p>While we could definitely define a <code>ConfigMap</code> ourselves as part of our <code>Resources</code>, we would lose the ability to define that variable at build time.</p>
+<p>That's why we want to build a <code>ConfigMap</code> programmatically, by sourcing a file we'll create in our CI:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
+  - deployment.yaml
+
+configMapGenerator:
+- name: environment-variables
+  envs: [environment-properties.env]
+  behavior: create
+
+vars: ...
+</code></pre>
+<p>There's one more thing we need to do though. For the sake of testing your code locally, just create a file named <code>environment-properties.env</code> containing the following content:</p>
+<pre><code>CI_COMMIT_SHORT_SHA=unknown
+</code></pre>
+<p>(You should keep that file tracked in your CI, it would make debugging locally easier.)</p>
+<p>Running <code>kustomize build .</code> at this point would, still, keep that variable as-is. That's because we try to substitute a value in a field that Kustomize doesn't look in by default, probably for performance or security concerns.</p>
+<p>To fix this, we need to add a custom transformer. Put that in your Kustomization:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">configurations:
+  - env-var-transformer.yaml
+</code></pre>
+<p>And then create <code>env-var-transformer.yaml</code> with that content:</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">varReference:
+  - kind: Deployment
+    path: spec&#x2F;template&#x2F;metadata&#x2F;annotations
+</code></pre>
+<p>Now, running <code>kustomize build .</code> locally should give you the expected result.</p>
+<p>Finally, in our CI job, we can build that file:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">echo CI_COMMIT_SHORT_SHA=$CI_COMMIT_SHORT_SHA &gt; environment-properties.env
+# And then, you just have to apply your changes:
+kustomize build . |kubectl apply -f -
+</code></pre>
+<p>Now running <code>kustomize build .</code> would result in this :-)</p>
+<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: v1
+data:
+  CI_COMMIT_SHORT_SHA: &quot;123456&quot;
+kind: ConfigMap
+metadata:
+  name: environment-variables-2t266m664k
+---
+apiVersion: apps&#x2F;v1
+kind: Deployment
+spec:
+  template:
+    annotations:
+      example.com&#x2F;git-commit: &quot;123456&quot;
+</code></pre>
+<p>Tada!</p>
+<p>Kustomize has a predefined list of fields it'll actually replace corresponding patterns with environment variables. You can check this list <a href="https://github.com/kubernetes-sigs/kustomize/blob/a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce/api/konfig/builtinpluginconsts/varreference.go">directly in the repository</a>. If you want to do variable substitution in a field that is not in that list, you can follow the section <code>I want to put $VAR in some (currently disallowed) field</code> <a href="https://github.com/kubernetes-sigs/kustomize/issues/2052">on this Github issue</a>, which points to the aforementioned source file.</p>
+<p>Hope this will help some people stumbling around here.</p>
 
     </div>
 
