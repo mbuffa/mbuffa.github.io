@@ -23,6 +23,11 @@ body.light {
   /* slate-200 */
 }
 
+body.light blockquote {
+  border-left-color: #a0aec0;
+  /* slate-600 */
+}
+
 div.markdown-content img {
   margin: auto;
   display: flex;
@@ -115,6 +120,13 @@ div.markdown-content pre {
   padding: .5rem;
 }
 
+div.markdown-content blockquote {
+  margin: 1rem;
+  padding: .5rem;
+  border-left-style: solid;
+  border-left-width: 6px;
+}
+
 body.dark h1,
 body.dark h2,
 body.dark h3,
@@ -126,13 +138,18 @@ body.dark h6 {
 }
 
 body.dark pre,
-body.dark code {
+body.dark code,
+body.dark blockquote {
   background-color: rgba(17, 17, 17, 9) !important;
 }
 
 body.dark pre {
   border: 1px solid white;
   border-top-width: 6px;
+}
+
+body.dark blockquote {
+  border-left-color: white;
 }
 
 .w-120 {
