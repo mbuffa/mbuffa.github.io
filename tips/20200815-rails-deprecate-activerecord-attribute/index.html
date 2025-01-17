@@ -285,27 +285,27 @@
 <li>shaming your coworkers on Slack with a bot message</li>
 </ul>
 <p>But let's keep it simple for the time being:</p>
-<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby"># app&#x2F;deprecators&#x2F;field_deprecator.rb
-class FieldDeprecator
-  def deprecation_warning(field, replacement, _caller_backtrace = nil)
-    message = &quot;#{field} is deprecated, please favor #{replacement}&quot;
-    Kernel.warn message
-  end
-end
-</code></pre>
+<pre data-lang="ruby" style="background-color:#2b303b;color:#c0c5ce;" class="language-ruby "><code class="language-ruby" data-lang="ruby"><span style="color:#65737e;"># app/deprecators/field_deprecator.rb
+</span><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">FieldDeprecator
+</span><span style="color:#eff1f5;">  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">deprecation_warning</span><span>(</span><span style="color:#bf616a;">field</span><span>, </span><span style="color:#bf616a;">replacement</span><span>, </span><span style="color:#bf616a;">_caller_backtrace </span><span>= </span><span style="color:#d08770;">nil</span><span>)
+</span><span>    message = &quot;#{field}</span><span style="color:#a3be8c;"> is deprecated, please favor </span><span>#{replacement}&quot;
+</span><span>    </span><span style="color:#ebcb8b;">Kernel</span><span>.</span><span style="color:#96b5b4;">warn</span><span> message
+</span><span>  </span><span style="color:#b48ead;">end
+</span><span style="color:#b48ead;">end
+</span></code></pre>
 <p>We're not respecting the semantics of the second argument, but hey, this is duck-typing :trollface:</p>
 <p>Then, all we have to do is to add a call to this class method in our model:</p>
-<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">class Racoon &lt; ApplicationRecord
-  deprecate \
-    owner_id: &#x27;Racoon#caretaker_id&#x27;,
-    # ... any other attribute you need to deprecate.
-    deprecator: FieldDeprecator.new
-end
-</code></pre>
+<pre data-lang="ruby" style="background-color:#2b303b;color:#c0c5ce;" class="language-ruby "><code class="language-ruby" data-lang="ruby"><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">Racoon </span><span style="color:#eff1f5;">&lt; </span><span style="color:#a3be8c;">ApplicationRecord
+</span><span>  deprecate \
+</span><span>    </span><span style="color:#a3be8c;">owner_id: </span><span>&#39;</span><span style="color:#a3be8c;">Racoon#caretaker_id</span><span>&#39;,
+</span><span>    </span><span style="color:#65737e;"># ... any other attribute you need to deprecate.
+</span><span>    </span><span style="color:#a3be8c;">deprecator: </span><span style="color:#ebcb8b;">FieldDeprecator</span><span>.</span><span style="color:#8fa1b3;">new
+</span><span style="color:#b48ead;">end
+</span></code></pre>
 <p>With our current deprecator, this would output a warning message everytime this field is being read and updated:</p>
-<pre><code>&gt; Racoon.first.owner_id
-owner_id is deprecated, please favor Racoon#caretaker_id
-</code></pre>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>&gt; Racoon.first.owner_id
+</span><span>owner_id is deprecated, please favor Racoon#caretaker_id
+</span></code></pre>
 <p><em>Et voilà.</em></p>
 
     </div>

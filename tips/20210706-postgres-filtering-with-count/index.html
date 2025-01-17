@@ -244,12 +244,12 @@
 <p>Thankfully, there's a way simpler way to do this in PostgreSQL, with <code>FILTER</code>.</p>
 <p>Let's consider we have a simple table (<code>racoons</code>) with a few fields, and we want to return a <code>caretaker_id</code>, the total number of racoons taken care by this person, and the number of racoons that have been released to the wilds.</p>
 <p>It's as simple as this:</p>
-<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">SELECT   r.caretaker_id,
-         COUNT(*) as total,
-         COUNT(*) FILTER (WHERE released = true) as released
-FROM     racoons r
-GROUP BY r.caretaker_id;
-</code></pre>
+<pre data-lang="sql" style="background-color:#2b303b;color:#c0c5ce;" class="language-sql "><code class="language-sql" data-lang="sql"><span style="color:#b48ead;">SELECT   </span><span style="color:#d08770;">r</span><span>.</span><span style="color:#d08770;">caretaker_id</span><span>,
+</span><span>         </span><span style="color:#96b5b4;">COUNT</span><span>(</span><span style="color:#bf616a;">*</span><span>) as total,
+</span><span>         </span><span style="color:#96b5b4;">COUNT</span><span>(</span><span style="color:#bf616a;">*</span><span>) FILTER (</span><span style="color:#b48ead;">WHERE</span><span> released = </span><span style="color:#d08770;">true</span><span>) as released
+</span><span style="color:#b48ead;">FROM</span><span>     racoons r
+</span><span style="color:#b48ead;">GROUP BY </span><span style="color:#d08770;">r</span><span>.</span><span style="color:#d08770;">caretaker_id</span><span>;
+</span></code></pre>
 <p><a href="https://kb.objectrocket.com/postgresql/how-to-use-the-filter-clause-in-postgresql-881">This page</a> has a bit more information, especially if you're working with a PostgreSQL database prior to 9.4.</p>
 
     </div>

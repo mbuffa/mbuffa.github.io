@@ -327,49 +327,49 @@
 <p>In that case, you might be tempted to use a polymorphic association, but this comes at the cost of sacrificing data integrity with the loss of foreign keys.</p>
 <p>One simple alternative consists of having one foreign key per relation. It is simple and reliable, at least until you reach a large number of foreign keys.</p>
 <p>Let's say we have the following schema:</p>
-<pre><code>items       
-----        todos   
-id          -----   
-todo_id --&gt; id      posts
-...         title   -----
-post_id ----------&gt; id
-                    title
-</code></pre>
-<p>We might want to know the &quot;type&quot; of relation our row is linked to, without having to use a case-when statement on each SQl query, which would be costly - and/or at least inefficient.</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>items       
+</span><span>----        todos   
+</span><span>id          -----   
+</span><span>todo_id --&gt; id      posts
+</span><span>...         title   -----
+</span><span>post_id ----------&gt; id
+</span><span>                    title
+</span></code></pre>
+<p>We might want to know the "type" of relation our row is linked to, without having to use a case-when statement on each SQl query, which would be costly - and/or at least inefficient.</p>
 <p>How about adding a string field representing the relation type? It's fine. But our model may change, and we might have to declare a new type, and yet forget to add the new possible value.</p>
 <p>This is a situation where SQL generated columns can be handy.</p>
 <h2 id="usage">Usage</h2>
 <p>A generated column is typically created like this:</p>
-<pre data-lang="sql" class="language-sql "><code class="language-sql" data-lang="sql">ALTER TABLE $TABLE_NAME ADD COLUMN $FIELD_NAME $FIELD_TYPE GENERATED AS (
-  $GENERATION_EXPRESSION
-) STORED;
-</code></pre>
+<pre data-lang="sql" style="background-color:#2b303b;color:#c0c5ce;" class="language-sql "><code class="language-sql" data-lang="sql"><span style="color:#b48ead;">ALTER TABLE </span><span>$TABLE_NAME ADD COLUMN $FIELD_NAME $FIELD_TYPE GENERATED AS (
+</span><span>  $GENERATION_EXPRESSION
+</span><span>) STORED;
+</span></code></pre>
 <p>A few key points here:</p>
 <ul>
 <li><code>$GENERATION_EXPRESSION</code> can be any statement returning a value,</li>
 <li>Postgres only supports stored values.</li>
 </ul>
 <p>So, in our case, the field definition would look like this:</p>
-<pre><code>ALTER TABLE items ADD COLUMN relation_type string GENERATED AS (
-  CASE
-    WHEN &#x27;post_id&#x27; IS NOT NULL THEN &#x27;post&#x27;
-    WHEN &#x27;todo_id&#x27; IS NOT NULL THEN &#x27;todo&#x27;
-  END
-) STORED;
-</code></pre>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>ALTER TABLE items ADD COLUMN relation_type string GENERATED AS (
+</span><span>  CASE
+</span><span>    WHEN &#39;post_id&#39; IS NOT NULL THEN &#39;post&#39;
+</span><span>    WHEN &#39;todo_id&#39; IS NOT NULL THEN &#39;todo&#39;
+</span><span>  END
+</span><span>) STORED;
+</span></code></pre>
 <h2 id="implications">Implications</h2>
 <h3 id="introducing-new-foreign-keys">Introducing new foreign keys</h3>
 <p>You may need to introduce new foreign keys. In that case, you'll need to alter the table again and add a new condition to your generator expression.</p>
-<p>You might be tempted to add a default &quot;unknown&quot; value, but I think explicit failure should be prefered in that case.</p>
+<p>You might be tempted to add a default "unknown" value, but I think explicit failure should be prefered in that case.</p>
 <h3 id="testing">Testing</h3>
 <p>Since we basically have an enumeration, we might want to iterate over this enumeration in our tests, so that we can check that our codebase actually handles all the possible values it can take (eg. for exposing values on a GraphQL API).</p>
 <p>And it turns out we can retrieve that information from Postgres!</p>
-<pre><code>SELECT generation_expression
-        FROM information_schema.columns
-        WHERE table_schema = &#x27;public&#x27;
-        AND table_name   = &#x27;items&#x27;
-        AND column_name = &#x27;relation_type&#x27;;
-</code></pre>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>SELECT generation_expression
+</span><span>        FROM information_schema.columns
+</span><span>        WHERE table_schema = &#39;public&#39;
+</span><span>        AND table_name   = &#39;items&#39;
+</span><span>        AND column_name = &#39;relation_type&#39;;
+</span></code></pre>
 <p>This will return the raw SQL statement used to generate new values. It's a bit sketchy, but you can parse this expression with simple regexps and extract what you need.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Generated fields are a simple but powerful tool, and you can use it in a lot of scenarios I didn't mention, such as generating a tsvector for full text search, or simplifying basic yet cumbersome checks.</p>

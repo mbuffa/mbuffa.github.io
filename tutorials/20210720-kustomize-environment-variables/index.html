@@ -291,132 +291,132 @@
 <p>And, of course, you also need to know Docker :-)</p>
 <h2 id="let-s-get-started">Let's get started</h2>
 <p>Let's take this stripped down deployment example, named <code>deployment.yaml</code>:</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: apps&#x2F;v1
-kind: Deployment
-metadata:
-  name:  MYAPP
-  namespace: default
-  labels:
-    app:  MYAPP
-spec:
-  selector:
-    matchLabels:
-      app: MYAPP
-  replicas: 1
-  template:
-    spec:
-      containers:
-      - name:  MYAPP
-        image:  MYAPP:latest
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 100Mi
-        env:
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: MYAPP
-              key: DB_HOST
-        ports:
-        - containerPort:  80
-          name:  MYAPP
-      restartPolicy: Always
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">apps/v1
+</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
+</span><span style="color:#bf616a;">metadata</span><span>:
+</span><span>  </span><span style="color:#bf616a;">name</span><span>:  </span><span style="color:#a3be8c;">MYAPP
+</span><span>  </span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">default
+</span><span>  </span><span style="color:#bf616a;">labels</span><span>:
+</span><span>    </span><span style="color:#bf616a;">app</span><span>:  </span><span style="color:#a3be8c;">MYAPP
+</span><span style="color:#bf616a;">spec</span><span>:
+</span><span>  </span><span style="color:#bf616a;">selector</span><span>:
+</span><span>    </span><span style="color:#bf616a;">matchLabels</span><span>:
+</span><span>      </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">MYAPP
+</span><span>  </span><span style="color:#bf616a;">replicas</span><span>: </span><span style="color:#d08770;">1
+</span><span>  </span><span style="color:#bf616a;">template</span><span>:
+</span><span>    </span><span style="color:#bf616a;">spec</span><span>:
+</span><span>      </span><span style="color:#bf616a;">containers</span><span>:
+</span><span>      - </span><span style="color:#bf616a;">name</span><span>:  </span><span style="color:#a3be8c;">MYAPP
+</span><span>        </span><span style="color:#bf616a;">image</span><span>:  </span><span style="color:#a3be8c;">MYAPP:latest
+</span><span>        </span><span style="color:#bf616a;">resources</span><span>:
+</span><span>          </span><span style="color:#bf616a;">requests</span><span>:
+</span><span>            </span><span style="color:#bf616a;">cpu</span><span>: </span><span style="color:#a3be8c;">100m
+</span><span>            </span><span style="color:#bf616a;">memory</span><span>: </span><span style="color:#a3be8c;">100Mi
+</span><span>          </span><span style="color:#bf616a;">limits</span><span>:
+</span><span>            </span><span style="color:#bf616a;">cpu</span><span>: </span><span style="color:#a3be8c;">100m
+</span><span>            </span><span style="color:#bf616a;">memory</span><span>: </span><span style="color:#a3be8c;">100Mi
+</span><span>        </span><span style="color:#bf616a;">env</span><span>:
+</span><span>        - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">DB_HOST
+</span><span>          </span><span style="color:#bf616a;">valueFrom</span><span>:
+</span><span>            </span><span style="color:#bf616a;">configMapKeyRef</span><span>:
+</span><span>              </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">MYAPP
+</span><span>              </span><span style="color:#bf616a;">key</span><span>: </span><span style="color:#a3be8c;">DB_HOST
+</span><span>        </span><span style="color:#bf616a;">ports</span><span>:
+</span><span>        - </span><span style="color:#bf616a;">containerPort</span><span>:  </span><span style="color:#d08770;">80
+</span><span>          </span><span style="color:#bf616a;">name</span><span>:  </span><span style="color:#a3be8c;">MYAPP
+</span><span>      </span><span style="color:#bf616a;">restartPolicy</span><span>: </span><span style="color:#a3be8c;">Always
+</span></code></pre>
 <p>You would typically associate this with a <code>Kustomization.yaml</code> file:</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
-  - deployment.yaml
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">resources</span><span>:
+</span><span>  - </span><span style="color:#a3be8c;">deployment.yaml
+</span></code></pre>
 <p>This file allows you to define values shared across multiple resources (like services, jobs, ingresses...), either by editing it directly, like this:</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
-  - deployment.yaml
-
-namespace: web
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">resources</span><span>:
+</span><span>  - </span><span style="color:#a3be8c;">deployment.yaml
+</span><span>
+</span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">web
+</span></code></pre>
 <p>...or programmatically, for example, in your CI:</p>
-<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">$ kustomize edit set namespace web
-</code></pre>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">$</span><span> kustomize edit set namespace web
+</span></code></pre>
 <p>Running <code>kustomize build .</code> in the directory containing your kustomization and deployment would result in an output that you could apply directly with <code>kubectl apply</code>. Just run <code>kustomize build . | kubectl apply -f -</code> and you're good to go.</p>
 <p>Now let's say we want to add an annotation at build time in our CI with an environment variable, like this:</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: apps&#x2F;v1
-kind: Deployment
-metadata:
-  name:  MYAPP
-spec:
-  template:
-    annotations:
-      example.com&#x2F;git-commit: $(CI_COMMIT_SHORT_SHA)
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">apps/v1
+</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
+</span><span style="color:#bf616a;">metadata</span><span>:
+</span><span>  </span><span style="color:#bf616a;">name</span><span>:  </span><span style="color:#a3be8c;">MYAPP
+</span><span style="color:#bf616a;">spec</span><span>:
+</span><span>  </span><span style="color:#bf616a;">template</span><span>:
+</span><span>    </span><span style="color:#bf616a;">annotations</span><span>:
+</span><span>      </span><span style="color:#bf616a;">example.com/git-commit</span><span>: </span><span style="color:#a3be8c;">$(CI_COMMIT_SHORT_SHA)
+</span></code></pre>
 <p>This can be pretty useful if, for example, you want to do a new deployment even if the docker image specified in that deployment hasn't changed.</p>
 <p>Running <code>kustomize build .</code> now would keep that line as-is.</p>
 <p>In that case, you <em>could</em> add an annotation programmatically, like this:</p>
-<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">kustomize edit add annotation example.com&#x2F;git_commit:$CI_COMMIT_SHORT_SHA
-</code></pre>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">kustomize</span><span> edit add annotation example.com/git_commit:$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA
+</span></code></pre>
 <p>But then all your resources would be affected, mearning that your service and ingress would also be redeployed in that example. In some cases, you really want to scope your changes.</p>
 <p>To use environment variables, you need to specify them in your <code>Kustomization</code>, in a <code>vars:</code> section:</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
-  - deployment.yaml
-
-vars:
-- name: CI_COMMIT_SHORT_SHA
-  objref:
-    kind: ConfigMap
-    name: environment-variables
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.CI_COMMIT_SHORT_SHA
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">resources</span><span>:
+</span><span>  - </span><span style="color:#a3be8c;">deployment.yaml
+</span><span>
+</span><span style="color:#bf616a;">vars</span><span>:
+</span><span>- </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">CI_COMMIT_SHORT_SHA
+</span><span>  </span><span style="color:#bf616a;">objref</span><span>:
+</span><span>    </span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">ConfigMap
+</span><span>    </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">environment-variables
+</span><span>    </span><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">v1
+</span><span>  </span><span style="color:#bf616a;">fieldref</span><span>:
+</span><span>    </span><span style="color:#bf616a;">fieldpath</span><span>: </span><span style="color:#a3be8c;">data.CI_COMMIT_SHORT_SHA
+</span></code></pre>
 <p>Each variable defined here must have a name and references to let Kustomize know where it's supposed to get that value. In that example, I'm using a <code>configMap</code>, which is often the best option to store configuration.</p>
 <p>While we could definitely define a <code>ConfigMap</code> ourselves as part of our <code>Resources</code>, we would lose the ability to define that variable at build time.</p>
 <p>That's why we want to build a <code>ConfigMap</code> programmatically, by sourcing a file we'll create in our CI:</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">resources:
-  - deployment.yaml
-
-configMapGenerator:
-- name: environment-variables
-  envs: [environment-properties.env]
-  behavior: create
-
-vars: ...
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">resources</span><span>:
+</span><span>  - </span><span style="color:#a3be8c;">deployment.yaml
+</span><span>
+</span><span style="color:#bf616a;">configMapGenerator</span><span>:
+</span><span>- </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">environment-variables
+</span><span>  </span><span style="color:#bf616a;">envs</span><span>: [</span><span style="color:#a3be8c;">environment-properties.env</span><span>]
+</span><span>  </span><span style="color:#bf616a;">behavior</span><span>: </span><span style="color:#a3be8c;">create
+</span><span>
+</span><span style="color:#bf616a;">vars</span><span>: </span><span style="color:#d08770;">...
+</span></code></pre>
 <p>There's one more thing we need to do though. For the sake of testing your code locally, just create a file named <code>environment-properties.env</code> containing the following content:</p>
-<pre><code>CI_COMMIT_SHORT_SHA=unknown
-</code></pre>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>CI_COMMIT_SHORT_SHA=unknown
+</span></code></pre>
 <p>(You should keep that file tracked in your CI, it would make debugging locally easier.)</p>
 <p>Running <code>kustomize build .</code> at this point would, still, keep that variable as-is. That's because we try to substitute a value in a field that Kustomize doesn't look in by default, probably for performance or security concerns.</p>
 <p>To fix this, we need to add a custom transformer. Put that in your Kustomization:</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">configurations:
-  - env-var-transformer.yaml
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">configurations</span><span>:
+</span><span>  - </span><span style="color:#a3be8c;">env-var-transformer.yaml
+</span></code></pre>
 <p>And then create <code>env-var-transformer.yaml</code> with that content:</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">varReference:
-  - kind: Deployment
-    path: spec&#x2F;template&#x2F;metadata&#x2F;annotations
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">varReference</span><span>:
+</span><span>  - </span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
+</span><span>    </span><span style="color:#bf616a;">path</span><span>: </span><span style="color:#a3be8c;">spec/template/metadata/annotations
+</span></code></pre>
 <p>Now, running <code>kustomize build .</code> locally should give you the expected result.</p>
 <p>Finally, in our CI job, we can build that file:</p>
-<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">echo CI_COMMIT_SHORT_SHA=$CI_COMMIT_SHORT_SHA &gt; environment-properties.env
-# And then, you just have to apply your changes:
-kustomize build . |kubectl apply -f -
-</code></pre>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#96b5b4;">echo</span><span> CI_COMMIT_SHORT_SHA=$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA </span><span>&gt; environment-properties.env
+</span><span style="color:#65737e;"># And then, you just have to apply your changes:
+</span><span style="color:#bf616a;">kustomize</span><span> build . |</span><span style="color:#bf616a;">kubectl</span><span> apply</span><span style="color:#bf616a;"> -f</span><span> -
+</span></code></pre>
 <p>Now running <code>kustomize build .</code> would result in this :-)</p>
-<pre data-lang="yaml" class="language-yaml "><code class="language-yaml" data-lang="yaml">apiVersion: v1
-data:
-  CI_COMMIT_SHORT_SHA: &quot;123456&quot;
-kind: ConfigMap
-metadata:
-  name: environment-variables-2t266m664k
----
-apiVersion: apps&#x2F;v1
-kind: Deployment
-spec:
-  template:
-    annotations:
-      example.com&#x2F;git-commit: &quot;123456&quot;
-</code></pre>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">v1
+</span><span style="color:#bf616a;">data</span><span>:
+</span><span>  </span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA</span><span>: &quot;</span><span style="color:#a3be8c;">123456</span><span>&quot;
+</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">ConfigMap
+</span><span style="color:#bf616a;">metadata</span><span>:
+</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">environment-variables-2t266m664k
+</span><span>---
+</span><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">apps/v1
+</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
+</span><span style="color:#bf616a;">spec</span><span>:
+</span><span>  </span><span style="color:#bf616a;">template</span><span>:
+</span><span>    </span><span style="color:#bf616a;">annotations</span><span>:
+</span><span>      </span><span style="color:#bf616a;">example.com/git-commit</span><span>: &quot;</span><span style="color:#a3be8c;">123456</span><span>&quot;
+</span></code></pre>
 <p>Tada!</p>
 <p>Kustomize has a predefined list of fields it'll actually replace corresponding patterns with environment variables. You can check this list <a href="https://github.com/kubernetes-sigs/kustomize/blob/a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce/api/konfig/builtinpluginconsts/varreference.go">directly in the repository</a>. If you want to do variable substitution in a field that is not in that list, you can follow the section <code>I want to put $VAR in some (currently disallowed) field</code> <a href="https://github.com/kubernetes-sigs/kustomize/issues/2052">on this Github issue</a>, which points to the aforementioned source file.</p>
 <p>Hope this will help some people stumbling around here.</p>
