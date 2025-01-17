@@ -1,46 +1,46 @@
 name: CI
 on:
   push:
-    branches: [ content ]
+    branches: [content]
 
 env:
-  ZOLA_VERSION: v0.18.0
+  ZOLA_VERSION: v0.19.2
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
 
-    - name: Set Git identity
-      run: |
-        # This is required to run `act` locally (default image doesn't include those).
-        # See: https://github.com/nektos/act/issues/107
-        apt update && apt install -y git sudo nodejs
-        git config --global user.email "mbuffa@users.noreply.github.com"
-        git config --global user.name "Maxime Buffa"
+      - name: Set Git identity
+        run: |
+          # This is required to run `act` locally (default image doesn't include those).
+          # See: https://github.com/nektos/act/issues/107
+          apt update && apt install -y git sudo nodejs
+          git config --global user.email "mbuffa@users.noreply.github.com"
+          git config --global user.name "Maxime Buffa"
 
-    - name: Checkout Zola
-      run: curl -s -L https://github.com/getzola/zola/releases/download/$ZOLA_VERSION/zola-$ZOLA_VERSION-x86_64-unknown-linux-gnu.tar.gz | sudo tar xvzf - -C /usr/local/bin
+      - name: Checkout Zola
+        run: curl -s -L https://github.com/getzola/zola/releases/download/$ZOLA_VERSION/zola-$ZOLA_VERSION-x86_64-unknown-linux-gnu.tar.gz | sudo tar xvzf - -C /usr/local/bin
 
-    - name: Build
-      run: |
-        cd $GITHUB_WORKSPACE
-        zola build
-        npm run build
-        cp vendor/* public/
+      - name: Build
+        run: |
+          cd $GITHUB_WORKSPACE
+          zola build
+          npm run build
+          cp vendor/* public/
 
-    - name: Push
-      run: |
-        cd $GITHUB_WORKSPACE
-        git fetch -p
-        git checkout master
-        rm -rf config.toml content sass templates
-        cp -R public/* .
-        rm -rf public
-        git add -f .
-        git status
-        git commit -m "New release"
-        git push origin master
+      - name: Push
+        run: |
+          cd $GITHUB_WORKSPACE
+          git fetch -p
+          git checkout master
+          rm -rf config.toml content sass templates
+          cp -R public/* .
+          rm -rf public
+          git add -f .
+          git status
+          git commit -m "New release"
+          git push origin master
