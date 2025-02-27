@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "npx npm-watch",
     "watch": "npm run build",
-    "build": "npx tailwindcss -i ./css/main.css -o ./public/main.css --minify"
+    "build": "npx tailwindcss@3 -i ./css/main.css -o ./public/main.css --minify"
   },
   "watch": {
     "watch": {
@@ -19,7 +19,9 @@
     }
   },
   "author": "Maxime Buffa",
-  "dependencies": {},
+  "dependencies": {
+    "tailwindcss": "^3.4.17"
+  },
   "devDependencies": {
     "npm-watch": "^0.11.0"
   }
