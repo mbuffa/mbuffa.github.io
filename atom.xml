@@ -4,8 +4,51 @@
     <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2024-01-30T00:00:00+00:00</updated>
+    <updated>2025-02-27T00:00:00+00:00</updated>
     <id>https://mbuffa.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Unix: Loading env variables, without messing up your environment</title>
+        <published>2025-02-27T00:00:00+00:00</published>
+        <updated>2025-02-27T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/tips/20250227-loading-env-without-leaks/"/>
+        <id>https://mbuffa.github.io/tips/20250227-loading-env-without-leaks/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/tips/20250227-loading-env-without-leaks/">&lt;p&gt;If you&#x27;re developing a server or a web app, and this server needs to interact with third-party services, you&#x27;re probably going to use a &lt;code&gt;.env&lt;&#x2F;code&gt; (dotenv) file to define those variables. At least, when running your project locally.&lt;&#x2F;p&gt;
+&lt;p&gt;So, you would probably end up doing something like &lt;code&gt;export $(cat .env | xargs)&lt;&#x2F;code&gt;, and then running your process.&lt;&#x2F;p&gt;
+&lt;p&gt;This approach has one major drawback: it updates the environment of your current shell, and it has a few implications:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;If you&#x27;re working with several services, with various &lt;code&gt;dotenv&lt;&#x2F;code&gt; files, you may end up overwriting variables, or relying on variables defined by other services...&lt;&#x2F;li&gt;
+&lt;li&gt;...worst-case scenario, you end up connecting to a production database when running a task that was supposed to run against a test database, and things go wild.&lt;&#x2F;li&gt;
+&lt;li&gt;You may leak tokens every time you call &lt;code&gt;env&lt;&#x2F;code&gt; in your terminal. Not ideal if you&#x27;re streaming your content.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;You can actually make sure your application loads its necessary environment variables without those inconveniences, either by using a Shell script, or a Makefile. Two very simple solutions compared to, say, setting up and maintaining SOPS&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;getsops&#x2F;sops&quot;&gt;1&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;So, basically by adding something like &lt;code&gt;server.sh&lt;&#x2F;code&gt; with the following:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#!&#x2F;bin&#x2F;sh
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(cat .env | xargs)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Running your server
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Your env will be loaded inside the context of a new TTY (if I remember my UNIX lessons correctly).&lt;&#x2F;p&gt;
+&lt;p&gt;It also works with Makefiles (and yeah, I hate the syntax, it&#x27;s annoying and weird, but I always end up writing Makefiles):&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;Makefile&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-Makefile &quot;&gt;&lt;code class=&quot;language-Makefile&quot; data-lang=&quot;Makefile&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;include &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.env
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;server&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Running your server
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And that&#x27;s it. Also, make sure your variables are properly defined (such as &lt;code&gt;FOO=bar&lt;&#x2F;code&gt;, without quotes) because having additional quotes may cause issues (some loaders would escape quotes).&lt;&#x2F;p&gt;
+&lt;p&gt;Not a revolutionary take, but better be safe (and clean) than sorry!&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>Postgres: Using SQL generated columns</title>
         <published>2024-01-30T00:00:00+00:00</published>

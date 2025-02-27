@@ -27,6 +27,9 @@
         <loc>https://mbuffa.github.io/tags/dev/</loc>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/tags/dotenv/</loc>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/elixir/</loc>
     </url>
     <url>
@@ -46,6 +49,9 @@
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/rails/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/unix/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/wsl/</loc>
@@ -68,6 +74,10 @@
     <url>
         <loc>https://mbuffa.github.io/tips/20211220-kubectl-shortcuts/</loc>
         <lastmod>2021-12-20</lastmod>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tips/20250227-loading-env-without-leaks/</loc>
+        <lastmod>2025-02-27</lastmod>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tutorials/</loc>
