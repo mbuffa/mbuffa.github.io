@@ -5,7 +5,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 html {
-  font-family: 'Lato', sans-serif, system-ui, -apple-system;
+  font-family: 'Bitter', serif, system-ui, -apple-system;
 }
 
 body {
