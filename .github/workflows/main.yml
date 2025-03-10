@@ -32,15 +32,26 @@ jobs:
           npm run build
           cp vendor/* public/
 
-      - name: Push
+      - name: Bake
         run: |
           cd $GITHUB_WORKSPACE
           git fetch -p
           git checkout master
           rm -rf config.toml content sass templates
           cp -R public/* .
+          # The two following lines are here to preserve SEO.
+          ln -s articles tips
+          ln -s articles tutorials
           rm -rf public
+
+      - name: Commit
+        run: |
+          cd $GITHUB_WORKSPACE
           git add -f .
           git status
           git commit -m "New release"
+
+      - name: Push
+        run: |
+          cd $GITHUB_WORKSPACE
           git push origin master
