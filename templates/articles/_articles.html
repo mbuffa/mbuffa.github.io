@@ -1,3 +1,5 @@
+{% import "components/_badge.html" as badge_macro %}
+
 {% macro articles_list(title, subtitle, list) %}
 <article class="w-full">
   <table class="w-full">
@@ -10,6 +12,7 @@
             {{ subtitle }}
           </p>
         </th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -17,11 +20,18 @@
       <tr class="leading-10">
         <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white">{{
           list_item.date }}</td>
-        <td class="w-5/6">
+        <td class="w-4/6">
           <a class="
               underline hover:no-underline
               dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
             href="{{ list_item.permalink | safe }}">{{ list_item.title }}</a>
+        </td>
+        <td>
+          {% if "tip" in list_item.taxonomies["tags"] %}
+            {{ badge_macro::badge(href="", title="Tip") }}
+          {% elif "tutorial" in list_item.taxonomies["tags"] %}
+            {{ badge_macro::badge(href="", title="Tutorial") }}
+          {% endif %}
         </td>
       </tr>
       {% endfor %}

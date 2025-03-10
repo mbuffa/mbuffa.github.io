@@ -3,13 +3,15 @@ title = "Kustomize: Using Environment Variables"
 description = "Using Environment Variables in your Kubernetes manifests"
 date = 2021-07-20
 [taxonomies]
-tags = ["k8s"]
+tags = ["tutorial", "k8s"]
 +++
 
 ## Context
+
 Using environment variables in your Kubernetes manifests built with Kustomize may be a bit tedious, but I recently found how you can actually use some.
 
 ## Prerequisites
+
 I won't go into too much details about Kubernetes manifests, or deploying on Kubernetes in general. I learned as I went, mostly by looking at examples and documentation. If you're looking for tutorials or courses, there are pretty good resources available for free. [This great article][0] gives some very useful tips to learn by doing, and there's even [an official interactive tutorial][1].
 
 And, of course, you also need to know Docker :-)
@@ -22,10 +24,10 @@ Let's take this stripped down deployment example, named `deployment.yaml`:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  MYAPP
+  name: MYAPP
   namespace: default
   labels:
-    app:  MYAPP
+    app: MYAPP
 spec:
   selector:
     matchLabels:
@@ -34,34 +36,36 @@ spec:
   template:
     spec:
       containers:
-      - name:  MYAPP
-        image:  MYAPP:latest
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 100Mi
-        env:
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
+        - name: MYAPP
+          image: MYAPP:latest
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: MYAPP
+                  key: DB_HOST
+          ports:
+            - containerPort: 80
               name: MYAPP
-              key: DB_HOST
-        ports:
-        - containerPort:  80
-          name:  MYAPP
       restartPolicy: Always
 ```
 
 You would typically associate this with a `Kustomization.yaml` file:
+
 ```yaml
 resources:
   - deployment.yaml
 ```
 
 This file allows you to define values shared across multiple resources (like services, jobs, ingresses...), either by editing it directly, like this:
+
 ```yaml
 resources:
   - deployment.yaml
@@ -70,6 +74,7 @@ namespace: web
 ```
 
 ...or programmatically, for example, in your CI:
+
 ```sh
 $ kustomize edit set namespace web
 ```
@@ -77,11 +82,12 @@ $ kustomize edit set namespace web
 Running `kustomize build .` in the directory containing your kustomization and deployment would result in an output that you could apply directly with `kubectl apply`. Just run `kustomize build . | kubectl apply -f -` and you're good to go.
 
 Now let's say we want to add an annotation at build time in our CI with an environment variable, like this:
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  MYAPP
+  name: MYAPP
 spec:
   template:
     annotations:
@@ -92,7 +98,8 @@ This can be pretty useful if, for example, you want to do a new deployment even 
 
 Running `kustomize build .` now would keep that line as-is.
 
-In that case, you *could* add an annotation programmatically, like this:
+In that case, you _could_ add an annotation programmatically, like this:
+
 ```sh
 kustomize edit add annotation example.com/git_commit:$CI_COMMIT_SHORT_SHA
 ```
@@ -100,18 +107,19 @@ kustomize edit add annotation example.com/git_commit:$CI_COMMIT_SHORT_SHA
 But then all your resources would be affected, mearning that your service and ingress would also be redeployed in that example. In some cases, you really want to scope your changes.
 
 To use environment variables, you need to specify them in your `Kustomization`, in a `vars:` section:
+
 ```yaml
 resources:
   - deployment.yaml
 
 vars:
-- name: CI_COMMIT_SHORT_SHA
-  objref:
-    kind: ConfigMap
-    name: environment-variables
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.CI_COMMIT_SHORT_SHA
+  - name: CI_COMMIT_SHORT_SHA
+    objref:
+      kind: ConfigMap
+      name: environment-variables
+      apiVersion: v1
+    fieldref:
+      fieldpath: data.CI_COMMIT_SHORT_SHA
 ```
 
 Each variable defined here must have a name and references to let Kustomize know where it's supposed to get that value. In that example, I'm using a `configMap`, which is often the best option to store configuration.
@@ -119,33 +127,38 @@ Each variable defined here must have a name and references to let Kustomize know
 While we could definitely define a `ConfigMap` ourselves as part of our `Resources`, we would lose the ability to define that variable at build time.
 
 That's why we want to build a `ConfigMap` programmatically, by sourcing a file we'll create in our CI:
+
 ```yaml
 resources:
   - deployment.yaml
 
 configMapGenerator:
-- name: environment-variables
-  envs: [environment-properties.env]
-  behavior: create
+  - name: environment-variables
+    envs: [environment-properties.env]
+    behavior: create
 
 vars: ...
 ```
 
 There's one more thing we need to do though. For the sake of testing your code locally, just create a file named `environment-properties.env` containing the following content:
+
 ```
 CI_COMMIT_SHORT_SHA=unknown
 ```
+
 (You should keep that file tracked in your CI, it would make debugging locally easier.)
 
 Running `kustomize build .` at this point would, still, keep that variable as-is. That's because we try to substitute a value in a field that Kustomize doesn't look in by default, probably for performance or security concerns.
 
 To fix this, we need to add a custom transformer. Put that in your Kustomization:
+
 ```yaml
 configurations:
   - env-var-transformer.yaml
 ```
 
 And then create `env-var-transformer.yaml` with that content:
+
 ```yaml
 varReference:
   - kind: Deployment
@@ -155,6 +168,7 @@ varReference:
 Now, running `kustomize build .` locally should give you the expected result.
 
 Finally, in our CI job, we can build that file:
+
 ```sh
 echo CI_COMMIT_SHORT_SHA=$CI_COMMIT_SHORT_SHA > environment-properties.env
 # And then, you just have to apply your changes:
@@ -162,6 +176,7 @@ kustomize build . |kubectl apply -f -
 ```
 
 Now running `kustomize build .` would result in this :-)
+
 ```yaml
 apiVersion: v1
 data:

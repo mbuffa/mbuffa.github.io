@@ -3,7 +3,7 @@ title = "Unix: Loading env variables, without messing up your environment"
 description = "A clean way to load env variables locally"
 date = 2025-02-27
 [taxonomies]
-tags = ["unix", "dotenv"]
+tags = ["tip", "unix", "dotenv"]
 +++
 
 If you're developing a server or a web app, and this server needs to interact with third-party services, you're probably going to use a `.env` (dotenv) file to define those variables. At least, when running your project locally.
