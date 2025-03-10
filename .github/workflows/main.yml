@@ -39,10 +39,9 @@ jobs:
           git checkout master
           rm -rf config.toml content sass templates
           cp -R public/* .
-          # The two following lines are here to preserve SEO.
-          ln -s articles tips
-          ln -s articles tutorials
           rm -rf public
+          rm -rf tips
+          rm -rf tutorials
 
       - name: Commit
         run: |
