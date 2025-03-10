@@ -1,0 +1,7 @@
+{% macro badge(href, title) %}
+<span class="rounded-sm text-xs p-2 m-2
+  dark:bg-orange-500 dark:text-black
+    
+"><a href="{{href | safe}}" title="{{ title }}">{{ title }}</a>
+</span>
+{% endmacro badge %}

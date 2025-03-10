@@ -2,8 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 html {
-  font-family: 'Lato', sans-serif, system-ui, -apple-system;
+  font-family: 'Bitter', serif, system-ui, -apple-system;
+  font-size: 1.125rem;
 }
 
 body {
@@ -15,14 +18,13 @@ body.dark {
   background: radial-gradient(ellipse at bottom -200% right -100%, #fd7313 0%, #090A0F 100%);
 }
 
-body.light {
-  background: #e2e8f0;
-  /* slate-200 */
-}
-
 body.light blockquote {
   border-left-color: #a0aec0;
   /* slate-600 */
+}
+
+.small-caps {
+  font-variant: small-caps;
 }
 
 div.markdown-content img {

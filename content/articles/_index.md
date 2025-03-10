@@ -1,8 +1,8 @@
 +++
-title = "Tips"
+title = "Articles"
 sort_by = "date"
 template = "articles/articles.html"
 page_template = "articles/article.html"
 [extra]
-subtitle = "Very short guides on very specific topics"
+subtitle = "Articles on various tech topics"
 +++

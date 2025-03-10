@@ -3,16 +3,18 @@ title = "Elixir: Troubleshooting Mnesia"
 description = "An Elixir tutorial to use Erlang's :mnesia in your cluster."
 date = 2020-11-11
 [taxonomies]
-tags = ["elixir", "erlang"]
+tags = ["tutorial", "elixir", "erlang"]
 +++
 
 ## Context
+
 Mnesia is a powerful DBMS implemented in Erlang which you can use in your Elixir application.
 
 Why would you want to do that?
-* It can span over multiple nodes in your cluster, providing redundancy and recovery mechanisms.
-* It prevents you from adding an external dependency like Redis, PostgreSQL, or whatever.
-* It provides all the features you need from a solid DBMS like transactions, locks, indices, dumps to disk, and a consistent data structure.
+
+- It can span over multiple nodes in your cluster, providing redundancy and recovery mechanisms.
+- It prevents you from adding an external dependency like Redis, PostgreSQL, or whatever.
+- It provides all the features you need from a solid DBMS like transactions, locks, indices, dumps to disk, and a consistent data structure.
 
 After looking at and evaluating alternatives when working on a project at Pandascore, I finally decided to give a shot at Mnesia for storing an internal state. It took me a few hours to set it up correctly, but I ran into several issues that may drive anyone nearing an end of sprint crazy, so here's a few tips for it :-)
 
@@ -21,6 +23,7 @@ One disclaimer though: this project is in production (\o/), but due to other pri
 So this is pretty much a beginner to beginner feedback. Please take it with a pinch of salt.
 
 ## Some useful links
+
 Since I'm pretty much writing an addendum, you'll find more exhaustive information with the following articles and resources. You can read them afterwards if you prefer, and go back to this article if you encounter any issue.
 
 First, [this excellent article from Welcome to the Jungle][0] gave me a good overview on how to setup Mnesia in a cluster.
@@ -30,6 +33,7 @@ Two more links are mentioned at the end of this article, but I'll paste them her
 You can also check [my article on deploying an Elixir cluster on Kubernetes][3] since I give a few details on how to set up a simple local cluster. I'll do it more quickly here anyway.
 
 ## Let's create a sample project
+
 Let's create a simple project to try out Mnesia locally. We'll need to run a small cluster, so we'll throw in one specific library.
 
 ```
@@ -38,6 +42,7 @@ $ cd clustertest
 ```
 
 And let's head out to `mix.exs` to add `libcluster`:
+
 ```
 # In mix.exs
 defp deps do
@@ -85,6 +90,7 @@ This will get you started with a small cluster of two nodes. `Epmd` is
 perfectly fit for our example here, since we just have to specify a few hosts.
 
 Now, let's open two shells and start two instances:
+
 ```
 # In one shell
 iex --name a@127.0.0.1 -S mix
@@ -94,6 +100,7 @@ iex --name b@127.0.0.1 -S mix
 ```
 
 Now, running `Node.list()` in each REPL should give you exactly one atom:
+
 ```
 > [:"b@127.0.0.1"]
 
@@ -101,9 +108,11 @@ Now, running `Node.list()` in each REPL should give you exactly one atom:
 ```
 
 ## Initializing Mnesia
+
 Now, let's start actually using Mnesia. We'll pretend we're running a small wildlife protection office taking care of local racoons.
 
 Also, for the sake of simplicity, we'll add it directly to the children of our app. There's no need for complexity for hello world code :)
+
 ```
 # In lib/clustertest/application.ex
 defmodule Clustertest.Application do
@@ -180,9 +189,10 @@ end
 
 There are a few important things to note here.
 
-First, you *need* to create a schema *before* starting Mnesia. This is really important. Try switching the two lines to see what happens.
+First, you _need_ to create a schema _before_ starting Mnesia. This is really important. Try switching the two lines to see what happens.
 
 Then, you're free to create your table. Both schema and table can be already created when you run your app, since Mnesia keeps RAM and disk copies, depending on how you configure it. By the way, you should have noticed there are now two new folders in your project directory:
+
 ```
 $ ls
 Mnesia.a@127.0.0.1
@@ -190,6 +200,7 @@ Mnesia.b@127.0.0.1
 ```
 
 Hmm, let's see if Mnesia is properly configured. Type this in a terminal:
+
 ```
 $ :mnesia.info()
 ```
@@ -227,7 +238,8 @@ Hmm, looking at `running db nodes`, we're only running two Mnesia nodes independ
 
 Let's go back to our Store and add a bit of code:
 
-* We want to be notified when new nodes connect...
+- We want to be notified when new nodes connect...
+
 ```
 defmodule Clustertest.Store.Racoon do
   use GenServer
@@ -247,7 +259,8 @@ defmodule Clustertest.Store.Racoon do
 end
 ```
 
-* ...And we want to configure Mnesia to use extra nodes, create a table copy on the other node, and remove the other node when connection is lost.
+- ...And we want to configure Mnesia to use extra nodes, create a table copy on the other node, and remove the other node when connection is lost.
+
 ```
 defmodule Clustertest.Store.Racoon do
   [...]
@@ -308,6 +321,7 @@ end
 ```
 
 Now, restarting our two nodes should raise an error:
+
 ```
 17:20:34.541 [error] GenServer #PID<0.213.0> terminating
 ** (MatchError) no match of right hand side value: {:ok, []}
@@ -331,6 +345,7 @@ Let's remove `setup_store()` completely (and `ensure_schema_exists()` too). If w
 Also, remember those two folders that popped up in your directory? Remove those folders. Those may contain conflicting schemas.
 
 Now, let's restart our two REPLs.
+
 ```
 17:35:48.049 [error] GenServer #PID<0.213.0> terminating
 ** (MatchError) no match of right hand side value: {:ok, []}
@@ -346,6 +361,7 @@ State: %{}
 Well, you can't guess either, but Mnesia must be started as an application. Surprisingly enough, trying to use `:mnesia` functions wouldn't raise any errors.
 
 So let's head to our manifest and add `:mnesia` in a familiar place:
+
 ```
 # In mix.exs
 def application do
@@ -357,6 +373,7 @@ end
 ```
 
 Now let's check...
+
 ```
 ---> Processes holding locks <---
 ---> Processes waiting for locks <---
@@ -387,6 +404,7 @@ disc_only_copies   = []
 See how `opt_disc` and `running db nodes` changed. But we have no data yet.
 
 ## Inserting data
+
 We'll add some code and make some changes so that we'll use a struct defined in `Types.Racoon`. The naming in my example isn't great, but basically, we're just adding serialization/deserialization functions to manipulate structs in our codebase, while Mnesia stores tuples.
 
 So we'll add two functions, `list()` and `create()`, and do a few changes on the table name.
@@ -476,6 +494,7 @@ defmodule Clustertest.Store.Racoon do
 ```
 
 Now let's test a few examples, after a REPL reset.
+
 ```
 # In your first shell:
 iex(a@127.0.0.1)3> Clustertest.Store.Racoon.list()
@@ -496,6 +515,7 @@ iex(b@127.0.0.1)4> Clustertest.Store.Racoon.list()
 ```
 
 The `update`, `read`, and `delete` functions are quite straighforward. You can implement them yourself, but I'm adding those as a reference.
+
 ```
 defmodule Clustertest.Store.Racoon do
   [...]
@@ -541,6 +561,7 @@ end
 You can play around with this :) Note that creating data on one node, and creating the identical data on another node doesn't raise any issue, but do not create duplicates either.
 
 There's one issue remaining though: closing both REPLs clear the table. This is because we forgot to specify one option when calling `:mnesia.create_table`!
+
 ```
 :mnesia.create_table(
   Types.Racoon,
@@ -558,11 +579,13 @@ There's one issue remaining though: closing both REPLs clear the table. This is 
 Now we're good, and `:mnesia.info()` doesn't show an empty `disc_copies` anymore.
 
 ## A few important notes for releases...
+
 ...and solving the "bad cookie" issue.
 
 Keep in mind that we've been using `iex` all along and that running a compiled application will raise a few differences.
 
 Remember the snippet I used for adding `:mnesia` to our running application?
+
 ```
 # In mix.exs
 def application do
@@ -592,6 +615,7 @@ end
 ```
 
 Thing is, I also had to revert my changes on `create_table` and remove the `disc_copies` option.
+
 ```
 :mnesia.create_table(
   Types.Racoon,
@@ -610,6 +634,7 @@ Now, `:mnesia.info()` will properly display a populated `disc_copies` option.
 I do not know why those differences between `iex` and compiled code exist. I may be doing something wrong, so please feel free to open an issue on the [repository][5] if you find why!
 
 ## Conclusion
+
 I hope this was neither too tedious or frightening regarding the usage of Mnesia in your project. I thought the "crash course" format to be interesting in this case (ie. amending snippets), because it helps to have beaten that path when things go wrong.
 
 I didn't mention the issue of network partitioning and a possible way to solve it, but this is more related to your cluster configuration. Essentially, network failure may happen inside your cluster, and reconnecting nodes wouldn't know how to handle this, since we're not using a master-replica strategy. I haven't read much about this, but one possible solution would be to pass the cluster size as an environment variable to all nodes, and check the `Node.list()` result when a `:nodedown` message is received. Afterwards, a simple calculation should be enough to determine if your node is isolated or in a dominant group, allowing you to push the self-destruct red button with, for example, a "liveness" GenServer exposed to your orchestrator, returning `HTTP 200 Ok` responses codes until isolation is detected.
@@ -618,7 +643,7 @@ Note that there's also the [Mnesiac][6] library, which is an Elixir layer on top
 
 Last, but not least, I [created a repository][5] with a small and clear commit history, in case you want to tinker with it.
 
-*Et voilà.*
+_Et voilà._
 
 [0]: https://www.welcometothejungle.com/fr/articles/redis-mnesia-distributed-database
 [1]: https://elixirschool.com/en/lessons/specifics/mnesia

@@ -1,0 +1,8 @@
+{% import "articles/_articles.html" as macros %}
+
+{% block content %}
+{% set section = get_section(path="articles/_index.md") %}
+{{ macros::articles_list(title="Articles", subtitle=section.extra.subtitle,
+list=section.pages)
+}}
+{% endblock content %}
