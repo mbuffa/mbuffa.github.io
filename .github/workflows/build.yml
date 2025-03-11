@@ -1,10 +1,10 @@
-name: CI
+name: Build
 on:
   push:
     branches: [content]
 
 env:
-  ZOLA_VERSION: v0.19.2
+  ZOLA_VERSION: v0.20.0
 
 jobs:
   build:
