@@ -1,0 +1,459 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+  <title>Developing on WSL</title>
+  
+
+  
+  
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap"
+    rel="stylesheet">
+
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+
+  <meta name="description" content="My personal website with tips and rants." />
+</head>
+
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateGiscusStyle(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+            break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+            break;
+
+          default:
+            activeMode = "dark";
+            break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateGiscusStyle(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+
+  <main class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white bg-blue-900 dark:bg-transparent
+    ">
+    <div class="w-228 max-w-screen m-auto p-4 bg-slate-200 dark:bg-transparent">
+      <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul
+      class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+      
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;">Home</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;articles">Articles</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;demos">Demos</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;tags">Tags</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;contact">Contact</a>
+      </li>
+      
+      <li class="ml-auto">
+        <a class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
+            name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
+            name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+      <div class="
+        w-11/12 m-auto mt-2 p-4
+        flex justify-center
+        flex-col flex-wrap
+        lg:flex-row lg:flex-nowrap
+        dark:bg-black dark:bg-opacity-60
+    ">
+        
+
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#the-good" title="The Good">
+  The Good
+</a>
+
+        
+        <ol>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#seamless-development" title="Seamless development">
+  Seamless development
+</a>
+</li>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#you-can-use-docker" title="You can use Docker">
+  You can use Docker
+</a>
+</li>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#accessing-files-between-linux-and-windows" title="Accessing files between Linux and Windows">
+  Accessing files between Linux and Windows
+</a>
+</li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#the-bad" title="The Bad">
+  The Bad
+</a>
+
+        
+        <ol>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#occasional-bugs-and-freezes" title="Occasional bugs and freezes">
+  Occasional bugs and freezes
+</a>
+</li>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#wondering-about-long-term-stability" title="Wondering about long-term stability">
+  Wondering about long-term stability
+</a>
+</li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#the-ugly" title="The Ugly">
+  The Ugly
+</a>
+
+        
+        <ol>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#get-out-of-my-path" title="Get out of my $PATH">
+  Get out of my $PATH
+</a>
+</li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/#conclusion" title="Conclusion">
+  Conclusion
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Developing on WSL
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2020-08-16
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/tutorial">
+    tutorial
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/wsl">
+    wsl
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/dev">
+    dev
+  </a>
+  
+</p>
+
+    
+  </header>
+
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
+<p>The latest versions of Windows 10 have seen the maturation of WSL, the Windows Subsystem for Linux. Basically, it allows installing a Linux distribution that'll use a special Linux kernel running "nativaly" on Windows 10. It doesn't run on a virtualized environment, although it seems to use a Hyper-V volume for storage.</p>
+<p>Oh, and you can also use their shiny new <a href="https://github.com/microsoft/terminal">Terminal</a> for ultimate ease of use.</p>
+<h2 id="the-good">The Good</h2>
+<h3 id="seamless-development">Seamless development</h3>
+<p>You will evolve in a familiar environment if you're already using VSCode, since it leverages its client/server architecture, each running on Windows and Linux respectively. Typing <code>code .</code> in your terminal will open VSCode. Extensions will be installed server-side.</p>
+<p>Other than that, you can enjoy the benefits of using any regular Linux distribution.</p>
+<h3 id="you-can-use-docker">You can use Docker</h3>
+<p>Since the release of WSL 2 (included in the 2004 Windows update), you can use Docker containers inside your Linux distro, managed by your Docker daemon installed on Windows. "All" it requires is using a WSL2 compatible distribution, and enable WSL2 integration in the Docker Desktop preferences.</p>
+<p>And, instead of using a virtual machine to host the containers, you can also set Docker Desktop to use... WSL2.</p>
+<p><img src="/assets/memes/brain_explosion.gif" alt="Brain explosion" title="Brain explosion" /></p>
+<p>I haven't made any benchmarks, but I suppose it helps to boost performance.</p>
+<p>I suppose you can even use your Kubernetes cluster installed with Docker on Windows from your Linux distribution, but I haven't come that far into testing yet.</p>
+<h3 id="accessing-files-between-linux-and-windows">Accessing files between Linux and Windows</h3>
+<p>Your Windows volumes are automatically mounted in <code>/mnt</code>, meaning you can literally access anything from your Windows installation. Also, typing <code>explorer.exe .</code> reveals the current folder in Windows' file manager, shown as a network shared volume.</p>
+<h2 id="the-bad">The Bad</h2>
+<h3 id="occasional-bugs-and-freezes">Occasional bugs and freezes</h3>
+<p>I do backend development in Ruby (and Rails), Elixir (and mostly Phoenix) professionally, and I also wrote a bit of Elm and Rust in WSL2. I am quite satisfied with the quality of the integration WSL2 offers, but it isn't bug-free either.</p>
+<p>For example, when I first tried Zola and ran its web server, I just couldn't connect to it with my browser. Firefox was just displaying "Unable to connect". The reason? I don't know, but running <code>wsl.exe --shutdown</code> would "solve" this problem. I'm obviously more annoyed by the fact that I <em>need</em> to reboot than the fact that I only lose a few seconds of my time every week or so.</p>
+<p>But the most annoying thing was occurring during the compilation of my Rust project through Docker (it never happened when I was building "on bare metal"), which was the complete freeze of VSCode, my terminal, and really, any app related to WSL. In that case, I'd need to wait for a few minutes for the build to finish and my system to be responsive again. I assume this has something to do with my building process eating all of the IO reserved for WSL, or something related to this weird Docker setup.</p>
+<h3 id="wondering-about-long-term-stability">Wondering about long-term stability</h3>
+<p>While Microsoft provided a migration script to switch from WSL to WSL2 (through the use of <code>wsl.exe</code>, to run in <code>cmd.exe</code> or PowerShell), it never worked on the Ubuntu I installed a few months ago, so I tried a few several other distributions (Alpine, Arch) after finally installing a fresh new Ubuntu, which worked instantly with Docker integration. I think not all distributions available on the store are compatible with WSL2, but information is a bit scarce.</p>
+<p>So far, my setup has been very stable, but I wonder if a future Windows update could break the whole thing. I got almost anything versioned and hosted somewhere, but still.
+And sure, there's bugtracking through Github, but I think WSL as a whole is pretty opaque and hard to debug yourself.</p>
+<h2 id="the-ugly">The Ugly</h2>
+<h3 id="get-out-of-my-path">Get out of my $PATH</h3>
+<p>To achieve a seemless integration with Windows, my Ubuntu installation has basically the whole Windows mess injected into its default $PATH:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>➜  / echo $PATH
+</span><span>/home/makks/.asdf/shims:/home/makks/.asdf/bin:/home/makks/.cargo/bin:/home/makks/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/Git/cmd:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Users/Makks/.cargo/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Makks/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Makks.cargo/bin:/mnt/c/Users/Makks/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps
+</span></code></pre>
+<p>Whish is... yeah. It itched me in many places when I saw this, and when I saw random DLLs popping in my autocompletion. But this is sadly probably the price to pay for this kind of integration.</p>
+<p><a href="https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/">There's a setting to disable this</a> (and even a few other things), but my distro just didn't cared about my feelings and refused to apply it. Judging by the comments section, I'm not alone in this situation.</p>
+<p>This kind of dirty black magic may annoy you if you want your distro to be 100% clean. But I guess you wouldn't want to use WSL in the first place in that was the case ;)</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I'm very satisfied with WSL and its related developments so far. My primary reason for using it is the need for good UI and accessibility tools, because I have an extremely low vision (but I'll run into details in a future article) but it's also really satisfying to leverage a good CPU (in that case, a Ryzen 3800X) instead of the traditional coughing overpriced Macbook Pro any startup company grants its employees with.</p>
+<p>And of course, you can launch a game or two when you need a break.</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+</article>
+
+      </div>
+
+      <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written with <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://www.getzola.org/" target="_blank">Zola</a> and <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+  </span>
+</footer>
+    </div>
+    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link.
+    <br>
+  </main>
+
+  <!-- Heap Analytics loader -->
+    <script type="text/javascript">
+      window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
+      heap.load("4008293954");
+    </script>
+    <script
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+    <script type="module"
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+
+</html>

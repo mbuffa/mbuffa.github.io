@@ -1,0 +1,1392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title></title>
+    <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-02-27T00:00:00+00:00</updated>
+    <id>https://mbuffa.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Unix: Loading env variables, without messing up your environment</title>
+        <published>2025-02-27T00:00:00+00:00</published>
+        <updated>2025-02-27T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/"/>
+        <id>https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/">&lt;p&gt;If you&#x27;re developing a server or a web app, and this server needs to interact with third-party services, you&#x27;re probably going to use a &lt;code&gt;.env&lt;&#x2F;code&gt; (dotenv) file to define those variables. At least, when running your project locally.&lt;&#x2F;p&gt;
+&lt;p&gt;So, you would probably end up doing something like &lt;code&gt;export $(cat .env | xargs)&lt;&#x2F;code&gt;, and then running your process.&lt;&#x2F;p&gt;
+&lt;p&gt;This approach has one major drawback: it updates the environment of your current shell, and it has a few implications:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;If you&#x27;re working with several services, with various &lt;code&gt;dotenv&lt;&#x2F;code&gt; files, you may end up overwriting variables, or relying on variables defined by other services...&lt;&#x2F;li&gt;
+&lt;li&gt;...worst-case scenario, you end up connecting to a production database when running a task that was supposed to run against a test database, and things go wild.&lt;&#x2F;li&gt;
+&lt;li&gt;You may leak tokens every time you call &lt;code&gt;env&lt;&#x2F;code&gt; in your terminal. Not ideal if you&#x27;re streaming your content.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;You can actually make sure your application loads its necessary environment variables without those inconveniences, either by using a Shell script, or a Makefile. Two very simple solutions compared to, say, setting up and maintaining SOPS&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;getsops&#x2F;sops&quot;&gt;1&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;So, basically by adding something like &lt;code&gt;server.sh&lt;&#x2F;code&gt; with the following:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#!&#x2F;bin&#x2F;sh
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(cat .env | xargs)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Running your server
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Your env will be loaded inside the context of a new TTY (if I remember my UNIX lessons correctly).&lt;&#x2F;p&gt;
+&lt;p&gt;It also works with Makefiles (and yeah, I hate the syntax, it&#x27;s annoying and weird, but I always end up writing Makefiles):&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;Makefile&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-Makefile &quot;&gt;&lt;code class=&quot;language-Makefile&quot; data-lang=&quot;Makefile&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;include &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.env
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;server&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Running your server
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And that&#x27;s it. Also, make sure your variables are properly defined (such as &lt;code&gt;FOO=bar&lt;&#x2F;code&gt;, without quotes) because having additional quotes may cause issues (some loaders would escape quotes).&lt;&#x2F;p&gt;
+&lt;p&gt;Not a revolutionary take, but better be safe (and clean) than sorry!&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Postgres: Using SQL generated columns</title>
+        <published>2024-01-30T00:00:00+00:00</published>
+        <updated>2024-01-30T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/"/>
+        <id>https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;Attention: This feature isn&#x27;t specific to PG, but that&#x27;s the only RDBMS I use on a regular basis, so variations may apply.&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;TL;DR: You can define a field generated at row insertion, instead of inferring a dynamic value.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;When designing your data model using a relational database, you might encounter a case where you&#x27;d need to link a table to numerous other tables.&lt;&#x2F;p&gt;
+&lt;p&gt;In that case, you might be tempted to use a polymorphic association, but this comes at the cost of sacrificing data integrity with the loss of foreign keys.&lt;&#x2F;p&gt;
+&lt;p&gt;One simple alternative consists of having one foreign key per relation. It is simple and reliable, at least until you reach a large number of foreign keys.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s say we have the following schema:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;items
+&lt;&#x2F;span&gt;&lt;span&gt;----        todos
+&lt;&#x2F;span&gt;&lt;span&gt;id          -----
+&lt;&#x2F;span&gt;&lt;span&gt;todo_id --&amp;gt; id      posts
+&lt;&#x2F;span&gt;&lt;span&gt;...         title   -----
+&lt;&#x2F;span&gt;&lt;span&gt;post_id ----------&amp;gt; id
+&lt;&#x2F;span&gt;&lt;span&gt;                    title
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We might want to know the &quot;type&quot; of relation our row is linked to, without having to use a case-when statement on each SQl query, which would be costly - and&#x2F;or at least inefficient.&lt;&#x2F;p&gt;
+&lt;p&gt;How about adding a string field representing the relation type? It&#x27;s fine. But our model may change, and we might have to declare a new type, and yet forget to add the new possible value.&lt;&#x2F;p&gt;
+&lt;p&gt;This is a situation where SQL generated columns can be handy.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h2&gt;
+&lt;p&gt;A generated column is typically created like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sql&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sql &quot;&gt;&lt;code class=&quot;language-sql&quot; data-lang=&quot;sql&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;ALTER TABLE &lt;&#x2F;span&gt;&lt;span&gt;$TABLE_NAME ADD COLUMN $FIELD_NAME $FIELD_TYPE GENERATED AS (
+&lt;&#x2F;span&gt;&lt;span&gt;  $GENERATION_EXPRESSION
+&lt;&#x2F;span&gt;&lt;span&gt;) STORED;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;A few key points here:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;$GENERATION_EXPRESSION&lt;&#x2F;code&gt; can be any statement returning a value,&lt;&#x2F;li&gt;
+&lt;li&gt;Postgres only supports stored values.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;So, in our case, the field definition would look like this:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;ALTER TABLE items ADD COLUMN relation_type string GENERATED AS (
+&lt;&#x2F;span&gt;&lt;span&gt;  CASE
+&lt;&#x2F;span&gt;&lt;span&gt;    WHEN &amp;#39;post_id&amp;#39; IS NOT NULL THEN &amp;#39;post&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;    WHEN &amp;#39;todo_id&amp;#39; IS NOT NULL THEN &amp;#39;todo&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;  END
+&lt;&#x2F;span&gt;&lt;span&gt;) STORED;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;implications&quot;&gt;Implications&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;introducing-new-foreign-keys&quot;&gt;Introducing new foreign keys&lt;&#x2F;h3&gt;
+&lt;p&gt;You may need to introduce new foreign keys. In that case, you&#x27;ll need to alter the table again and add a new condition to your generator expression.&lt;&#x2F;p&gt;
+&lt;p&gt;You might be tempted to add a default &quot;unknown&quot; value, but I think explicit failure should be prefered in that case.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;testing&quot;&gt;Testing&lt;&#x2F;h3&gt;
+&lt;p&gt;Since we basically have an enumeration, we might want to iterate over this enumeration in our tests, so that we can check that our codebase actually handles all the possible values it can take (eg. for exposing values on a GraphQL API).&lt;&#x2F;p&gt;
+&lt;p&gt;And it turns out we can retrieve that information from Postgres!&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;SELECT generation_expression
+&lt;&#x2F;span&gt;&lt;span&gt;        FROM information_schema.columns
+&lt;&#x2F;span&gt;&lt;span&gt;        WHERE table_schema = &amp;#39;public&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;        AND table_name   = &amp;#39;items&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;        AND column_name = &amp;#39;relation_type&amp;#39;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This will return the raw SQL statement used to generate new values. It&#x27;s a bit sketchy, but you can parse this expression with simple regexps and extract what you need.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;Generated fields are a simple but powerful tool, and you can use it in a lot of scenarios I didn&#x27;t mention, such as generating a tsvector for full text search, or simplifying basic yet cumbersome checks.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>A* (A Star) Live Demo</title>
+        <published>2022-11-20T00:00:00+00:00</published>
+        <updated>2022-11-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/demos/20221120-astar-live-demo/"/>
+        <id>https://mbuffa.github.io/demos/20221120-astar-live-demo/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/demos/20221120-astar-live-demo/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;This is a live demonstration of the A* pathfinding algorithm implemented in Elixir using LiveView. The implementation itself is a functional step-by-step version of the famous A* algorithm, which is most commonly used in video games.&lt;&#x2F;p&gt;
+&lt;p&gt;I hacked the original version of this demo over a weekend in Feb 2021, ingesting a lot of content about pathing, and a bit about LiveView, in order to showcase it during an internal talk at Pandascore. I got back to it and refactored the whole thing later to clean it up.&lt;&#x2F;p&gt;
+&lt;p&gt;Please keep in mind that this is, however, not a perfect example of algorithmic efficiency (there&#x27;s a lot of linear search through lists and it could probably be better), and that there might be mistakes or imprecisions about my implementation.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-a&quot;&gt;What is A*?&lt;&#x2F;h2&gt;
+&lt;div class=&quot;video-embed&quot; &gt;
+  &lt;iframe
+    src=&quot;https:&#x2F;&#x2F;www.youtube-nocookie.com&#x2F;embed&#x2F;-L-WgKMFuhE&quot;
+    webkitallowfullscreen mozallowfullscreen allowfullscreen&gt;&lt;&#x2F;iframe&gt;
+&lt;&#x2F;div&gt;&lt;h2 id=&quot;demo&quot;&gt;Demo&lt;&#x2F;h2&gt;
+&lt;p&gt;Head over to &lt;a href=&quot;https:&#x2F;&#x2F;path-demo.fly.dev&quot;&gt;Fly.io&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;You control the robot. Pick a target, find the path, and walk the path.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;repo&quot;&gt;Repo&lt;&#x2F;h2&gt;
+&lt;p&gt;Source code is available on &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mbuffa&#x2F;elixir-pathfinding-demo&quot;&gt;Github&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Kubernetes: Creating and using Operators</title>
+        <published>2022-01-22T00:00:00+00:00</published>
+        <updated>2022-01-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20220122-kubernetes-operators/"/>
+        <id>https://mbuffa.github.io/articles/20220122-kubernetes-operators/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20220122-kubernetes-operators/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;I recently had to deploy a variant of an existing application, with a small set of common REST APIs with additional endpoints, and a few specific applications to fit the business needs of that product. I encountered an issue though: my ingress configuration (using Traefik) needed to have access to my certificate in that same namespace. I&#x27;m pretty sure Kubernetes namespaces are completely isolated compartments, but I tried to access that secret in my default namespace nonetheless, without success.&lt;&#x2F;p&gt;
+&lt;p&gt;Also, that certificate would be renewed every once in a while.&lt;&#x2F;p&gt;
+&lt;p&gt;So I basically had three solutions:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Copy the secret manually, initially and then after each certificate update&lt;&#x2F;li&gt;
+&lt;li&gt;Update the certificate update procedure, so that the person updating it would also update the one in my namespace&lt;&#x2F;li&gt;
+&lt;li&gt;Copy the secret on a regular basis, either with a Kubernetes CronJob or a deployed app&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;The first solution was too error-prone. I&#x27;d rather write and validate a script once and schedule it, rather than trusting my self in six months, with clouded memory and human nature.&lt;&#x2F;p&gt;
+&lt;p&gt;The second solution would have required me to have access to that update procedure, and having anyone deploying in a new namespace the obligation to update that procedure (or warn about it) for each new namespace. Not really resilient to human errors and not scalable by definition.&lt;&#x2F;p&gt;
+&lt;p&gt;The third solution was the most tempting, but I found a more elegant and equally reliable way to do this.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solving-this-with-an-operator&quot;&gt;Solving this with an Operator&lt;&#x2F;h2&gt;
+&lt;p&gt;A &lt;a href=&quot;https:&#x2F;&#x2F;kubernetes.io&#x2F;docs&#x2F;concepts&#x2F;extend-kubernetes&#x2F;operator&#x2F;&quot;&gt;Kubernetes Operator&lt;&#x2F;a&gt; is a fancy word for applications subscribing to the Kubernetes event loop and executing some code in return. Classic PubSub.&lt;&#x2F;p&gt;
+&lt;p&gt;Operators aren&#x27;t a ressource as can be Pods, Deployments or ConfigMaps. They&#x27;re just deployed apps with a certain design, and there are several ways to create one.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-don-t-reinvent-the-wheel-way&quot;&gt;The Don&#x27;t-Reinvent-The-Wheel way&lt;&#x2F;h2&gt;
+&lt;p&gt;In my case, I wanted to have something running in a reanosably short timespan. There are ways to build your own operator &quot;from scratch&quot; (at least, without &lt;a href=&quot;https:&#x2F;&#x2F;youtu.be&#x2F;zSgiXGELjbc&quot;&gt;having to invent the universe&lt;&#x2F;a&gt;), but I went for an &quot;out-of-the-box&quot; solution called &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;flant&#x2F;shell-operator&quot;&gt;shell-operator&lt;&#x2F;a&gt;, allowing you to write a simple YAML manifest for the subscription, and some UNIX shell scripting for the code execution.&lt;&#x2F;p&gt;
+&lt;p&gt;The README is pretty straightforward and does a very good job, so I won&#x27;t elaborate step-by-step on this. There are even examples, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;flant&#x2F;shell-operator&#x2F;tree&#x2F;main&#x2F;examples&#x2F;101-monitor-pods&quot;&gt;such as this one&lt;&#x2F;a&gt;. I wouldn&#x27;t do a better job than the author himself. Advertising the use of Operators is the best I can do here :-)&lt;&#x2F;p&gt;
+&lt;p&gt;Anyway, you basically end up with a Dockerfile, a shell script both used to create the subscription hook and the code execution (in which you can of course run &lt;code&gt;kubectl apply -f&lt;&#x2F;code&gt; if it has the required permissions), and you only have to build your new container and deploy it.&lt;&#x2F;p&gt;
+&lt;p&gt;In my case, I ended up having a specific deployment for every namespace I deployed (and that is intended to not be a temporary namespace, and have a lifetime superior to the renewal period). I could have deployed only one operator and have it update the secret in all namespaces at once, but that basically killed the principle of compartmented and independant namespaces.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-do-it-yourself-way&quot;&gt;The Do-It-Yourself way&lt;&#x2F;h2&gt;
+&lt;p&gt;I also like to master what&#x27;s happening and have a low-level understanding of things, so I&#x27;ll try to update this article (or create a new one) about creating your own operator soon. Yeah, sorry, that section is currently a scam.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Kubectl: Useful shortcuts</title>
+        <published>2021-12-20T00:00:00+00:00</published>
+        <updated>2021-12-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/"/>
+        <id>https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;code&gt;kubectl&lt;&#x2F;code&gt; is the command line tool for accessing and interacting with your Kubernetes cluster. It&#x27;s quite intuitive and easy-to-use, but here is a small summary of some very useful commands to get you started if you&#x27;re new to Kube.&lt;&#x2F;p&gt;
+&lt;p&gt;You should already know a few basics about building a Docker container and firing a simple deployment on Kubernetes though. This won&#x27;t help you much if you don&#x27;t know Kubernetes at all :-)&lt;&#x2F;p&gt;
+&lt;p&gt;Anyway, here&#x27;s a quick catch-up:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;To deploy a basic app on Kube, you would typically write a &lt;em&gt;Deployment&lt;&#x2F;em&gt;, featuring a template with a list of &lt;em&gt;Container&lt;&#x2F;em&gt;s.&lt;&#x2F;li&gt;
+&lt;li&gt;Once applied, this &lt;em&gt;Deployment&lt;&#x2F;em&gt; will have an associated &lt;em&gt;ReplicaSet&lt;&#x2F;em&gt; linked to the template you specified, and managed by Kube.&lt;&#x2F;li&gt;
+&lt;li&gt;Each &lt;em&gt;ReplicaSet&lt;&#x2F;em&gt; will then create &lt;em&gt;Pod&lt;&#x2F;em&gt;s accordingly (depending on the amount of replicas you set).&lt;&#x2F;li&gt;
+&lt;li&gt;And finally, each &lt;em&gt;Pod&lt;&#x2F;em&gt; will wrap the &lt;em&gt;Container&lt;&#x2F;em&gt;s you specified in the aforementioned template.&lt;&#x2F;li&gt;
+&lt;li&gt;Additionally, &lt;em&gt;Service&lt;&#x2F;em&gt;s will provide a single &lt;strong&gt;Endpoint&lt;&#x2F;strong&gt; to your app &lt;strong&gt;inside&lt;&#x2F;strong&gt; your cluster, while &lt;em&gt;Ingress&lt;&#x2F;em&gt;es will provide access from &lt;strong&gt;outside&lt;&#x2F;strong&gt; your cluster, redirecting traffic to the &lt;strong&gt;Service&lt;&#x2F;strong&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;I&#x27;ll try to update this article if I discover or remember some good shortcuts. It would be pretty long and tedious if it was a full tutorial, so I&#x27;ll keep this light.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-good-entrypoint&quot;&gt;A good entrypoint&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;code&gt;kubectl explain&lt;&#x2F;code&gt; is here to help you. You can use it on any kind of ressources inside Kubernetes:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kubectl&lt;&#x2F;span&gt;&lt;span&gt; explain deployments
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is really useful, especially when combined with some IDE plugins. VSCode has some that add snippets, and even a cluster visualizer that lets you browse all your ressources from inside your editor! You can easily learn something about a new type of ressource you didn&#x27;t know about.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-simple-way-to-open-a-tty-to-your-pod&quot;&gt;A simple way to open a TTY to your pod&lt;&#x2F;h2&gt;
+&lt;p&gt;You may already know that you can open a terminal over SSH by simply running:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kubectl&lt;&#x2F;span&gt;&lt;span&gt; exec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -it&lt;&#x2F;span&gt;&lt;span&gt; my-app-1234-5678 -- &#x2F;bin&#x2F;sh
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If you&#x27;re deploying quite often, the replicaset attached to your deployment will change, and pods will be recreated. Therefore, opening a new TTY can be tedious.&lt;&#x2F;p&gt;
+&lt;p&gt;But fortunately, you can use the service as a shortcut:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kubectl&lt;&#x2F;span&gt;&lt;span&gt; exec&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -it&lt;&#x2F;span&gt;&lt;span&gt; service&#x2F;my-app -- &#x2F;bin&#x2F;sh
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;accessing-multiple-apps-logs&quot;&gt;Accessing multiple apps logs&lt;&#x2F;h2&gt;
+&lt;p&gt;You may know that you can access a container logs, either statically or continuously, by running this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kubectl&lt;&#x2F;span&gt;&lt;span&gt; logs &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;-f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt; my-app-1234-5678 container_name
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;But yet again, the pod may be replaced, and you may be interested to fetch logs from multiple pods of the same app, or even logs coming from various apps, but serving a common purpose.&lt;&#x2F;p&gt;
+&lt;p&gt;You can do just that by adding &lt;strong&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kubernetes.io&#x2F;docs&#x2F;concepts&#x2F;overview&#x2F;working-with-objects&#x2F;labels&#x2F;&quot;&gt;Labels&lt;&#x2F;a&gt;&lt;&#x2F;strong&gt; to your ressources (especially deployments), and running the same command, but with &lt;em&gt;Label Selector&lt;&#x2F;em&gt;s instead:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kubectl&lt;&#x2F;span&gt;&lt;span&gt; logs &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;-f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -l&lt;&#x2F;span&gt;&lt;span&gt; app=my-app&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -c&lt;&#x2F;span&gt;&lt;span&gt; container_name
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In fact, selectors can be used with many commands, including all &lt;code&gt;get&lt;&#x2F;code&gt; calls, to fetch ressources of different nature grouped by-whatever-your-semantic-grouping-is. No more &lt;code&gt;grep&lt;&#x2F;code&gt; :-)&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Unix: Saving and restoring your Homebrew packages</title>
+        <published>2021-10-29T00:00:00+00:00</published>
+        <updated>2021-10-29T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20211029-homebrew-bundles/"/>
+        <id>https://mbuffa.github.io/articles/20211029-homebrew-bundles/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20211029-homebrew-bundles/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;If you&#x27;re using the Homebrew package manager on your Mac, there&#x27;s a small chance you may want to backup your list of packages and to be able to restore them in one command, especially if you got a computer for personal use and another one for professional use, or in case you have to restore your setup for whatever reason.&lt;&#x2F;p&gt;
+&lt;p&gt;Homebrew provides bundles that does just that. To create one, just open your terminal and type:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;brew&lt;&#x2F;span&gt;&lt;span&gt; bundle dump
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This will create a Brewfile containing all custom repositories and the list of all the packages you installed.&lt;&#x2F;p&gt;
+&lt;p&gt;To restore it, simply run &lt;code&gt;brew bundle&lt;&#x2F;code&gt; and Homebrew will make sure you have all those packages installed.&lt;&#x2F;p&gt;
+&lt;p&gt;This isn&#x27;t something huge, but I thought this deserved a bit of coverage from yet another Github Page :-)&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Elixir: Using Environment Variables</title>
+        <published>2021-09-16T00:00:00+00:00</published>
+        <updated>2021-09-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20210916-elixir-environment-variables/"/>
+        <id>https://mbuffa.github.io/articles/20210916-elixir-environment-variables/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20210916-elixir-environment-variables/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;An environment variable is a widespread programming concept that refers to a value coming from the system, being read by an application at runtime. Elixir can be a bit surprising on that aspect for beginners.&lt;&#x2F;p&gt;
+&lt;p&gt;This is one way of accessing an environment variable:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&amp;gt; HELLO=world iex
+&lt;&#x2F;span&gt;&lt;span&gt;iex(1)&amp;gt; System.get_env(&amp;quot;HELLO&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;world&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And the same call would work in your application source code.&lt;&#x2F;p&gt;
+&lt;p&gt;However, you may want to avoid scattering those calls in every corner, and use a config file instead to centralize your settings and your default values.&lt;&#x2F;p&gt;
+&lt;p&gt;Newer versions of Mix no longer generate config files by default, so you&#x27;d have to create one of those, like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mix&lt;&#x2F;span&gt;&lt;span&gt; new test
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt; test
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mkdir&lt;&#x2F;span&gt;&lt;span&gt; config
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;touch&lt;&#x2F;span&gt;&lt;span&gt; config&#x2F;config.exs
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And edit your &lt;code&gt;config&#x2F;config.exs&lt;&#x2F;code&gt; file, like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Config
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;config &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:test&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;hello: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;System&lt;&#x2F;span&gt;&lt;span&gt;.get_env(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;HELLO&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And lastly, modify &lt;code&gt;lib&#x2F;test.ex&lt;&#x2F;code&gt; like this, to actually use the key-value pair we defined:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span&gt;module &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Test &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;  # ...
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;hello &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Application&lt;&#x2F;span&gt;&lt;span&gt;.get_env(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:test&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:hello&lt;&#x2F;span&gt;&lt;span&gt;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;default&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, we want to produce a build, but let&#x27;s define our environment variable just before we do that:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HELLO&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;foo
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;MIX_ENV&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;prod &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mix&lt;&#x2F;span&gt;&lt;span&gt; release
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now let&#x27;s run an interactive terminal to our build, and let&#x27;s override that env variable along the way:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HELLO&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;bar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;.&#x2F;_build&#x2F;prod&#x2F;rel&#x2F;test&#x2F;bin&#x2F;test&lt;&#x2F;span&gt;&lt;span&gt; start_iex
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;There, calling &lt;code&gt;Test.hello&lt;&#x2F;code&gt; would return &quot;foo&quot;, not &quot;bar&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;You can easily get surprises when releasing your first Elixir app, because this is not something you can reproduce with &lt;code&gt;iex -S mix&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-happened&quot;&gt;What happened&lt;&#x2F;h2&gt;
+&lt;p&gt;Well basically, &lt;code&gt;exs&lt;&#x2F;code&gt; files are script files: they&#x27;re used at build or test times, and aren&#x27;t present in your final build. When building your release, Mix interpreted &lt;code&gt;System.get_env&lt;&#x2F;code&gt; directly and hardcoded the value.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solutions&quot;&gt;Solutions&lt;&#x2F;h2&gt;
+&lt;p&gt;One exception to that is the Elixir 1.11 addition &lt;code&gt;config&#x2F;runtime.exs&lt;&#x2F;code&gt; file, meant to be &quot;compiled&quot; at runtime.&lt;&#x2F;p&gt;
+&lt;p&gt;Of course, you could argue that using &lt;code&gt;System.get_env&lt;&#x2F;code&gt; directly in your source code would work, but I would say this wouldn&#x27;t be a great idea ;-)&lt;&#x2F;p&gt;
+&lt;p&gt;There&#x27;s an alternative to &lt;code&gt;config&#x2F;runtime.exs&lt;&#x2F;code&gt; though, &lt;a href=&quot;https:&#x2F;&#x2F;hex.pm&#x2F;packages&#x2F;env&quot;&gt;which is the &lt;code&gt;env&lt;&#x2F;code&gt; library&lt;&#x2F;a&gt;. It lets you define tuples in your config files, and a getter similar to &lt;code&gt;Application.get_env&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# In your config files:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Config
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;config &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:test&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;hello: &lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:system&lt;&#x2F;span&gt;&lt;span&gt;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;HELLO&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;world&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# In your codebase:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Env&lt;&#x2F;span&gt;&lt;span&gt;.fetch(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:test&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:hello&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;em&gt;Et voilà !&lt;&#x2F;em&gt; Hope this helps.&lt;&#x2F;p&gt;
+&lt;p&gt;If you want to know more about Elixir builds and releases, as always, &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;mix&#x2F;1.12&#x2F;Mix.Tasks.Release.html&quot;&gt;the official documentation is a great place to start&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Kustomize: Using Environment Variables</title>
+        <published>2021-07-20T00:00:00+00:00</published>
+        <updated>2021-07-20T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/"/>
+        <id>https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;Using environment variables in your Kubernetes manifests built with Kustomize may be a bit tedious, but I recently found how you can actually use some.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;&#x2F;h2&gt;
+&lt;p&gt;I won&#x27;t go into too much details about Kubernetes manifests, or deploying on Kubernetes in general. I learned as I went, mostly by looking at examples and documentation. If you&#x27;re looking for tutorials or courses, there are pretty good resources available for free. &lt;a href=&quot;https:&#x2F;&#x2F;prefetch.net&#x2F;blog&#x2F;2019&#x2F;10&#x2F;16&#x2F;the-beginners-guide-to-creating-kubernetes-manifests&#x2F;&quot;&gt;This great article&lt;&#x2F;a&gt; gives some very useful tips to learn by doing, and there&#x27;s even &lt;a href=&quot;https:&#x2F;&#x2F;kubernetes.io&#x2F;docs&#x2F;tutorials&#x2F;kubernetes-basics&#x2F;deploy-app&#x2F;deploy-interactive&#x2F;&quot;&gt;an official interactive tutorial&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;And, of course, you also need to know Docker :-)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;let-s-get-started&quot;&gt;Let&#x27;s get started&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s take this stripped down deployment example, named &lt;code&gt;deployment.yaml&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apiVersion&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;apps&#x2F;v1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Deployment
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;metadata&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;MYAPP
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;namespace&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;default
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;labels&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;MYAPP
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;spec&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;selector&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;matchLabels&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;MYAPP
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;replicas&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;spec&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;containers&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;        - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;MYAPP
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;MYAPP:latest
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;resources&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;requests&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cpu&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;100m
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;memory&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;100Mi
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;limits&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cpu&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;100m
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;memory&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;100Mi
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;env&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;DB_HOST
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;valueFrom&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;configMapKeyRef&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;                  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;MYAPP
+&lt;&#x2F;span&gt;&lt;span&gt;                  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;key&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;DB_HOST
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ports&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;containerPort&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;80
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;MYAPP
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;restartPolicy&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Always
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You would typically associate this with a &lt;code&gt;Kustomization.yaml&lt;&#x2F;code&gt; file:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;resources&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;deployment.yaml
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This file allows you to define values shared across multiple resources (like services, jobs, ingresses...), either by editing it directly, like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;resources&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;deployment.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;namespace&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;web
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;...or programmatically, for example, in your CI:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt; kustomize edit set namespace web
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Running &lt;code&gt;kustomize build .&lt;&#x2F;code&gt; in the directory containing your kustomization and deployment would result in an output that you could apply directly with &lt;code&gt;kubectl apply&lt;&#x2F;code&gt;. Just run &lt;code&gt;kustomize build . | kubectl apply -f -&lt;&#x2F;code&gt; and you&#x27;re good to go.&lt;&#x2F;p&gt;
+&lt;p&gt;Now let&#x27;s say we want to add an annotation at build time in our CI with an environment variable, like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apiVersion&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;apps&#x2F;v1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Deployment
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;metadata&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;MYAPP
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;spec&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;annotations&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;example.com&#x2F;git-commit&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;$(CI_COMMIT_SHORT_SHA)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This can be pretty useful if, for example, you want to do a new deployment even if the docker image specified in that deployment hasn&#x27;t changed.&lt;&#x2F;p&gt;
+&lt;p&gt;Running &lt;code&gt;kustomize build .&lt;&#x2F;code&gt; now would keep that line as-is.&lt;&#x2F;p&gt;
+&lt;p&gt;In that case, you &lt;em&gt;could&lt;&#x2F;em&gt; add an annotation programmatically, like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kustomize&lt;&#x2F;span&gt;&lt;span&gt; edit add annotation example.com&#x2F;git_commit:$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CI_COMMIT_SHORT_SHA
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;But then all your resources would be affected, mearning that your service and ingress would also be redeployed in that example. In some cases, you really want to scope your changes.&lt;&#x2F;p&gt;
+&lt;p&gt;To use environment variables, you need to specify them in your &lt;code&gt;Kustomization&lt;&#x2F;code&gt;, in a &lt;code&gt;vars:&lt;&#x2F;code&gt; section:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;resources&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;deployment.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vars&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;CI_COMMIT_SHORT_SHA
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;objref&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ConfigMap
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;environment-variables
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apiVersion&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;v1
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fieldref&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fieldpath&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;data.CI_COMMIT_SHORT_SHA
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Each variable defined here must have a name and references to let Kustomize know where it&#x27;s supposed to get that value. In that example, I&#x27;m using a &lt;code&gt;configMap&lt;&#x2F;code&gt;, which is often the best option to store configuration.&lt;&#x2F;p&gt;
+&lt;p&gt;While we could definitely define a &lt;code&gt;ConfigMap&lt;&#x2F;code&gt; ourselves as part of our &lt;code&gt;Resources&lt;&#x2F;code&gt;, we would lose the ability to define that variable at build time.&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s why we want to build a &lt;code&gt;ConfigMap&lt;&#x2F;code&gt; programmatically, by sourcing a file we&#x27;ll create in our CI:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;resources&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;deployment.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;configMapGenerator&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;environment-variables
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;envs&lt;&#x2F;span&gt;&lt;span&gt;: [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;environment-properties.env&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;behavior&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;create
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vars&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;There&#x27;s one more thing we need to do though. For the sake of testing your code locally, just create a file named &lt;code&gt;environment-properties.env&lt;&#x2F;code&gt; containing the following content:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;CI_COMMIT_SHORT_SHA=unknown
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;(You should keep that file tracked in your CI, it would make debugging locally easier.)&lt;&#x2F;p&gt;
+&lt;p&gt;Running &lt;code&gt;kustomize build .&lt;&#x2F;code&gt; at this point would, still, keep that variable as-is. That&#x27;s because we try to substitute a value in a field that Kustomize doesn&#x27;t look in by default, probably for performance or security concerns.&lt;&#x2F;p&gt;
+&lt;p&gt;To fix this, we need to add a custom transformer. Put that in your Kustomization:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;configurations&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;env-var-transformer.yaml
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And then create &lt;code&gt;env-var-transformer.yaml&lt;&#x2F;code&gt; with that content:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;varReference&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Deployment
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;path&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;spec&#x2F;template&#x2F;metadata&#x2F;annotations
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, running &lt;code&gt;kustomize build .&lt;&#x2F;code&gt; locally should give you the expected result.&lt;&#x2F;p&gt;
+&lt;p&gt;Finally, in our CI job, we can build that file:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span&gt; CI_COMMIT_SHORT_SHA=$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CI_COMMIT_SHORT_SHA &lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; environment-properties.env
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# And then, you just have to apply your changes:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kustomize&lt;&#x2F;span&gt;&lt;span&gt; build . |&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kubectl&lt;&#x2F;span&gt;&lt;span&gt; apply&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -f&lt;&#x2F;span&gt;&lt;span&gt; -
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now running &lt;code&gt;kustomize build .&lt;&#x2F;code&gt; would result in this :-)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apiVersion&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;v1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;CI_COMMIT_SHORT_SHA&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;123456&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ConfigMap
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;metadata&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;environment-variables-2t266m664k
+&lt;&#x2F;span&gt;&lt;span&gt;---
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apiVersion&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;apps&#x2F;v1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Deployment
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;spec&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;annotations&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;example.com&#x2F;git-commit&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;123456&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Tada!&lt;&#x2F;p&gt;
+&lt;p&gt;Kustomize has a predefined list of fields it&#x27;ll actually replace corresponding patterns with environment variables. You can check this list &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kubernetes-sigs&#x2F;kustomize&#x2F;blob&#x2F;a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce&#x2F;api&#x2F;konfig&#x2F;builtinpluginconsts&#x2F;varreference.go&quot;&gt;directly in the repository&lt;&#x2F;a&gt;. If you want to do variable substitution in a field that is not in that list, you can follow the section &lt;code&gt;I want to put $VAR in some (currently disallowed) field&lt;&#x2F;code&gt; &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kubernetes-sigs&#x2F;kustomize&#x2F;issues&#x2F;2052&quot;&gt;on this Github issue&lt;&#x2F;a&gt;, which points to the aforementioned source file.&lt;&#x2F;p&gt;
+&lt;p&gt;Hope this will help some people stumbling around here.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Postgres: Filtering with COUNT()</title>
+        <published>2021-07-06T00:00:00+00:00</published>
+        <updated>2021-07-06T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/"/>
+        <id>https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;Doing a COUNT() in SQL is pretty simple, but sometimes you want to return several counts at once with different filters. To achieve this, you would typically do multiple queries, &lt;a href=&quot;https:&#x2F;&#x2F;www.postgresql.org&#x2F;docs&#x2F;9.1&#x2F;queries-with.html&quot;&gt;optionally with a &lt;code&gt;WITH&lt;&#x2F;code&gt; query&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Thankfully, there&#x27;s a way simpler way to do this in PostgreSQL, with &lt;code&gt;FILTER&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s consider we have a simple table (&lt;code&gt;racoons&lt;&#x2F;code&gt;) with a few fields, and we want to return a &lt;code&gt;caretaker_id&lt;&#x2F;code&gt;, the total number of racoons taken care by this person, and the number of racoons that have been released to the wilds.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s as simple as this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sql&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sql &quot;&gt;&lt;code class=&quot;language-sql&quot; data-lang=&quot;sql&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;SELECT   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;r&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;caretaker_id&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;         &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;COUNT&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;) as total,
+&lt;&#x2F;span&gt;&lt;span&gt;         &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;COUNT&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;) FILTER (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;WHERE&lt;&#x2F;span&gt;&lt;span&gt; released = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;) as released
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;FROM&lt;&#x2F;span&gt;&lt;span&gt;     racoons r
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;GROUP BY &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;r&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;caretaker_id&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kb.objectrocket.com&#x2F;postgresql&#x2F;how-to-use-the-filter-clause-in-postgresql-881&quot;&gt;This page&lt;&#x2F;a&gt; has a bit more information, especially if you&#x27;re working with a PostgreSQL database prior to 9.4.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Elixir: Troubleshooting Mnesia</title>
+        <published>2020-11-11T00:00:00+00:00</published>
+        <updated>2020-11-11T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/"/>
+        <id>https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;Mnesia is a powerful DBMS implemented in Erlang which you can use in your Elixir application.&lt;&#x2F;p&gt;
+&lt;p&gt;Why would you want to do that?&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;It can span over multiple nodes in your cluster, providing redundancy and recovery mechanisms.&lt;&#x2F;li&gt;
+&lt;li&gt;It prevents you from adding an external dependency like Redis, PostgreSQL, or whatever.&lt;&#x2F;li&gt;
+&lt;li&gt;It provides all the features you need from a solid DBMS like transactions, locks, indices, dumps to disk, and a consistent data structure.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;After looking at and evaluating alternatives when working on a project at Pandascore, I finally decided to give a shot at Mnesia for storing an internal state. It took me a few hours to set it up correctly, but I ran into several issues that may drive anyone nearing an end of sprint crazy, so here&#x27;s a few tips for it :-)&lt;&#x2F;p&gt;
+&lt;p&gt;One disclaimer though: this project is in production (\o&#x2F;), but due to other priorities, I&#x27;m not really monitoring it or improving the design, and thus learning more about Mnesia.&lt;&#x2F;p&gt;
+&lt;p&gt;So this is pretty much a beginner to beginner feedback. Please take it with a pinch of salt.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;some-useful-links&quot;&gt;Some useful links&lt;&#x2F;h2&gt;
+&lt;p&gt;Since I&#x27;m pretty much writing an addendum, you&#x27;ll find more exhaustive information with the following articles and resources. You can read them afterwards if you prefer, and go back to this article if you encounter any issue.&lt;&#x2F;p&gt;
+&lt;p&gt;First, &lt;a href=&quot;https:&#x2F;&#x2F;www.welcometothejungle.com&#x2F;fr&#x2F;articles&#x2F;redis-mnesia-distributed-database&quot;&gt;this excellent article from Welcome to the Jungle&lt;&#x2F;a&gt; gave me a good overview on how to setup Mnesia in a cluster.&lt;&#x2F;p&gt;
+&lt;p&gt;Two more links are mentioned at the end of this article, but I&#x27;ll paste them here too. &lt;a href=&quot;https:&#x2F;&#x2F;elixirschool.com&#x2F;en&#x2F;lessons&#x2F;specifics&#x2F;mnesia&quot;&gt;Elixir School has a good walkthrough&lt;&#x2F;a&gt; from begin to end mostly, and of course, &lt;a href=&quot;http:&#x2F;&#x2F;erlang.org&#x2F;doc&#x2F;man&#x2F;mnesia.html&quot;&gt;the Erlang documentation&lt;&#x2F;a&gt; is a gold mine, though it can be a bit rough to read if you&#x27;re well-versed in Elixir but not Erlang.&lt;&#x2F;p&gt;
+&lt;p&gt;You can also check &lt;a href=&quot;&#x2F;tips&#x2F;20201022-elixir-clustering-on-kubernetes&#x2F;&quot;&gt;my article on deploying an Elixir cluster on Kubernetes&lt;&#x2F;a&gt; since I give a few details on how to set up a simple local cluster. I&#x27;ll do it more quickly here anyway.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;let-s-create-a-sample-project&quot;&gt;Let&#x27;s create a sample project&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s create a simple project to try out Mnesia locally. We&#x27;ll need to run a small cluster, so we&#x27;ll throw in one specific library.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;$ mix new clustertest
+&lt;&#x2F;span&gt;&lt;span&gt;$ cd clustertest
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And let&#x27;s head out to &lt;code&gt;mix.exs&lt;&#x2F;code&gt; to add &lt;code&gt;libcluster&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# In mix.exs
+&lt;&#x2F;span&gt;&lt;span&gt;defp deps do
+&lt;&#x2F;span&gt;&lt;span&gt;  [
+&lt;&#x2F;span&gt;&lt;span&gt;    {:libcluster, &amp;quot;~&amp;gt; 3.2.1&amp;quot;},
+&lt;&#x2F;span&gt;&lt;span&gt;  ]
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And let&#x27;s define a very simple Supervisor. This will get our ClusterSupervisor
+started, with a simple configuration for our local experiments!&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# In mix.exs:
+&lt;&#x2F;span&gt;&lt;span&gt;def application do
+&lt;&#x2F;span&gt;&lt;span&gt;  [
+&lt;&#x2F;span&gt;&lt;span&gt;    mod: {Clustertest.Application, []},
+&lt;&#x2F;span&gt;&lt;span&gt;    extra_applications: [:logger]
+&lt;&#x2F;span&gt;&lt;span&gt;  ]
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;# In lib&#x2F;clustertest&#x2F;application.ex
+&lt;&#x2F;span&gt;&lt;span&gt;defmodule Clustertest.Application do
+&lt;&#x2F;span&gt;&lt;span&gt;  use Application
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def start(_type, _args) do
+&lt;&#x2F;span&gt;&lt;span&gt;    topologies = [
+&lt;&#x2F;span&gt;&lt;span&gt;      epmd_example: [
+&lt;&#x2F;span&gt;&lt;span&gt;        strategy: Cluster.Strategy.Epmd,
+&lt;&#x2F;span&gt;&lt;span&gt;        config: [
+&lt;&#x2F;span&gt;&lt;span&gt;          hosts: [:&amp;quot;a@127.0.0.1&amp;quot;, :&amp;quot;b@127.0.0.1&amp;quot;]
+&lt;&#x2F;span&gt;&lt;span&gt;        ]
+&lt;&#x2F;span&gt;&lt;span&gt;      ]
+&lt;&#x2F;span&gt;&lt;span&gt;    ]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    [
+&lt;&#x2F;span&gt;&lt;span&gt;      {Cluster.Supervisor, [topologies, [name: Clustertest.ClusterSupervisor]]}
+&lt;&#x2F;span&gt;&lt;span&gt;    ]
+&lt;&#x2F;span&gt;&lt;span&gt;    |&amp;gt; Supervisor.start_link(strategy: :one_for_one)
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This will get you started with a small cluster of two nodes. &lt;code&gt;Epmd&lt;&#x2F;code&gt; is
+perfectly fit for our example here, since we just have to specify a few hosts.&lt;&#x2F;p&gt;
+&lt;p&gt;Now, let&#x27;s open two shells and start two instances:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# In one shell
+&lt;&#x2F;span&gt;&lt;span&gt;iex --name a@127.0.0.1 -S mix
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;# In another one
+&lt;&#x2F;span&gt;&lt;span&gt;iex --name b@127.0.0.1 -S mix
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, running &lt;code&gt;Node.list()&lt;&#x2F;code&gt; in each REPL should give you exactly one atom:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&amp;gt; [:&amp;quot;b@127.0.0.1&amp;quot;]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; [:&amp;quot;a@127.0.0.1&amp;quot;]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;initializing-mnesia&quot;&gt;Initializing Mnesia&lt;&#x2F;h2&gt;
+&lt;p&gt;Now, let&#x27;s start actually using Mnesia. We&#x27;ll pretend we&#x27;re running a small wildlife protection office taking care of local racoons.&lt;&#x2F;p&gt;
+&lt;p&gt;Also, for the sake of simplicity, we&#x27;ll add it directly to the children of our app. There&#x27;s no need for complexity for hello world code :)&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# In lib&#x2F;clustertest&#x2F;application.ex
+&lt;&#x2F;span&gt;&lt;span&gt;defmodule Clustertest.Application do
+&lt;&#x2F;span&gt;&lt;span&gt;  use Application
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def start(_type, _args) do
+&lt;&#x2F;span&gt;&lt;span&gt;    topologies = [...]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    [
+&lt;&#x2F;span&gt;&lt;span&gt;      {Cluster.Supervisor, [topologies, [name: Clustertest.ClusterSupervisor]]},
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      {Clustertest.Store.Racoon, []},
+&lt;&#x2F;span&gt;&lt;span&gt;    ]
+&lt;&#x2F;span&gt;&lt;span&gt;    |&amp;gt; Supervisor.start_link(strategy: :one_for_one)
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;# In lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex
+&lt;&#x2F;span&gt;&lt;span&gt;defmodule Clustertest.Store.Racoon do
+&lt;&#x2F;span&gt;&lt;span&gt;  use GenServer
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def start_link(opts \\ []) do
+&lt;&#x2F;span&gt;&lt;span&gt;    GenServer.start_link(__MODULE__, %{}, opts)
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def init(state) do
+&lt;&#x2F;span&gt;&lt;span&gt;    setup_store()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:ok, state}
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp setup_store() do
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Setting up store...&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = ensure_schema_exists()
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = :mnesia.start()
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = ensure_table_exists()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;...Store set up!&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp ensure_schema_exists() do
+&lt;&#x2F;span&gt;&lt;span&gt;    case :mnesia.create_schema([node()]) do
+&lt;&#x2F;span&gt;&lt;span&gt;      {:error, {_node, {:already_exists, __node}}} -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        :ok
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      :ok -&amp;gt; :ok
+&lt;&#x2F;span&gt;&lt;span&gt;    end
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp ensure_table_exists() do
+&lt;&#x2F;span&gt;&lt;span&gt;    :mnesia.create_table(
+&lt;&#x2F;span&gt;&lt;span&gt;      Racoon,
+&lt;&#x2F;span&gt;&lt;span&gt;      [
+&lt;&#x2F;span&gt;&lt;span&gt;        attributes: [
+&lt;&#x2F;span&gt;&lt;span&gt;          :id,
+&lt;&#x2F;span&gt;&lt;span&gt;          :name,
+&lt;&#x2F;span&gt;&lt;span&gt;          :caretaker_id
+&lt;&#x2F;span&gt;&lt;span&gt;        ]
+&lt;&#x2F;span&gt;&lt;span&gt;      ]
+&lt;&#x2F;span&gt;&lt;span&gt;    )
+&lt;&#x2F;span&gt;&lt;span&gt;    |&amp;gt; case do
+&lt;&#x2F;span&gt;&lt;span&gt;      {:atomic, :ok} -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        :ok
+&lt;&#x2F;span&gt;&lt;span&gt;      {:aborted, {:already_exists, Racoon}} -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        :ok
+&lt;&#x2F;span&gt;&lt;span&gt;    end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = :mnesia.wait_for_tables([Racoon], 5000)
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;There are a few important things to note here.&lt;&#x2F;p&gt;
+&lt;p&gt;First, you &lt;em&gt;need&lt;&#x2F;em&gt; to create a schema &lt;em&gt;before&lt;&#x2F;em&gt; starting Mnesia. This is really important. Try switching the two lines to see what happens.&lt;&#x2F;p&gt;
+&lt;p&gt;Then, you&#x27;re free to create your table. Both schema and table can be already created when you run your app, since Mnesia keeps RAM and disk copies, depending on how you configure it. By the way, you should have noticed there are now two new folders in your project directory:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;$ ls
+&lt;&#x2F;span&gt;&lt;span&gt;Mnesia.a@127.0.0.1
+&lt;&#x2F;span&gt;&lt;span&gt;Mnesia.b@127.0.0.1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Hmm, let&#x27;s see if Mnesia is properly configured. Type this in a terminal:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;$ :mnesia.info()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This will be your best friend for debugging Mnesia :)&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;---&amp;gt; Processes holding locks &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Processes waiting for locks &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Participant transactions &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Coordinator transactions &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Uncertain transactions &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Active tables &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;Elixir.Racoon  : with 0        records occupying 305      words of mem
+&lt;&#x2F;span&gt;&lt;span&gt;schema         : with 2        records occupying 535      words of mem
+&lt;&#x2F;span&gt;&lt;span&gt;===&amp;gt; System info in version &amp;quot;4.17&amp;quot;, debug level = none &amp;lt;===
+&lt;&#x2F;span&gt;&lt;span&gt;opt_disc. Directory &amp;quot;&#x2F;home&#x2F;makks&#x2F;code&#x2F;mbuffa&#x2F;clustertest&#x2F;Mnesia.a@127.0.0.1&amp;quot; is used.
+&lt;&#x2F;span&gt;&lt;span&gt;use fallback at restart = false
+&lt;&#x2F;span&gt;&lt;span&gt;running db nodes   = [&amp;#39;a@127.0.0.1&amp;#39;]
+&lt;&#x2F;span&gt;&lt;span&gt;stopped db nodes   = []
+&lt;&#x2F;span&gt;&lt;span&gt;master node tables = []
+&lt;&#x2F;span&gt;&lt;span&gt;remote             = []
+&lt;&#x2F;span&gt;&lt;span&gt;ram_copies         = [&amp;#39;Elixir.Racoon&amp;#39;]
+&lt;&#x2F;span&gt;&lt;span&gt;disc_copies        = [schema]
+&lt;&#x2F;span&gt;&lt;span&gt;disc_only_copies   = []
+&lt;&#x2F;span&gt;&lt;span&gt;[{&amp;#39;a@127.0.0.1&amp;#39;,disc_copies}] = [schema]
+&lt;&#x2F;span&gt;&lt;span&gt;[{&amp;#39;a@127.0.0.1&amp;#39;,ram_copies}] = [&amp;#39;Elixir.Racoon&amp;#39;]
+&lt;&#x2F;span&gt;&lt;span&gt;3 transactions committed, 0 aborted, 0 restarted, 2 logged to disc
+&lt;&#x2F;span&gt;&lt;span&gt;0 held locks, 0 in queue; 0 local transactions, 0 remote
+&lt;&#x2F;span&gt;&lt;span&gt;0 transactions waits for other nodes: []
+&lt;&#x2F;span&gt;&lt;span&gt;:ok
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Hmm, looking at &lt;code&gt;running db nodes&lt;&#x2F;code&gt;, we&#x27;re only running two Mnesia nodes independently. We want to connect them, but we have to do it ourselves when new nodes are connected.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s go back to our Store and add a bit of code:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;We want to be notified when new nodes connect...&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;defmodule Clustertest.Store.Racoon do
+&lt;&#x2F;span&gt;&lt;span&gt;  use GenServer
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  [...]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def init(state) do
+&lt;&#x2F;span&gt;&lt;span&gt;    # Get notified when new nodes are connected.
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = :net_kernel.monitor_nodes(true)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    setup_store()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:ok, state}
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  [...]
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;...And we want to configure Mnesia to use extra nodes, create a table copy on the other node, and remove the other node when connection is lost.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;defmodule Clustertest.Store.Racoon do
+&lt;&#x2F;span&gt;&lt;span&gt;  [...]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def handle_info({:nodeup, node}, state) do
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Node connected: #{inspect node}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = connect_mnesia_to_cluster()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:noreply, state}
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def handle_info({:nodedown, node}, state) do
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Node disconnected: #{inspect node}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    update_mnesia_nodes()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:noreply, state}
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp connect_mnesia_to_cluster() do
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = :mnesia.start()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:ok, [_|_] = nodes} = :mnesia.change_config(:extra_db_nodes, Node.list())
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Extra db nodes: #{ inspect nodes }&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = ensure_table_exists()
+&lt;&#x2F;span&gt;&lt;span&gt;    :mnesia.change_table_copy_type(:schema, node(), :disc_copies)
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = ensure_table_copy_exists()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Successfully connected Mnesia to the cluster!&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp update_mnesia_nodes do
+&lt;&#x2F;span&gt;&lt;span&gt;    nodes = Node.list()
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Updating Mnesia nodes with #{inspect nodes}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;    :mnesia.change_config(:extra_db_nodes, nodes)
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp ensure_schema_exists() do
+&lt;&#x2F;span&gt;&lt;span&gt;    [...]
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp ensure_table_exists() do
+&lt;&#x2F;span&gt;&lt;span&gt;    [...]
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp ensure_table_copy_exists() do
+&lt;&#x2F;span&gt;&lt;span&gt;    case :mnesia.add_table_copy(Racoon, node(), :disc_copies) do
+&lt;&#x2F;span&gt;&lt;span&gt;      {:atomic, :ok} -&amp;gt; :ok
+&lt;&#x2F;span&gt;&lt;span&gt;      {:aborted, {:already_exists, Racoon, _node}} -&amp;gt; :ok
+&lt;&#x2F;span&gt;&lt;span&gt;    end
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, restarting our two nodes should raise an error:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;17:20:34.541 [error] GenServer #PID&amp;lt;0.213.0&amp;gt; terminating
+&lt;&#x2F;span&gt;&lt;span&gt;** (MatchError) no match of right hand side value: {:ok, []}
+&lt;&#x2F;span&gt;&lt;span&gt;    (clustertest 0.1.0) lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex:46: Clustertest.Store.Racoon.connect_mnesia_to_cluster&#x2F;0
+&lt;&#x2F;span&gt;&lt;span&gt;    (clustertest 0.1.0) lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex:30: Clustertest.Store.Racoon.handle_info&#x2F;2
+&lt;&#x2F;span&gt;&lt;span&gt;    (stdlib 3.13) gen_server.erl:680: :gen_server.try_dispatch&#x2F;4
+&lt;&#x2F;span&gt;&lt;span&gt;    (stdlib 3.13) gen_server.erl:756: :gen_server.handle_msg&#x2F;6
+&lt;&#x2F;span&gt;&lt;span&gt;    (stdlib 3.13) proc_lib.erl:226: :proc_lib.init_p_do_apply&#x2F;3
+&lt;&#x2F;span&gt;&lt;span&gt;Last message: {:nodeup, :&amp;quot;b@127.0.0.1&amp;quot;}
+&lt;&#x2F;span&gt;&lt;span&gt;State: %{}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Why is &lt;code&gt;:mnesia.change_config(:extra_db_nodes, Node.list())&lt;&#x2F;code&gt; returning &lt;code&gt;:ok&lt;&#x2F;code&gt; with an empty array?&lt;&#x2F;p&gt;
+&lt;p&gt;Well, you can&#x27;t really guess, and silent errors is why Mnesia can be difficult to work with for the first time.&lt;&#x2F;p&gt;
+&lt;p&gt;In fact, Mnesia requires that you create an identical schema on each of your nodes, sharing the same cookie. By calling &lt;code&gt;setup_store()&lt;&#x2F;code&gt; and its &lt;code&gt;:mnesia.create_schema()&lt;&#x2F;code&gt;, you&#x27;re creating two conflicting schemas Mnesia can&#x27;t resolve.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s remove &lt;code&gt;setup_store()&lt;&#x2F;code&gt; completely (and &lt;code&gt;ensure_schema_exists()&lt;&#x2F;code&gt; too). If we need to be able to deploy single nodes (locally for example) we can still define an environment variable to decide what to do. But this is off-topic.&lt;&#x2F;p&gt;
+&lt;p&gt;Also, remember those two folders that popped up in your directory? Remove those folders. Those may contain conflicting schemas.&lt;&#x2F;p&gt;
+&lt;p&gt;Now, let&#x27;s restart our two REPLs.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;17:35:48.049 [error] GenServer #PID&amp;lt;0.213.0&amp;gt; terminating
+&lt;&#x2F;span&gt;&lt;span&gt;** (MatchError) no match of right hand side value: {:ok, []}
+&lt;&#x2F;span&gt;&lt;span&gt;    (clustertest 0.1.0) lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex:34: Clustertest.Store.Racoon.connect_mnesia_to_cluster&#x2F;0
+&lt;&#x2F;span&gt;&lt;span&gt;    (clustertest 0.1.0) lib&#x2F;clustertest&#x2F;store&#x2F;racoon.ex:18: Clustertest.Store.Racoon.handle_info&#x2F;2
+&lt;&#x2F;span&gt;&lt;span&gt;    (stdlib 3.13) gen_server.erl:680: :gen_server.try_dispatch&#x2F;4
+&lt;&#x2F;span&gt;&lt;span&gt;    (stdlib 3.13) gen_server.erl:756: :gen_server.handle_msg&#x2F;6
+&lt;&#x2F;span&gt;&lt;span&gt;    (stdlib 3.13) proc_lib.erl:226: :proc_lib.init_p_do_apply&#x2F;3
+&lt;&#x2F;span&gt;&lt;span&gt;Last message: {:nodeup, :&amp;quot;b@127.0.0.1&amp;quot;}
+&lt;&#x2F;span&gt;&lt;span&gt;State: %{}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Well, you can&#x27;t guess either, but Mnesia must be started as an application. Surprisingly enough, trying to use &lt;code&gt;:mnesia&lt;&#x2F;code&gt; functions wouldn&#x27;t raise any errors.&lt;&#x2F;p&gt;
+&lt;p&gt;So let&#x27;s head to our manifest and add &lt;code&gt;:mnesia&lt;&#x2F;code&gt; in a familiar place:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# In mix.exs
+&lt;&#x2F;span&gt;&lt;span&gt;def application do
+&lt;&#x2F;span&gt;&lt;span&gt;  [
+&lt;&#x2F;span&gt;&lt;span&gt;    mod: {Clustertest.Application, []},
+&lt;&#x2F;span&gt;&lt;span&gt;    extra_applications: [:logger, :mnesia]
+&lt;&#x2F;span&gt;&lt;span&gt;  ]
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now let&#x27;s check...&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;---&amp;gt; Processes holding locks &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Processes waiting for locks &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Participant transactions &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Coordinator transactions &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Uncertain transactions &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;---&amp;gt; Active tables &amp;lt;---
+&lt;&#x2F;span&gt;&lt;span&gt;schema         : with 2        records occupying 554      words of mem
+&lt;&#x2F;span&gt;&lt;span&gt;===&amp;gt; System info in version &amp;quot;4.17&amp;quot;, debug level = none &amp;lt;===
+&lt;&#x2F;span&gt;&lt;span&gt;opt_disc. Directory &amp;quot;&#x2F;home&#x2F;makks&#x2F;code&#x2F;mbuffa&#x2F;clustertest&#x2F;Mnesia.a@127.0.0.1&amp;quot; is NOT used.
+&lt;&#x2F;span&gt;&lt;span&gt;use fallback at restart = false
+&lt;&#x2F;span&gt;&lt;span&gt;running db nodes   = [&amp;#39;b@127.0.0.1&amp;#39;,&amp;#39;a@127.0.0.1&amp;#39;]
+&lt;&#x2F;span&gt;&lt;span&gt;stopped db nodes   = []
+&lt;&#x2F;span&gt;&lt;span&gt;master node tables = []
+&lt;&#x2F;span&gt;&lt;span&gt;remote             = [&amp;#39;Elixir.Racoon&amp;#39;]
+&lt;&#x2F;span&gt;&lt;span&gt;ram_copies         = [schema]
+&lt;&#x2F;span&gt;&lt;span&gt;disc_copies        = []
+&lt;&#x2F;span&gt;&lt;span&gt;disc_only_copies   = []
+&lt;&#x2F;span&gt;&lt;span&gt;[{&amp;#39;a@127.0.0.1&amp;#39;,ram_copies},{&amp;#39;b@127.0.0.1&amp;#39;,disc_copies}] = [schema]
+&lt;&#x2F;span&gt;&lt;span&gt;[{&amp;#39;b@127.0.0.1&amp;#39;,ram_copies}] = [&amp;#39;Elixir.Racoon&amp;#39;]
+&lt;&#x2F;span&gt;&lt;span&gt;2 transactions committed, 0 aborted, 0 restarted, 0 logged to disc
+&lt;&#x2F;span&gt;&lt;span&gt;0 held locks, 0 in queue; 0 local transactions, 0 remote
+&lt;&#x2F;span&gt;&lt;span&gt;0 transactions waits for other nodes: []
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;media.giphy.com&#x2F;media&#x2F;4xpB3eE00FfBm&#x2F;giphy.gif&quot; alt=&quot;&quot; title=&quot;hooray&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;See how &lt;code&gt;opt_disc&lt;&#x2F;code&gt; and &lt;code&gt;running db nodes&lt;&#x2F;code&gt; changed. But we have no data yet.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;inserting-data&quot;&gt;Inserting data&lt;&#x2F;h2&gt;
+&lt;p&gt;We&#x27;ll add some code and make some changes so that we&#x27;ll use a struct defined in &lt;code&gt;Types.Racoon&lt;&#x2F;code&gt;. The naming in my example isn&#x27;t great, but basically, we&#x27;re just adding serialization&#x2F;deserialization functions to manipulate structs in our codebase, while Mnesia stores tuples.&lt;&#x2F;p&gt;
+&lt;p&gt;So we&#x27;ll add two functions, &lt;code&gt;list()&lt;&#x2F;code&gt; and &lt;code&gt;create()&lt;&#x2F;code&gt;, and do a few changes on the table name.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;defmodule Clustertest.Store.Racoon do
+&lt;&#x2F;span&gt;&lt;span&gt;  [...]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defmodule Types.Racoon do
+&lt;&#x2F;span&gt;&lt;span&gt;    defstruct [
+&lt;&#x2F;span&gt;&lt;span&gt;      :id,
+&lt;&#x2F;span&gt;&lt;span&gt;      :name,
+&lt;&#x2F;span&gt;&lt;span&gt;      caretaker_id: nil
+&lt;&#x2F;span&gt;&lt;span&gt;    ]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    def decode({__MODULE__, id, name, caretaker_id}) do
+&lt;&#x2F;span&gt;&lt;span&gt;      %__MODULE__{
+&lt;&#x2F;span&gt;&lt;span&gt;        id: id,
+&lt;&#x2F;span&gt;&lt;span&gt;        name: name,
+&lt;&#x2F;span&gt;&lt;span&gt;        caretaker_id: caretaker_id
+&lt;&#x2F;span&gt;&lt;span&gt;      }
+&lt;&#x2F;span&gt;&lt;span&gt;    end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    def encode(%__MODULE__{
+&lt;&#x2F;span&gt;&lt;span&gt;      id: id,
+&lt;&#x2F;span&gt;&lt;span&gt;      name: name,
+&lt;&#x2F;span&gt;&lt;span&gt;      caretaker_id: caretaker_id
+&lt;&#x2F;span&gt;&lt;span&gt;    }) do
+&lt;&#x2F;span&gt;&lt;span&gt;      {__MODULE__, id, name, caretaker_id}
+&lt;&#x2F;span&gt;&lt;span&gt;    end
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  [...]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def list() do
+&lt;&#x2F;span&gt;&lt;span&gt;    {:atomic, list} = :mnesia.transaction(fn -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      :mnesia.match_object({Types.Racoon, :_, :_, :_})
+&lt;&#x2F;span&gt;&lt;span&gt;    end)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    list |&amp;gt; Enum.map(fn x -&amp;gt; Types.Racoon.decode(x) end)
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def create(%Types.Racoon{ id: id } = state) when is_integer(id) do
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Inserting #{inspect state}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:atomic, reason} = :mnesia.transaction(fn -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      case :mnesia.read(Types.Racoon, id, :write) do
+&lt;&#x2F;span&gt;&lt;span&gt;        [] -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          Types.Racoon.encode(state) |&amp;gt; :mnesia.write()
+&lt;&#x2F;span&gt;&lt;span&gt;        _ -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          :record_exists
+&lt;&#x2F;span&gt;&lt;span&gt;      end
+&lt;&#x2F;span&gt;&lt;span&gt;    end)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    reason
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  [...]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp ensure_table_exists() do
+&lt;&#x2F;span&gt;&lt;span&gt;    :mnesia.create_table(
+&lt;&#x2F;span&gt;&lt;span&gt;      Types.Racoon,
+&lt;&#x2F;span&gt;&lt;span&gt;      [
+&lt;&#x2F;span&gt;&lt;span&gt;        attributes: [
+&lt;&#x2F;span&gt;&lt;span&gt;          :id,
+&lt;&#x2F;span&gt;&lt;span&gt;          :name,
+&lt;&#x2F;span&gt;&lt;span&gt;          :caretaker_id
+&lt;&#x2F;span&gt;&lt;span&gt;        ]
+&lt;&#x2F;span&gt;&lt;span&gt;      ]
+&lt;&#x2F;span&gt;&lt;span&gt;    )
+&lt;&#x2F;span&gt;&lt;span&gt;    |&amp;gt; case do
+&lt;&#x2F;span&gt;&lt;span&gt;      {:atomic, :ok} -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        :ok
+&lt;&#x2F;span&gt;&lt;span&gt;      {:aborted, {:already_exists, Types.Racoon}} -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        :ok
+&lt;&#x2F;span&gt;&lt;span&gt;    end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok = :mnesia.wait_for_tables([Types.Racoon], 5000)
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  defp ensure_table_copy_exists() do
+&lt;&#x2F;span&gt;&lt;span&gt;    case :mnesia.add_table_copy(Types.Racoon, node(), :disc_copies) do
+&lt;&#x2F;span&gt;&lt;span&gt;      {:atomic, :ok} -&amp;gt; :ok
+&lt;&#x2F;span&gt;&lt;span&gt;      {:aborted, {:already_exists, Types.Racoon, _node}} -&amp;gt; :ok
+&lt;&#x2F;span&gt;&lt;span&gt;    end
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now let&#x27;s test a few examples, after a REPL reset.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# In your first shell:
+&lt;&#x2F;span&gt;&lt;span&gt;iex(a@127.0.0.1)3&amp;gt; Clustertest.Store.Racoon.list()
+&lt;&#x2F;span&gt;&lt;span&gt;[]
+&lt;&#x2F;span&gt;&lt;span&gt;iex(a@127.0.0.1)4&amp;gt; Clustertest.Store.Racoon.create(%Clustertest.Store.Racoon.Types.Racoon{ id: 1, name: &amp;quot;Ricky&amp;quot;, caretaker_id: nil })
+&lt;&#x2F;span&gt;&lt;span&gt;Inserting %Clustertest.Store.Racoon.Types.Racoon{caretaker_id: nil, id: 1, name: &amp;quot;Ricky&amp;quot;}
+&lt;&#x2F;span&gt;&lt;span&gt;:ok
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;# In your second shell:
+&lt;&#x2F;span&gt;&lt;span&gt;iex(b@127.0.0.1)4&amp;gt; Clustertest.Store.Racoon.list()
+&lt;&#x2F;span&gt;&lt;span&gt;[
+&lt;&#x2F;span&gt;&lt;span&gt;  %Clustertest.Store.Racoon.Types.Racoon{
+&lt;&#x2F;span&gt;&lt;span&gt;    caretaker_id: nil,
+&lt;&#x2F;span&gt;&lt;span&gt;    id: 1,
+&lt;&#x2F;span&gt;&lt;span&gt;    name: &amp;quot;Ricky&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The &lt;code&gt;update&lt;&#x2F;code&gt;, &lt;code&gt;read&lt;&#x2F;code&gt;, and &lt;code&gt;delete&lt;&#x2F;code&gt; functions are quite straighforward. You can implement them yourself, but I&#x27;m adding those as a reference.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;defmodule Clustertest.Store.Racoon do
+&lt;&#x2F;span&gt;&lt;span&gt;  [...]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def update(%Types.Racoon{ id: id } = new_state) when is_integer(id) do
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Updating #{inspect new_state}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:atomic, reason} = :mnesia.transaction(fn -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      [{Types.Racoon, ^id, _, _,}] = :mnesia.read(Types.Racoon, id, :write)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      Types.Racoon.encode(new_state) |&amp;gt; :mnesia.write()
+&lt;&#x2F;span&gt;&lt;span&gt;    end)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    reason
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def read(id) when is_integer(id) do
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Returning #{id}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:atomic, result} = :mnesia.transaction(fn -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      :mnesia.read(Types.Racoon, id, :read)
+&lt;&#x2F;span&gt;&lt;span&gt;    end)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    case result do
+&lt;&#x2F;span&gt;&lt;span&gt;      [] -&amp;gt; nil
+&lt;&#x2F;span&gt;&lt;span&gt;      list -&amp;gt; list |&amp;gt; List.first() |&amp;gt; Types.Racoon.decode()
+&lt;&#x2F;span&gt;&lt;span&gt;    end
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  def delete(id) when is_integer(id) do
+&lt;&#x2F;span&gt;&lt;span&gt;    IO.puts(&amp;quot;Deleting #{id}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {:atomic, :ok} = :mnesia.transaction(fn -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      :ok = :mnesia.delete(Types.Racoon, id, :write)
+&lt;&#x2F;span&gt;&lt;span&gt;    end)
+&lt;&#x2F;span&gt;&lt;span&gt;    :ok
+&lt;&#x2F;span&gt;&lt;span&gt;  end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  [...]
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can play around with this :) Note that creating data on one node, and creating the identical data on another node doesn&#x27;t raise any issue, but do not create duplicates either.&lt;&#x2F;p&gt;
+&lt;p&gt;There&#x27;s one issue remaining though: closing both REPLs clear the table. This is because we forgot to specify one option when calling &lt;code&gt;:mnesia.create_table&lt;&#x2F;code&gt;!&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;:mnesia.create_table(
+&lt;&#x2F;span&gt;&lt;span&gt;  Types.Racoon,
+&lt;&#x2F;span&gt;&lt;span&gt;  [
+&lt;&#x2F;span&gt;&lt;span&gt;    attributes: [
+&lt;&#x2F;span&gt;&lt;span&gt;      :id,
+&lt;&#x2F;span&gt;&lt;span&gt;      :name,
+&lt;&#x2F;span&gt;&lt;span&gt;      :caretaker_id
+&lt;&#x2F;span&gt;&lt;span&gt;    ],
+&lt;&#x2F;span&gt;&lt;span&gt;    disc_copies: [Node.self()]
+&lt;&#x2F;span&gt;&lt;span&gt;  ]
+&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now we&#x27;re good, and &lt;code&gt;:mnesia.info()&lt;&#x2F;code&gt; doesn&#x27;t show an empty &lt;code&gt;disc_copies&lt;&#x2F;code&gt; anymore.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-few-important-notes-for-releases&quot;&gt;A few important notes for releases...&lt;&#x2F;h2&gt;
+&lt;p&gt;...and solving the &quot;bad cookie&quot; issue.&lt;&#x2F;p&gt;
+&lt;p&gt;Keep in mind that we&#x27;ve been using &lt;code&gt;iex&lt;&#x2F;code&gt; all along and that running a compiled application will raise a few differences.&lt;&#x2F;p&gt;
+&lt;p&gt;Remember the snippet I used for adding &lt;code&gt;:mnesia&lt;&#x2F;code&gt; to our running application?&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# In mix.exs
+&lt;&#x2F;span&gt;&lt;span&gt;def application do
+&lt;&#x2F;span&gt;&lt;span&gt;  [
+&lt;&#x2F;span&gt;&lt;span&gt;    mod: {Clustertest.Application, []},
+&lt;&#x2F;span&gt;&lt;span&gt;    extra_applications: [:logger, :mnesia]
+&lt;&#x2F;span&gt;&lt;span&gt;  ]
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;media.giphy.com&#x2F;media&#x2F;11CCn8sSFSm2kg&#x2F;giphy.gif&quot; alt=&quot;&quot; title=&quot;I lied.&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Well, it might cause you some trouble once you compile your release with &lt;code&gt;mix release&lt;&#x2F;code&gt; and your node starts.&lt;&#x2F;p&gt;
+&lt;p&gt;Thing is, adding libraries to &lt;code&gt;extra_applications&lt;&#x2F;code&gt; would start them automatically before your application does, so we have to specify
+that we only want to reference it in our release, to avoid :mnesia creating a schema and starting automatically.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# In mix.exs
+&lt;&#x2F;span&gt;&lt;span&gt;def application do
+&lt;&#x2F;span&gt;&lt;span&gt;  [
+&lt;&#x2F;span&gt;&lt;span&gt;    mod: {Clustertest.Application, []},
+&lt;&#x2F;span&gt;&lt;span&gt;    extra_applications: [:logger],
+&lt;&#x2F;span&gt;&lt;span&gt;    included_applications: [:mnesia]
+&lt;&#x2F;span&gt;&lt;span&gt;  ]
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Thing is, I also had to revert my changes on &lt;code&gt;create_table&lt;&#x2F;code&gt; and remove the &lt;code&gt;disc_copies&lt;&#x2F;code&gt; option.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;:mnesia.create_table(
+&lt;&#x2F;span&gt;&lt;span&gt;  Types.Racoon,
+&lt;&#x2F;span&gt;&lt;span&gt;  [
+&lt;&#x2F;span&gt;&lt;span&gt;    attributes: [
+&lt;&#x2F;span&gt;&lt;span&gt;      :id,
+&lt;&#x2F;span&gt;&lt;span&gt;      :name,
+&lt;&#x2F;span&gt;&lt;span&gt;      :caretaker_id
+&lt;&#x2F;span&gt;&lt;span&gt;    ]
+&lt;&#x2F;span&gt;&lt;span&gt;  ]
+&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, &lt;code&gt;:mnesia.info()&lt;&#x2F;code&gt; will properly display a populated &lt;code&gt;disc_copies&lt;&#x2F;code&gt; option.&lt;&#x2F;p&gt;
+&lt;p&gt;I do not know why those differences between &lt;code&gt;iex&lt;&#x2F;code&gt; and compiled code exist. I may be doing something wrong, so please feel free to open an issue on the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mbuffa&#x2F;elixir-mnesia-example&quot;&gt;repository&lt;&#x2F;a&gt; if you find why!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;I hope this was neither too tedious or frightening regarding the usage of Mnesia in your project. I thought the &quot;crash course&quot; format to be interesting in this case (ie. amending snippets), because it helps to have beaten that path when things go wrong.&lt;&#x2F;p&gt;
+&lt;p&gt;I didn&#x27;t mention the issue of network partitioning and a possible way to solve it, but this is more related to your cluster configuration. Essentially, network failure may happen inside your cluster, and reconnecting nodes wouldn&#x27;t know how to handle this, since we&#x27;re not using a master-replica strategy. I haven&#x27;t read much about this, but one possible solution would be to pass the cluster size as an environment variable to all nodes, and check the &lt;code&gt;Node.list()&lt;&#x2F;code&gt; result when a &lt;code&gt;:nodedown&lt;&#x2F;code&gt; message is received. Afterwards, a simple calculation should be enough to determine if your node is isolated or in a dominant group, allowing you to push the self-destruct red button with, for example, a &quot;liveness&quot; GenServer exposed to your orchestrator, returning &lt;code&gt;HTTP 200 Ok&lt;&#x2F;code&gt; responses codes until isolation is detected.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that there&#x27;s also the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;beardedeagle&#x2F;mnesiac&quot;&gt;Mnesiac&lt;&#x2F;a&gt; library, which is an Elixir layer on top of Mnesia. I prefer using low-level libraries directly, at least for learning, but it might be a good fit for production though.&lt;&#x2F;p&gt;
+&lt;p&gt;Last, but not least, I &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mbuffa&#x2F;elixir-mnesia-example&quot;&gt;created a repository&lt;&#x2F;a&gt; with a small and clear commit history, in case you want to tinker with it.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;Et voilà.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Elixir: Clustering on Kubernetes</title>
+        <published>2020-10-21T00:00:00+00:00</published>
+        <updated>2020-10-21T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/"/>
+        <id>https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;When developing Elixir applications, you may want to create a cluster of Erlang nodes at some point, for example, to provide redundancy, high availability,or to share a global state on the cluster (with Mnesia, for example) without hitting an outside DBMS.&lt;&#x2F;p&gt;
+&lt;p&gt;This can be easily achieved with &lt;code&gt;libcluster&lt;&#x2F;code&gt;. As you can see &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;libcluster&#x2F;readme.html&quot;&gt;in the docs&lt;&#x2F;a&gt;, it supports multiple strategies.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;ll assume you want to deploy to a Kubernetes cluster, and I&#x27;ll be covering this strategy only (&lt;code&gt;Cluster.Strategy.Kubernetes&lt;&#x2F;code&gt;) for simplicity sake, but you may find some bits interesting even if that doesn&#x27;t apply to your case. I&#x27;ll also assume that you already have a working basic Kubernetes deployment setup.&lt;&#x2F;p&gt;
+&lt;p&gt;We&#x27;ll deploy a &lt;code&gt;cluster&lt;&#x2F;code&gt; of Erlang &lt;code&gt;nodes&lt;&#x2F;code&gt;. To avoid confusion with Kubernetes terminology, I&#x27;ll use the prefix &lt;code&gt;k8s&lt;&#x2F;code&gt; when referring to Kube.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-word-about-wsl&quot;&gt;A word about WSL&lt;&#x2F;h2&gt;
+&lt;p&gt;You may run into one issue if you&#x27;re using WSL: by default, WSL systems use the same hostname as their Windows host, which isn&#x27;t fully qualified, and Erlang may not like that.&lt;&#x2F;p&gt;
+&lt;p&gt;To fix this (and to avoid breaking WSL), you can specify a full computer name on Windows.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Go to your PC settings (&lt;code&gt;This PC&lt;&#x2F;code&gt; -&amp;gt; &lt;code&gt;Properties&lt;&#x2F;code&gt; -&amp;gt; &lt;code&gt;Change Settings&lt;&#x2F;code&gt; -&amp;gt; &lt;code&gt;Change&lt;&#x2F;code&gt;),&lt;&#x2F;li&gt;
+&lt;li&gt;In the &lt;code&gt;Computer&#x2F;Domain Changes&lt;&#x2F;code&gt; window, keep a simple Computer Name,&lt;&#x2F;li&gt;
+&lt;li&gt;Click on More, and in the &lt;code&gt;DNS Suffix and NetBIOS Computer Name&lt;&#x2F;code&gt; window, specify a primary DNS suffix (like &lt;code&gt;localdomain&lt;&#x2F;code&gt;).&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;You can keep the other settings unchanged, provided you have something like &lt;code&gt;barney&lt;&#x2F;code&gt; as computer name and &lt;code&gt;barney.localdomain&lt;&#x2F;code&gt; as full computer name.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;connecting-nodes-locally&quot;&gt;Connecting nodes locally&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s make a new clean project with Mix:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&amp;gt; mix new cluster
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; cd cluster
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And let&#x27;s start a &lt;code&gt;iex&lt;&#x2F;code&gt; REPL, giving it a new argument:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&amp;gt; iex --sname a
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Here, we just passed a flag to the Erlang VM, specifying the shortname of the node we want to run.&lt;&#x2F;p&gt;
+&lt;p&gt;There&#x27;s now a slight difference appearing in your prompt:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;iex(a@{HOSTNAME})1&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You should see your PC hostname at the right of that &lt;code&gt;@&lt;&#x2F;code&gt; symbol. This is a default value, because we haven&#x27;t specified a fully qualified name.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s start a second Elixir app, in another terminal:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&amp;gt; iex --sname b
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And let&#x27;s discover a few functions!&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;node()&lt;&#x2F;code&gt; (or &lt;code&gt;Node.self()&lt;&#x2F;code&gt;) returns the name of the current Node.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;Node.list()&lt;&#x2F;code&gt; returns a list of the connected Nodes in the cluster. At this point, it should be empty.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;Node.connect()&lt;&#x2F;code&gt; and &lt;code&gt;Node.disconnect()&lt;&#x2F;code&gt; allow you to, you guessed it, connect and disconnect nodes. Let&#x27;s try it!&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;On the &lt;code&gt;b&lt;&#x2F;code&gt; Node, type:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;Node.connect(:a@hostname)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now, go back to the &lt;code&gt;a&lt;&#x2F;code&gt; Node, and run:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;Node.list()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You should see &lt;code&gt;b@hostname&lt;&#x2F;code&gt; appearing there. Congratulations :) We haven&#x27;t done anything spectacular this far, but this is exactly what &lt;code&gt;libcluster&lt;&#x2F;code&gt; will do under the hood once it&#x27;s set up correctly.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;todo&quot;&gt;Todo&lt;&#x2F;h2&gt;
+&lt;p&gt;So, here&#x27;s what we&#x27;ll have to do:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Pass the relevant fully qualified name to each Erlang VM&lt;&#x2F;li&gt;
+&lt;li&gt;Update our Kubernetes configuration&lt;&#x2F;li&gt;
+&lt;li&gt;Define a cluster topology to configure &lt;code&gt;libcluster&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;vm-args&quot;&gt;VM Args&lt;&#x2F;h2&gt;
+&lt;p&gt;We&#x27;ll need to pass some arguments to our Erlang VMs.
+Since at least its version &lt;code&gt;1.10&lt;&#x2F;code&gt;, Mix can handle this (you won&#x27;t need to add Distillery as a dependency).&lt;&#x2F;p&gt;
+&lt;p&gt;In your project directory, run:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;mix release.init
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This command will generate a few files. Let&#x27;s take a look at &lt;code&gt;vm.args.eex&lt;&#x2F;code&gt;. It should contain a few commented lines, specifically:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;## Customize flags given to the VM: http:&#x2F;&#x2F;erlang.org&#x2F;doc&#x2F;man&#x2F;erl.html
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;## -mode&#x2F;-name&#x2F;-sname&#x2F;-setcookie are configured via env vars, do not set them here
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Since we want to set &lt;code&gt;name&lt;&#x2F;code&gt; and deploy on Linux containers, let&#x27;s get to &lt;code&gt;env.sh.eex&lt;&#x2F;code&gt;. There&#x27;s a few commented lines in there, but we&#x27;re most interested in the last block:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Set the release to work across nodes. If using the long name format like
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# the one below (my_app@127.0.0.1), you need to also uncomment the
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# RELEASE_DISTRIBUTION variable below. Must be &amp;quot;sname&amp;quot;, &amp;quot;name&amp;quot; or &amp;quot;none&amp;quot;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# export RELEASE_DISTRIBUTION=name
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# export RELEASE_NODE=&amp;lt;%= @release.name %&amp;gt;@127.0.0.1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;To enable clustering, we need to replace the &lt;code&gt;127.0.0.1&lt;&#x2F;code&gt; part with the fully qualified name of our pod. Kubernetes has its own internal DNS, and pods are typically named like this:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# Assuming our Pod IP is 192.168.0.45
+&lt;&#x2F;span&gt;&lt;span&gt;192-168-0-45.namespace.pod.cluster.local
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;So your setup should end up looking like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;POD_A_RECORD&lt;&#x2F;span&gt;&lt;span&gt;=$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;POD_IP &lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sed &lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;s&#x2F;\.&#x2F;-&#x2F;g&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;RELEASE_DISTRIBUTION&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;name
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;RELEASE_NODE&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;myapp@&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;POD_A_RECORD&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;).&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;NAMESPACE&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;).pod.cluster.local
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Both &lt;code&gt;$POD_IP&lt;&#x2F;code&gt; and &lt;code&gt;$NAMESPACE&lt;&#x2F;code&gt; will have to be defined when our application starts, so we&#x27;ll add those to our k8s deployment manifest.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;kubernetes-configuration&quot;&gt;Kubernetes configuration&lt;&#x2F;h2&gt;
+&lt;p&gt;We should now declare our two new environment variables:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apiVersion&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;apps&#x2F;v1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Deployment
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;metadata&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;myapp
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;namespace&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;default
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;spec&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;selector&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;matchLabels&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;myapp
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;tier&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;web
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;metadata&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;labels&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;myapp
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;tier&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;web
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;spec&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;containers&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;        - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;myapp
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;Image&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;resources&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;limits&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;memory&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;128Mi&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cpu&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;500m&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ports&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;containerPort&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;lt;Port&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;env&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;NAMESPACE
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;valueFrom&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fieldRef&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;                  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fieldPath&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;metadata.namespace
+&lt;&#x2F;span&gt;&lt;span&gt;            - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;POD_IP
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;valueFrom&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fieldRef&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;                  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fieldPath&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;status.podIP
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Both variables references the pod&#x27;s information once it&#x27;s started. You can check it by running:e by running:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;kubectl get pod myapp-456789 -o yaml
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If you already have one pod correctly labelled, you can check that libcluster will correctly poll the right pods from Kube by doing what it does: polling with a labelSelector:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;kubectl get pods -l app=myapp,tier=web
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If this returns off-topic pods, then you should fix this before proceeding :)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;libcluster-topology&quot;&gt;Libcluster topology&lt;&#x2F;h2&gt;
+&lt;p&gt;Last, but not least, we need to specify our libcluster strategy:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span&gt;topologies = [
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;default: &lt;&#x2F;span&gt;&lt;span&gt;[
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;strategy: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Cluster&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Strategy&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Kubernetes&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;config: &lt;&#x2F;span&gt;&lt;span&gt;[
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;mode: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:dns&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;kubernetes_node_basename: &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;myapp&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;,
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;kubernetes_selector: &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;app=myapp,tier=web&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;,
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;kubernetes_namespace: &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;default&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;,
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;polling_interval: 10_000
+&lt;&#x2F;span&gt;&lt;span&gt;    ]
+&lt;&#x2F;span&gt;&lt;span&gt;  ]
+&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[
+&lt;&#x2F;span&gt;&lt;span&gt;  {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Cluster&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Supervisor&lt;&#x2F;span&gt;&lt;span&gt;, [topologies, [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;name: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Myapp&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;ClusterSupervisor&lt;&#x2F;span&gt;&lt;span&gt;]]}
+&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Once you deploy this, you should be good :) After scaling up your deployment (&lt;code&gt;kubectl scale --replicas=X deployment&#x2F;my-app&lt;&#x2F;code&gt;), you should see various &lt;code&gt;[libcluster]&lt;&#x2F;code&gt; log entries on your pods.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-now&quot;&gt;What now?&lt;&#x2F;h2&gt;
+&lt;p&gt;There&#x27;s a few things to toy around with if you want to leverage your cluster!&lt;&#x2F;p&gt;
+&lt;p&gt;Starting from there, and after cleaning your configuration and&#x2F;or setting up cleaner environment variables, there are a few interesting things to do. How about:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Declaring a GenServer tracking nodes status?&lt;&#x2F;li&gt;
+&lt;li&gt;Implementing a Cluster Singleton worker using &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Virviil&#x2F;individual&quot;&gt;Individual&lt;&#x2F;a&gt;?&lt;&#x2F;li&gt;
+&lt;li&gt;Toying around with Phoenix.PubSub?&lt;&#x2F;li&gt;
+&lt;li&gt;Playing with process registries, like Phoenix.Tracker?&lt;&#x2F;li&gt;
+&lt;li&gt;Discovering Erlang&#x27;s &lt;a href=&quot;http:&#x2F;&#x2F;erlang.org&#x2F;doc&#x2F;apps&#x2F;mnesia&#x2F;Mnesia_chap2.html&quot;&gt;Mnesia&lt;&#x2F;a&gt;, a powerful in-cluster DBMS to use for internal state or cache, and which makes Redis irrelevant?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;node-up-down-notifications&quot;&gt;Node up&#x2F;down notifications&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;erlang.org&#x2F;doc&#x2F;man&#x2F;net_kernel.html#monitor_nodes-1&quot;&gt;Erlang exposes a simple function&lt;&#x2F;a&gt; that&#x27;ll get the current process notified when nodes are up or down. This can allow us to react accordingly, like printing debug information in the logs, dereferencing the node, or push the self destruct button.&lt;&#x2F;p&gt;
+&lt;p&gt;In our first example, if you had run the following before connecting the two nodes together:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:net_kernel&lt;&#x2F;span&gt;&lt;span&gt;.monitor_nodes(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Then running &lt;code&gt;flush&lt;&#x2F;code&gt; would show you the messages you received:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:nodeup&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:a@Hostname&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can call &lt;code&gt;monitor_nodes&lt;&#x2F;code&gt; in a &lt;a href=&quot;https:&#x2F;&#x2F;elixir-lang.org&#x2F;getting-started&#x2F;mix-otp&#x2F;genserver.html&quot;&gt;GenServer&lt;&#x2F;a&gt;, of course, and implement the relevant callbacks:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;handle_info&lt;&#x2F;span&gt;&lt;span&gt;({&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:nodeup&lt;&#x2F;span&gt;&lt;span&gt;, node}, state) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;IO&lt;&#x2F;span&gt;&lt;span&gt;.puts(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;[STORE] Node connected: #{&lt;&#x2F;span&gt;&lt;span&gt;inspect node}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;  {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:noreply&lt;&#x2F;span&gt;&lt;span&gt;, state}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;handle_info&lt;&#x2F;span&gt;&lt;span&gt;({&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:nodedown&lt;&#x2F;span&gt;&lt;span&gt;, node}, state) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;IO&lt;&#x2F;span&gt;&lt;span&gt;.puts(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;[STORE] Node disconnected: #{&lt;&#x2F;span&gt;&lt;span&gt;inspect node}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;  {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:noreply&lt;&#x2F;span&gt;&lt;span&gt;, state}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;This article is a bit long and rough around the edges, but it should give you a better understanding on how to deploy Elixir applications as a cluster.&lt;&#x2F;p&gt;
+&lt;p&gt;I strongly suggest that you follow the official documentations of Elixir, Erlang and libraries. The snippets I included may get outdated over time, though I don&#x27;t expect the process to be easier than it currently is :)&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Developing on WSL</title>
+        <published>2020-08-16T00:00:00+00:00</published>
+        <updated>2020-08-16T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/"/>
+        <id>https://mbuffa.github.io/articles/20200816-developing-on-wsl/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20200816-developing-on-wsl/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;The latest versions of Windows 10 have seen the maturation of WSL, the Windows Subsystem for Linux. Basically, it allows installing a Linux distribution that&#x27;ll use a special Linux kernel running &quot;nativaly&quot; on Windows 10. It doesn&#x27;t run on a virtualized environment, although it seems to use a Hyper-V volume for storage.&lt;&#x2F;p&gt;
+&lt;p&gt;Oh, and you can also use their shiny new &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;terminal&quot;&gt;Terminal&lt;&#x2F;a&gt; for ultimate ease of use.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-good&quot;&gt;The Good&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;seamless-development&quot;&gt;Seamless development&lt;&#x2F;h3&gt;
+&lt;p&gt;You will evolve in a familiar environment if you&#x27;re already using VSCode, since it leverages its client&#x2F;server architecture, each running on Windows and Linux respectively. Typing &lt;code&gt;code .&lt;&#x2F;code&gt; in your terminal will open VSCode. Extensions will be installed server-side.&lt;&#x2F;p&gt;
+&lt;p&gt;Other than that, you can enjoy the benefits of using any regular Linux distribution.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;you-can-use-docker&quot;&gt;You can use Docker&lt;&#x2F;h3&gt;
+&lt;p&gt;Since the release of WSL 2 (included in the 2004 Windows update), you can use Docker containers inside your Linux distro, managed by your Docker daemon installed on Windows. &quot;All&quot; it requires is using a WSL2 compatible distribution, and enable WSL2 integration in the Docker Desktop preferences.&lt;&#x2F;p&gt;
+&lt;p&gt;And, instead of using a virtual machine to host the containers, you can also set Docker Desktop to use... WSL2.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;assets&#x2F;memes&#x2F;brain_explosion.gif&quot; alt=&quot;Brain explosion&quot; title=&quot;Brain explosion&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;I haven&#x27;t made any benchmarks, but I suppose it helps to boost performance.&lt;&#x2F;p&gt;
+&lt;p&gt;I suppose you can even use your Kubernetes cluster installed with Docker on Windows from your Linux distribution, but I haven&#x27;t come that far into testing yet.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;accessing-files-between-linux-and-windows&quot;&gt;Accessing files between Linux and Windows&lt;&#x2F;h3&gt;
+&lt;p&gt;Your Windows volumes are automatically mounted in &lt;code&gt;&#x2F;mnt&lt;&#x2F;code&gt;, meaning you can literally access anything from your Windows installation. Also, typing &lt;code&gt;explorer.exe .&lt;&#x2F;code&gt; reveals the current folder in Windows&#x27; file manager, shown as a network shared volume.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-bad&quot;&gt;The Bad&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;occasional-bugs-and-freezes&quot;&gt;Occasional bugs and freezes&lt;&#x2F;h3&gt;
+&lt;p&gt;I do backend development in Ruby (and Rails), Elixir (and mostly Phoenix) professionally, and I also wrote a bit of Elm and Rust in WSL2. I am quite satisfied with the quality of the integration WSL2 offers, but it isn&#x27;t bug-free either.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, when I first tried Zola and ran its web server, I just couldn&#x27;t connect to it with my browser. Firefox was just displaying &quot;Unable to connect&quot;. The reason? I don&#x27;t know, but running &lt;code&gt;wsl.exe --shutdown&lt;&#x2F;code&gt; would &quot;solve&quot; this problem. I&#x27;m obviously more annoyed by the fact that I &lt;em&gt;need&lt;&#x2F;em&gt; to reboot than the fact that I only lose a few seconds of my time every week or so.&lt;&#x2F;p&gt;
+&lt;p&gt;But the most annoying thing was occurring during the compilation of my Rust project through Docker (it never happened when I was building &quot;on bare metal&quot;), which was the complete freeze of VSCode, my terminal, and really, any app related to WSL. In that case, I&#x27;d need to wait for a few minutes for the build to finish and my system to be responsive again. I assume this has something to do with my building process eating all of the IO reserved for WSL, or something related to this weird Docker setup.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;wondering-about-long-term-stability&quot;&gt;Wondering about long-term stability&lt;&#x2F;h3&gt;
+&lt;p&gt;While Microsoft provided a migration script to switch from WSL to WSL2 (through the use of &lt;code&gt;wsl.exe&lt;&#x2F;code&gt;, to run in &lt;code&gt;cmd.exe&lt;&#x2F;code&gt; or PowerShell), it never worked on the Ubuntu I installed a few months ago, so I tried a few several other distributions (Alpine, Arch) after finally installing a fresh new Ubuntu, which worked instantly with Docker integration. I think not all distributions available on the store are compatible with WSL2, but information is a bit scarce.&lt;&#x2F;p&gt;
+&lt;p&gt;So far, my setup has been very stable, but I wonder if a future Windows update could break the whole thing. I got almost anything versioned and hosted somewhere, but still.
+And sure, there&#x27;s bugtracking through Github, but I think WSL as a whole is pretty opaque and hard to debug yourself.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-ugly&quot;&gt;The Ugly&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;get-out-of-my-path&quot;&gt;Get out of my $PATH&lt;&#x2F;h3&gt;
+&lt;p&gt;To achieve a seemless integration with Windows, my Ubuntu installation has basically the whole Windows mess injected into its default $PATH:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;➜  &#x2F; echo $PATH
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;home&#x2F;makks&#x2F;.asdf&#x2F;shims:&#x2F;home&#x2F;makks&#x2F;.asdf&#x2F;bin:&#x2F;home&#x2F;makks&#x2F;.cargo&#x2F;bin:&#x2F;home&#x2F;makks&#x2F;bin:&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin:&#x2F;sbin:&#x2F;bin:&#x2F;usr&#x2F;games:&#x2F;usr&#x2F;local&#x2F;games:&#x2F;mnt&#x2F;c&#x2F;Windows&#x2F;system32:&#x2F;mnt&#x2F;c&#x2F;Windows:&#x2F;mnt&#x2F;c&#x2F;Windows&#x2F;System32&#x2F;Wbem:&#x2F;mnt&#x2F;c&#x2F;Windows&#x2F;System32&#x2F;WindowsPowerShell&#x2F;v1.0&#x2F;:&#x2F;mnt&#x2F;c&#x2F;Windows&#x2F;System32&#x2F;OpenSSH&#x2F;:&#x2F;mnt&#x2F;c&#x2F;Program Files&#x2F;NVIDIA Corporation&#x2F;NVIDIA NvDLISR:&#x2F;mnt&#x2F;c&#x2F;Program Files (x86)&#x2F;NVIDIA Corporation&#x2F;PhysX&#x2F;Common:&#x2F;mnt&#x2F;c&#x2F;Program Files&#x2F;Git&#x2F;cmd:&#x2F;mnt&#x2F;c&#x2F;WINDOWS&#x2F;system32:&#x2F;mnt&#x2F;c&#x2F;WINDOWS:&#x2F;mnt&#x2F;c&#x2F;WINDOWS&#x2F;System32&#x2F;Wbem:&#x2F;mnt&#x2F;c&#x2F;WINDOWS&#x2F;System32&#x2F;WindowsPowerShell&#x2F;v1.0&#x2F;:&#x2F;mnt&#x2F;c&#x2F;WINDOWS&#x2F;System32&#x2F;OpenSSH&#x2F;:&#x2F;mnt&#x2F;c&#x2F;Program Files&#x2F;Docker&#x2F;Docker&#x2F;resources&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;ProgramData&#x2F;DockerDesktop&#x2F;version-bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;.cargo&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;AppData&#x2F;Local&#x2F;Microsoft&#x2F;WindowsApps:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;AppData&#x2F;Local&#x2F;Programs&#x2F;Microsoft VS Code&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks.cargo&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;AppData&#x2F;Local&#x2F;GitHubDesktop&#x2F;bin:&#x2F;mnt&#x2F;c&#x2F;Users&#x2F;Makks&#x2F;AppData&#x2F;Local&#x2F;Microsoft&#x2F;WindowsApps
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Whish is... yeah. It itched me in many places when I saw this, and when I saw random DLLs popping in my autocompletion. But this is sadly probably the price to pay for this kind of integration.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;devblogs.microsoft.com&#x2F;commandline&#x2F;automatically-configuring-wsl&#x2F;&quot;&gt;There&#x27;s a setting to disable this&lt;&#x2F;a&gt; (and even a few other things), but my distro just didn&#x27;t cared about my feelings and refused to apply it. Judging by the comments section, I&#x27;m not alone in this situation.&lt;&#x2F;p&gt;
+&lt;p&gt;This kind of dirty black magic may annoy you if you want your distro to be 100% clean. But I guess you wouldn&#x27;t want to use WSL in the first place in that was the case ;)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;I&#x27;m very satisfied with WSL and its related developments so far. My primary reason for using it is the need for good UI and accessibility tools, because I have an extremely low vision (but I&#x27;ll run into details in a future article) but it&#x27;s also really satisfying to leverage a good CPU (in that case, a Ryzen 3800X) instead of the traditional coughing overpriced Macbook Pro any startup company grants its employees with.&lt;&#x2F;p&gt;
+&lt;p&gt;And of course, you can launch a game or two when you need a break.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Rails: Deprecate an ActiveRecord attribute</title>
+        <published>2020-08-15T00:00:00+00:00</published>
+        <updated>2020-08-15T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/"/>
+        <id>https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;When working on a growing application relying on a database, it is not uncommon to have a data model that collects dust: some of its data may become obsolete, but you may not want to delete it just yet, because you may need to migrate it, prepare its deletion later or keep it as history.&lt;&#x2F;p&gt;
+&lt;p&gt;You might want to flag this data as deprecated, so that no one (including you) would rely on this no longer updated or relevant data.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;how&quot;&gt;How&lt;&#x2F;h2&gt;
+&lt;p&gt;You could of course add comments in your code, but there would be no guarantee someone would check those comments before using those attributes. Also, you wouldn&#x27;t notice anything if existing code would use those attributes indirectly.&lt;&#x2F;p&gt;
+&lt;p&gt;Fortunately, Rails provides &lt;a href=&quot;https:&#x2F;&#x2F;apidock.com&#x2F;rails&#x2F;v4.0.2&#x2F;Module&#x2F;deprecate&quot;&gt;a nice way to flag ActiveRecord attributes as obsolete&lt;&#x2F;a&gt;, stabilized since Rails 4.x.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s create a &lt;code&gt;Deprecator&lt;&#x2F;code&gt; class, that&#x27;ll embed any behavior we&#x27;d like to implement. We can be creative here, like:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;logging the action&lt;&#x2F;li&gt;
+&lt;li&gt;logging parts of the stacktrace&lt;&#x2F;li&gt;
+&lt;li&gt;shaming your coworkers on Slack with a bot message&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;But let&#x27;s keep it simple for the time being:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;ruby&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-ruby &quot;&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# app&#x2F;deprecators&#x2F;field_deprecator.rb
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;FieldDeprecator
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eff1f5;&quot;&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;deprecation_warning&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;field&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;replacement&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;_caller_backtrace &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;nil&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    message = &amp;quot;#{field}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt; is deprecated, please favor &lt;&#x2F;span&gt;&lt;span&gt;#{replacement}&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Kernel&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;warn&lt;&#x2F;span&gt;&lt;span&gt; message
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We&#x27;re not respecting the semantics of the second argument, but hey, this is duck-typing :trollface:&lt;&#x2F;p&gt;
+&lt;p&gt;Then, all we have to do is to add a call to this class method in our model:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;ruby&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-ruby &quot;&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Racoon &lt;&#x2F;span&gt;&lt;span style=&quot;color:#eff1f5;&quot;&gt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ApplicationRecord
+&lt;&#x2F;span&gt;&lt;span&gt;  deprecate \
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;owner_id: &lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Racoon#caretaker_id&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# ... any other attribute you need to deprecate.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;deprecator: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;FieldDeprecator&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;new
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;With our current deprecator, this would output a warning message everytime this field is being read and updated:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&amp;gt; Racoon.first.owner_id
+&lt;&#x2F;span&gt;&lt;span&gt;owner_id is deprecated, please favor Racoon#caretaker_id
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;em&gt;Et voilà.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

@@ -1,0 +1,590 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+  <title>Elixir: Clustering on Kubernetes</title>
+  
+
+  
+  
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap"
+    rel="stylesheet">
+
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+
+  <meta name="description" content="A quick walkthrough to setup a cluster with Elixir, Kubernetes and libcluster." />
+</head>
+
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateGiscusStyle(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+            break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+            break;
+
+          default:
+            activeMode = "dark";
+            break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateGiscusStyle(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+
+  <main class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white bg-blue-900 dark:bg-transparent
+    ">
+    <div class="w-228 max-w-screen m-auto p-4 bg-slate-200 dark:bg-transparent">
+      <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul
+      class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+      
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;">Home</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;articles">Articles</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;demos">Demos</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;tags">Tags</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;contact">Contact</a>
+      </li>
+      
+      <li class="ml-auto">
+        <a class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
+            name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
+            name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+      <div class="
+        w-11/12 m-auto mt-2 p-4
+        flex justify-center
+        flex-col flex-wrap
+        lg:flex-row lg:flex-nowrap
+        dark:bg-black dark:bg-opacity-60
+    ">
+        
+
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#a-word-about-wsl" title="A word about WSL">
+  A word about WSL
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#connecting-nodes-locally" title="Connecting nodes locally">
+  Connecting nodes locally
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#todo" title="Todo">
+  Todo
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#vm-args" title="VM Args">
+  VM Args
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#kubernetes-configuration" title="Kubernetes configuration">
+  Kubernetes configuration
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#libcluster-topology" title="Libcluster topology">
+  Libcluster topology
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#what-now" title="What now?">
+  What now?
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#node-up-down-notifications" title="Node up&#x2F;down notifications">
+  Node up&#x2F;down notifications
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/#conclusion" title="Conclusion">
+  Conclusion
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Elixir: Clustering on Kubernetes
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2020-10-21
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/tutorial">
+    tutorial
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/elixir">
+    elixir
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/k8s">
+    k8s
+  </a>
+  
+</p>
+
+    
+  </header>
+
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
+<p>When developing Elixir applications, you may want to create a cluster of Erlang nodes at some point, for example, to provide redundancy, high availability,or to share a global state on the cluster (with Mnesia, for example) without hitting an outside DBMS.</p>
+<p>This can be easily achieved with <code>libcluster</code>. As you can see <a href="https://hexdocs.pm/libcluster/readme.html">in the docs</a>, it supports multiple strategies.</p>
+<p>I'll assume you want to deploy to a Kubernetes cluster, and I'll be covering this strategy only (<code>Cluster.Strategy.Kubernetes</code>) for simplicity sake, but you may find some bits interesting even if that doesn't apply to your case. I'll also assume that you already have a working basic Kubernetes deployment setup.</p>
+<p>We'll deploy a <code>cluster</code> of Erlang <code>nodes</code>. To avoid confusion with Kubernetes terminology, I'll use the prefix <code>k8s</code> when referring to Kube.</p>
+<h2 id="a-word-about-wsl">A word about WSL</h2>
+<p>You may run into one issue if you're using WSL: by default, WSL systems use the same hostname as their Windows host, which isn't fully qualified, and Erlang may not like that.</p>
+<p>To fix this (and to avoid breaking WSL), you can specify a full computer name on Windows.</p>
+<ol>
+<li>Go to your PC settings (<code>This PC</code> -&gt; <code>Properties</code> -&gt; <code>Change Settings</code> -&gt; <code>Change</code>),</li>
+<li>In the <code>Computer/Domain Changes</code> window, keep a simple Computer Name,</li>
+<li>Click on More, and in the <code>DNS Suffix and NetBIOS Computer Name</code> window, specify a primary DNS suffix (like <code>localdomain</code>).</li>
+</ol>
+<p>You can keep the other settings unchanged, provided you have something like <code>barney</code> as computer name and <code>barney.localdomain</code> as full computer name.</p>
+<h2 id="connecting-nodes-locally">Connecting nodes locally</h2>
+<p>Let's make a new clean project with Mix:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>&gt; mix new cluster
+</span><span>&gt; cd cluster
+</span></code></pre>
+<p>And let's start a <code>iex</code> REPL, giving it a new argument:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>&gt; iex --sname a
+</span></code></pre>
+<p>Here, we just passed a flag to the Erlang VM, specifying the shortname of the node we want to run.</p>
+<p>There's now a slight difference appearing in your prompt:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>iex(a@{HOSTNAME})1&gt;
+</span></code></pre>
+<p>You should see your PC hostname at the right of that <code>@</code> symbol. This is a default value, because we haven't specified a fully qualified name.</p>
+<p>Let's start a second Elixir app, in another terminal:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>&gt; iex --sname b
+</span></code></pre>
+<p>And let's discover a few functions!</p>
+<ul>
+<li><code>node()</code> (or <code>Node.self()</code>) returns the name of the current Node.</li>
+<li><code>Node.list()</code> returns a list of the connected Nodes in the cluster. At this point, it should be empty.</li>
+<li><code>Node.connect()</code> and <code>Node.disconnect()</code> allow you to, you guessed it, connect and disconnect nodes. Let's try it!</li>
+</ul>
+<p>On the <code>b</code> Node, type:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Node.connect(:a@hostname)
+</span></code></pre>
+<p>Now, go back to the <code>a</code> Node, and run:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Node.list()
+</span></code></pre>
+<p>You should see <code>b@hostname</code> appearing there. Congratulations :) We haven't done anything spectacular this far, but this is exactly what <code>libcluster</code> will do under the hood once it's set up correctly.</p>
+<h2 id="todo">Todo</h2>
+<p>So, here's what we'll have to do:</p>
+<ol>
+<li>Pass the relevant fully qualified name to each Erlang VM</li>
+<li>Update our Kubernetes configuration</li>
+<li>Define a cluster topology to configure <code>libcluster</code></li>
+</ol>
+<h2 id="vm-args">VM Args</h2>
+<p>We'll need to pass some arguments to our Erlang VMs.
+Since at least its version <code>1.10</code>, Mix can handle this (you won't need to add Distillery as a dependency).</p>
+<p>In your project directory, run:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>mix release.init
+</span></code></pre>
+<p>This command will generate a few files. Let's take a look at <code>vm.args.eex</code>. It should contain a few commented lines, specifically:</p>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#65737e;">## Customize flags given to the VM: http://erlang.org/doc/man/erl.html
+</span><span style="color:#65737e;">## -mode/-name/-sname/-setcookie are configured via env vars, do not set them here
+</span></code></pre>
+<p>Since we want to set <code>name</code> and deploy on Linux containers, let's get to <code>env.sh.eex</code>. There's a few commented lines in there, but we're most interested in the last block:</p>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#65737e;"># Set the release to work across nodes. If using the long name format like
+</span><span style="color:#65737e;"># the one below (my_app@127.0.0.1), you need to also uncomment the
+</span><span style="color:#65737e;"># RELEASE_DISTRIBUTION variable below. Must be &quot;sname&quot;, &quot;name&quot; or &quot;none&quot;.
+</span><span style="color:#65737e;"># export RELEASE_DISTRIBUTION=name
+</span><span style="color:#65737e;"># export RELEASE_NODE=&lt;%= @release.name %&gt;@127.0.0.1
+</span></code></pre>
+<p>To enable clustering, we need to replace the <code>127.0.0.1</code> part with the fully qualified name of our pod. Kubernetes has its own internal DNS, and pods are typically named like this:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span># Assuming our Pod IP is 192.168.0.45
+</span><span>192-168-0-45.namespace.pod.cluster.local
+</span></code></pre>
+<p>So your setup should end up looking like this:</p>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#b48ead;">export </span><span style="color:#bf616a;">POD_A_RECORD</span><span>=$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span>$</span><span style="color:#bf616a;">POD_IP </span><span>| </span><span style="color:#bf616a;">sed </span><span>&#39;</span><span style="color:#a3be8c;">s/\./-/g</span><span>&#39;</span><span style="color:#a3be8c;">)
+</span><span style="color:#b48ead;">export </span><span style="color:#bf616a;">RELEASE_DISTRIBUTION</span><span>=</span><span style="color:#a3be8c;">name
+</span><span style="color:#b48ead;">export </span><span style="color:#bf616a;">RELEASE_NODE</span><span>=</span><span style="color:#a3be8c;">myapp@</span><span>$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span>$</span><span style="color:#bf616a;">POD_A_RECORD</span><span style="color:#a3be8c;">).</span><span>$</span><span style="color:#a3be8c;">(</span><span style="color:#96b5b4;">echo </span><span>$</span><span style="color:#bf616a;">NAMESPACE</span><span style="color:#a3be8c;">).pod.cluster.local
+</span></code></pre>
+<p>Both <code>$POD_IP</code> and <code>$NAMESPACE</code> will have to be defined when our application starts, so we'll add those to our k8s deployment manifest.</p>
+<h2 id="kubernetes-configuration">Kubernetes configuration</h2>
+<p>We should now declare our two new environment variables:</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">apps/v1
+</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
+</span><span style="color:#bf616a;">metadata</span><span>:
+</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">myapp
+</span><span>  </span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">default
+</span><span style="color:#bf616a;">spec</span><span>:
+</span><span>  </span><span style="color:#bf616a;">selector</span><span>:
+</span><span>    </span><span style="color:#bf616a;">matchLabels</span><span>:
+</span><span>      </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">myapp
+</span><span>      </span><span style="color:#bf616a;">tier</span><span>: </span><span style="color:#a3be8c;">web
+</span><span>  </span><span style="color:#bf616a;">template</span><span>:
+</span><span>    </span><span style="color:#bf616a;">metadata</span><span>:
+</span><span>      </span><span style="color:#bf616a;">labels</span><span>:
+</span><span>        </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">myapp
+</span><span>        </span><span style="color:#bf616a;">tier</span><span>: </span><span style="color:#a3be8c;">web
+</span><span>    </span><span style="color:#bf616a;">spec</span><span>:
+</span><span>      </span><span style="color:#bf616a;">containers</span><span>:
+</span><span>        - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">myapp
+</span><span>          </span><span style="color:#bf616a;">image</span><span>: </span><span style="color:#a3be8c;">&lt;Image&gt;
+</span><span>          </span><span style="color:#bf616a;">resources</span><span>:
+</span><span>            </span><span style="color:#bf616a;">limits</span><span>:
+</span><span>              </span><span style="color:#bf616a;">memory</span><span>: &quot;</span><span style="color:#a3be8c;">128Mi</span><span>&quot;
+</span><span>              </span><span style="color:#bf616a;">cpu</span><span>: &quot;</span><span style="color:#a3be8c;">500m</span><span>&quot;
+</span><span>          </span><span style="color:#bf616a;">ports</span><span>:
+</span><span>            - </span><span style="color:#bf616a;">containerPort</span><span>: </span><span style="color:#a3be8c;">&lt;Port&gt;
+</span><span>          </span><span style="color:#bf616a;">env</span><span>:
+</span><span>            - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">NAMESPACE
+</span><span>              </span><span style="color:#bf616a;">valueFrom</span><span>:
+</span><span>                </span><span style="color:#bf616a;">fieldRef</span><span>:
+</span><span>                  </span><span style="color:#bf616a;">fieldPath</span><span>: </span><span style="color:#a3be8c;">metadata.namespace
+</span><span>            - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">POD_IP
+</span><span>              </span><span style="color:#bf616a;">valueFrom</span><span>:
+</span><span>                </span><span style="color:#bf616a;">fieldRef</span><span>:
+</span><span>                  </span><span style="color:#bf616a;">fieldPath</span><span>: </span><span style="color:#a3be8c;">status.podIP
+</span></code></pre>
+<p>Both variables references the pod's information once it's started. You can check it by running:e by running:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>kubectl get pod myapp-456789 -o yaml
+</span></code></pre>
+<p>If you already have one pod correctly labelled, you can check that libcluster will correctly poll the right pods from Kube by doing what it does: polling with a labelSelector:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>kubectl get pods -l app=myapp,tier=web
+</span></code></pre>
+<p>If this returns off-topic pods, then you should fix this before proceeding :)</p>
+<h2 id="libcluster-topology">Libcluster topology</h2>
+<p>Last, but not least, we need to specify our libcluster strategy:</p>
+<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span>topologies = [
+</span><span>  </span><span style="color:#d08770;">default: </span><span>[
+</span><span>    </span><span style="color:#d08770;">strategy: </span><span style="color:#ebcb8b;">Cluster</span><span>.</span><span style="color:#ebcb8b;">Strategy</span><span>.</span><span style="color:#ebcb8b;">Kubernetes</span><span>,
+</span><span>    </span><span style="color:#d08770;">config: </span><span>[
+</span><span>      </span><span style="color:#d08770;">mode: </span><span style="color:#a3be8c;">:dns</span><span>,
+</span><span>      </span><span style="color:#d08770;">kubernetes_node_basename: </span><span>&quot;</span><span style="color:#a3be8c;">myapp</span><span>&quot;,
+</span><span>      </span><span style="color:#d08770;">kubernetes_selector: </span><span>&quot;</span><span style="color:#a3be8c;">app=myapp,tier=web</span><span>&quot;,
+</span><span>      </span><span style="color:#d08770;">kubernetes_namespace: </span><span>&quot;</span><span style="color:#a3be8c;">default</span><span>&quot;,
+</span><span>      </span><span style="color:#d08770;">polling_interval: 10_000
+</span><span>    ]
+</span><span>  ]
+</span><span>]
+</span><span>
+</span><span>[
+</span><span>  {</span><span style="color:#ebcb8b;">Cluster</span><span>.</span><span style="color:#ebcb8b;">Supervisor</span><span>, [topologies, [</span><span style="color:#d08770;">name: </span><span style="color:#ebcb8b;">Myapp</span><span>.</span><span style="color:#ebcb8b;">ClusterSupervisor</span><span>]]}
+</span><span>]
+</span></code></pre>
+<p>Once you deploy this, you should be good :) After scaling up your deployment (<code>kubectl scale --replicas=X deployment/my-app</code>), you should see various <code>[libcluster]</code> log entries on your pods.</p>
+<h2 id="what-now">What now?</h2>
+<p>There's a few things to toy around with if you want to leverage your cluster!</p>
+<p>Starting from there, and after cleaning your configuration and/or setting up cleaner environment variables, there are a few interesting things to do. How about:</p>
+<ul>
+<li>Declaring a GenServer tracking nodes status?</li>
+<li>Implementing a Cluster Singleton worker using <a href="https://github.com/Virviil/individual">Individual</a>?</li>
+<li>Toying around with Phoenix.PubSub?</li>
+<li>Playing with process registries, like Phoenix.Tracker?</li>
+<li>Discovering Erlang's <a href="http://erlang.org/doc/apps/mnesia/Mnesia_chap2.html">Mnesia</a>, a powerful in-cluster DBMS to use for internal state or cache, and which makes Redis irrelevant?</li>
+</ul>
+<h2 id="node-up-down-notifications">Node up/down notifications</h2>
+<p><a href="http://erlang.org/doc/man/net_kernel.html#monitor_nodes-1">Erlang exposes a simple function</a> that'll get the current process notified when nodes are up or down. This can allow us to react accordingly, like printing debug information in the logs, dereferencing the node, or push the self destruct button.</p>
+<p>In our first example, if you had run the following before connecting the two nodes together:</p>
+<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#a3be8c;">:net_kernel</span><span>.monitor_nodes(</span><span style="color:#d08770;">true</span><span>)
+</span></code></pre>
+<p>Then running <code>flush</code> would show you the messages you received:</p>
+<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span>{</span><span style="color:#a3be8c;">:nodeup</span><span>, </span><span style="color:#a3be8c;">:a@Hostname</span><span>}
+</span></code></pre>
+<p>You can call <code>monitor_nodes</code> in a <a href="https://elixir-lang.org/getting-started/mix-otp/genserver.html">GenServer</a>, of course, and implement the relevant callbacks:</p>
+<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">handle_info</span><span>({</span><span style="color:#a3be8c;">:nodeup</span><span>, node}, state) </span><span style="color:#b48ead;">do
+</span><span>  </span><span style="color:#ebcb8b;">IO</span><span>.puts(&quot;</span><span style="color:#a3be8c;">[STORE] Node connected: #{</span><span>inspect node}&quot;)
+</span><span>  {</span><span style="color:#a3be8c;">:noreply</span><span>, state}
+</span><span style="color:#b48ead;">end
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">handle_info</span><span>({</span><span style="color:#a3be8c;">:nodedown</span><span>, node}, state) </span><span style="color:#b48ead;">do
+</span><span>  </span><span style="color:#ebcb8b;">IO</span><span>.puts(&quot;</span><span style="color:#a3be8c;">[STORE] Node disconnected: #{</span><span>inspect node}&quot;)
+</span><span>  {</span><span style="color:#a3be8c;">:noreply</span><span>, state}
+</span><span style="color:#b48ead;">end
+</span></code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>This article is a bit long and rough around the edges, but it should give you a better understanding on how to deploy Elixir applications as a cluster.</p>
+<p>I strongly suggest that you follow the official documentations of Elixir, Erlang and libraries. The snippets I included may get outdated over time, though I don't expect the process to be easier than it currently is :)</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+</article>
+
+      </div>
+
+      <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written with <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://www.getzola.org/" target="_blank">Zola</a> and <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://tailwindcss.com/" target="_blank">Tailwind</a>
+  </span>
+</footer>
+    </div>
+    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link.
+    <br>
+  </main>
+
+  <!-- Heap Analytics loader -->
+    <script type="text/javascript">
+      window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
+      heap.load("4008293954");
+    </script>
+    <script
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+    <script type="module"
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+
+</html>
