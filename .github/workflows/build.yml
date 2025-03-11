@@ -5,6 +5,7 @@ on:
 
 env:
   ZOLA_VERSION: v0.20.0
+  BUILD_BRANCH: gh-pages
 
 jobs:
   build:
@@ -22,7 +23,7 @@ jobs:
           git config --global user.email "mbuffa@users.noreply.github.com"
           git config --global user.name "Maxime Buffa"
 
-      - name: Checkout Zola
+      - name: Get Zola
         run: curl -s -L https://github.com/getzola/zola/releases/download/$ZOLA_VERSION/zola-$ZOLA_VERSION-x86_64-unknown-linux-gnu.tar.gz | sudo tar xvzf - -C /usr/local/bin
 
       - name: Build
@@ -36,7 +37,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           git fetch -p
-          git checkout master
+          git checkout $BUILD_BRANCH
           rm -rf config.toml content sass templates
           cp -R public/* .
           rm -rf public
@@ -53,4 +54,4 @@ jobs:
       - name: Push
         run: |
           cd $GITHUB_WORKSPACE
-          git push origin master
+          git push origin $BUILD_BRANCH
