@@ -1,7 +1,7 @@
 name: Build
 on:
   push:
-    branches: [content]
+    branches: [master]
 
 env:
   ZOLA_VERSION: v0.20.0
