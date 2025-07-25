@@ -4,8 +4,92 @@
     <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2025-02-27T00:00:00+00:00</updated>
+    <updated>2025-07-25T00:00:00+00:00</updated>
     <id>https://mbuffa.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Elixir: Having multiple Live Views on the same page</title>
+        <published>2025-07-25T00:00:00+00:00</published>
+        <updated>2025-07-25T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20250725-live-view-session/"/>
+        <id>https://mbuffa.github.io/articles/20250725-live-view-session/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20250725-live-view-session/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;In its early versions and up until v1.0, Phoenix LiveView has been designed to let you manage one LiveView at a time. But in a few cases, you&#x27;ll need to be able to manage multiple Live Views, for either a complex dashboard, or even a navigation menu living on the side.&lt;&#x2F;p&gt;
+&lt;p&gt;In my case, I had to implement a navigation bar in one of my projects, with a different class for the active element. Using a Live Component was not possible, because those can&#x27;t be called from a regular (non-Live) template.&lt;&#x2F;p&gt;
+&lt;p&gt;Although, since Live Views are GenServers, and therefore Processes, having one Process per user constantly running just for displaying a dynamic navigation bar isn&#x27;t great. It would be much better to save those few kilobytes of RAM, and do the work with pure CSS and JS hooks, therefore offloading the logic to the client. But let&#x27;s just consider we need two LiveViews sitting next to each other for our use case.&lt;&#x2F;p&gt;
+&lt;p&gt;This is where &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;phoenix_live_view&#x2F;Phoenix.LiveView.Router.html#live_session&#x2F;3&quot;&gt;&lt;code&gt;live_session&#x2F;3&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; comes into play.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;code&gt;live_session&#x2F;3&lt;&#x2F;code&gt; is a Router-specific &quot;word&quot; (in the Router DSL) that lets you define a handful of things:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A &lt;code&gt;name&lt;&#x2F;code&gt; to identify it&lt;&#x2F;li&gt;
+&lt;li&gt;A &lt;code&gt;session&lt;&#x2F;code&gt; argument, in case you want to put a value in the connection (HTTP) Session&lt;&#x2F;li&gt;
+&lt;li&gt;A &lt;code&gt;root_layout&lt;&#x2F;code&gt; argument, in case you want to override it (it may already be specified in your pipeline)&lt;&#x2F;li&gt;
+&lt;li&gt;A &lt;code&gt;layout&lt;&#x2F;code&gt; argument, to specify a &quot;partial view&quot; that&#x27;ll be rendered inside your root layout&lt;&#x2F;li&gt;
+&lt;li&gt;An &lt;code&gt;on_mount&lt;&#x2F;code&gt; callback to specify a list of functions to call in order to update the socket&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;&#x2F;h2&gt;
+&lt;p&gt;This is how my code looks like:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# router.ex
+&lt;&#x2F;span&gt;&lt;span&gt;live_session &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:admin&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;on_mount: &lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;SutoWeb&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;InitAssigns&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:admin&lt;&#x2F;span&gt;&lt;span&gt;},
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;layout: &lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;SutoWeb&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Layouts&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:&amp;quot;live.admin&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;  scope &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;admin&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;SutoWeb&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Admin &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;    pipe_through &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:admin
+&lt;&#x2F;span&gt;&lt;span&gt;    live &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;IndexLive
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# init_assigns.ex
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;defmodule &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;SutoWeb&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;InitAssigns &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Phoenix&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Component
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;on_mount&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:admin&lt;&#x2F;span&gt;&lt;span&gt;, _params, _session, socket) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;    current_page =
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;case &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Atom&lt;&#x2F;span&gt;&lt;span&gt;.to_string(socket.view) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Elixir.SutoWeb.Admin.AuthLive&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &amp;lt;&amp;gt; _rest -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:auth
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Elixir.SutoWeb.Admin.ChannelLive&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &amp;lt;&amp;gt; _rest -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:channels
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Elixir.SutoWeb.Admin.TimerLive&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; &amp;lt;&amp;gt; _rest -&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:timers
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        ...
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:cont&lt;&#x2F;span&gt;&lt;span&gt;, assign(socket, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:current_page&lt;&#x2F;span&gt;&lt;span&gt;, current_page)}
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Partial layout
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;div class=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;min-h-screen h-full flex flex-row bg-gray-300&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &amp;lt;.live_component
+&lt;&#x2F;span&gt;&lt;span&gt;    module={&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;SutoWeb&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Admin&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;NavLive&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    id=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;nav&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    class=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;p-5&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    current_page={assigns.current_page}
+&lt;&#x2F;span&gt;&lt;span&gt;  &#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &amp;lt;main class=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;p-5 w-full h-screen overflow-auto&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;.flash_group flash={@&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;flash&lt;&#x2F;span&gt;&lt;span&gt;} &#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    {@&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;inner_content&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;  &amp;lt;&#x2F;main&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&#x2F;div&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And the &lt;code&gt;NavLive&lt;&#x2F;code&gt; module here is just a navigation bar built with &lt;a href=&quot;https:&#x2F;&#x2F;petal.build&#x2F;&quot;&gt;Petal Framework&lt;&#x2F;a&gt;, defining list items and picking the right Tailwind class for the active item.&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s it :) Please keep in mind that using a Live Session for something that could be offloaded to the client (with JavaScript and hooks) isn&#x27;t great, but this gives you an idea on what structure to use, in case you&#x27;re building a complex trading dashboard, and you absolutely need to have separate LiveViews on the same page, for concurrency reasons or resilience.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>Unix: Loading env variables, without messing up your environment</title>
         <published>2025-02-27T00:00:00+00:00</published>
@@ -22,7 +106,8 @@
         <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/"/>
         <id>https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/</id>
         
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/">&lt;p&gt;If you&#x27;re developing a server or a web app, and this server needs to interact with third-party services, you&#x27;re probably going to use a &lt;code&gt;.env&lt;&#x2F;code&gt; (dotenv) file to define those variables. At least, when running your project locally.&lt;&#x2F;p&gt;
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;If you&#x27;re developing a server or a web app, and this server needs to interact with third-party services, you&#x27;re probably going to use a &lt;code&gt;.env&lt;&#x2F;code&gt; (dotenv) file to define those variables. At least, when running your project locally.&lt;&#x2F;p&gt;
 &lt;p&gt;So, you would probably end up doing something like &lt;code&gt;export $(cat .env | xargs)&lt;&#x2F;code&gt;, and then running your process.&lt;&#x2F;p&gt;
 &lt;p&gt;This approach has one major drawback: it updates the environment of your current shell, and it has a few implications:&lt;&#x2F;p&gt;
 &lt;ul&gt;

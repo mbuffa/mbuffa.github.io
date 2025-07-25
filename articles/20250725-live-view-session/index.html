@@ -5,7 +5,7 @@
   
 
   
-  <title>Unix: Loading env variables, without messing up your environment</title>
+  <title>Elixir: Having multiple Live Views on the same page</title>
   
 
   
@@ -22,7 +22,7 @@
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
 
-  <meta name="description" content="A clean way to load env variables locally" />
+  <meta name="description" content="How to leverage Live Session for complex structures" />
 </head>
 
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -201,17 +201,61 @@
         
 
 
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250725-live-view-session/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250725-live-view-session/#usage" title="Usage">
+  Usage
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250725-live-view-session/#example" title="Example">
+  Example
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
 
 
-<article class="w-full">
+
+<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
 
   <header class="text-center">
     <h1 class="text-2xl font-bold m-2 p-2">
-      Unix: Loading env variables, without messing up your environment
+      Elixir: Having multiple Live Views on the same page
     </h1>
     
     <p class="subtitle">
-      Published on 2025-02-27
+      Published on 2025-07-25
     </p>
     
     
@@ -219,18 +263,23 @@
 <p class="max-w-fit m-auto">
   
   <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/tip">
-    tip
+    href="/tags/tutorial">
+    tutorial
   </a>
   
   <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/unix">
-    unix
+    href="/tags/elixir">
+    elixir
   </a>
   
   <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/dotenv">
-    dotenv
+    href="/tags/phoenix">
+    phoenix
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/liveview">
+    liveview
   </a>
   
 </p>
@@ -246,30 +295,70 @@
 
   <div class="markdown-content">
     <h2 id="context">Context</h2>
-<p>If you're developing a server or a web app, and this server needs to interact with third-party services, you're probably going to use a <code>.env</code> (dotenv) file to define those variables. At least, when running your project locally.</p>
-<p>So, you would probably end up doing something like <code>export $(cat .env | xargs)</code>, and then running your process.</p>
-<p>This approach has one major drawback: it updates the environment of your current shell, and it has a few implications:</p>
+<p>In its early versions and up until v1.0, Phoenix LiveView has been designed to let you manage one LiveView at a time. But in a few cases, you'll need to be able to manage multiple Live Views, for either a complex dashboard, or even a navigation menu living on the side.</p>
+<p>In my case, I had to implement a navigation bar in one of my projects, with a different class for the active element. Using a Live Component was not possible, because those can't be called from a regular (non-Live) template.</p>
+<p>Although, since Live Views are GenServers, and therefore Processes, having one Process per user constantly running just for displaying a dynamic navigation bar isn't great. It would be much better to save those few kilobytes of RAM, and do the work with pure CSS and JS hooks, therefore offloading the logic to the client. But let's just consider we need two LiveViews sitting next to each other for our use case.</p>
+<p>This is where <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.Router.html#live_session/3"><code>live_session/3</code></a> comes into play.</p>
+<h2 id="usage">Usage</h2>
+<p><code>live_session/3</code> is a Router-specific "word" (in the Router DSL) that lets you define a handful of things:</p>
 <ul>
-<li>If you're working with several services, with various <code>dotenv</code> files, you may end up overwriting variables, or relying on variables defined by other services...</li>
-<li>...worst-case scenario, you end up connecting to a production database when running a task that was supposed to run against a test database, and things go wild.</li>
-<li>You may leak tokens every time you call <code>env</code> in your terminal. Not ideal if you're streaming your content.</li>
+<li>A <code>name</code> to identify it</li>
+<li>A <code>session</code> argument, in case you want to put a value in the connection (HTTP) Session</li>
+<li>A <code>root_layout</code> argument, in case you want to override it (it may already be specified in your pipeline)</li>
+<li>A <code>layout</code> argument, to specify a "partial view" that'll be rendered inside your root layout</li>
+<li>An <code>on_mount</code> callback to specify a list of functions to call in order to update the socket</li>
 </ul>
-<p>You can actually make sure your application loads its necessary environment variables without those inconveniences, either by using a Shell script, or a Makefile. Two very simple solutions compared to, say, setting up and maintaining SOPS<a href="https://github.com/getsops/sops">1</a>.</p>
-<p>So, basically by adding something like <code>server.sh</code> with the following:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#65737e;">#!/bin/sh
-</span><span style="color:#b48ead;">export </span><span style="color:#bf616a;">$</span><span>(cat .env | xargs)
-</span><span style="color:#65737e;"># Running your server
+<h2 id="example">Example</h2>
+<p>This is how my code looks like:</p>
+<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#65737e;"># router.ex
+</span><span>live_session </span><span style="color:#a3be8c;">:admin</span><span>,
+</span><span>  </span><span style="color:#d08770;">on_mount: </span><span>{</span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">InitAssigns</span><span>, </span><span style="color:#a3be8c;">:admin</span><span>},
+</span><span>  </span><span style="color:#d08770;">layout: </span><span>{</span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">Layouts</span><span>, </span><span style="color:#a3be8c;">:&quot;live.admin&quot;</span><span>} </span><span style="color:#b48ead;">do
+</span><span>  scope &quot;</span><span style="color:#a3be8c;">/admin</span><span>&quot;, </span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">Admin </span><span style="color:#b48ead;">do
+</span><span>    pipe_through </span><span style="color:#a3be8c;">:admin
+</span><span>    live &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;, </span><span style="color:#ebcb8b;">IndexLive
+</span><span>  </span><span style="color:#b48ead;">end
+</span><span style="color:#b48ead;">end
 </span></code></pre>
-<p>Your env will be loaded inside the context of a new TTY (if I remember my UNIX lessons correctly).</p>
-<p>It also works with Makefiles (and yeah, I hate the syntax, it's annoying and weird, but I always end up writing Makefiles):</p>
-<pre data-lang="Makefile" style="background-color:#2b303b;color:#c0c5ce;" class="language-Makefile "><code class="language-Makefile" data-lang="Makefile"><span style="color:#b48ead;">include </span><span style="color:#a3be8c;">.env
-</span><span style="color:#b48ead;">export
+<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#65737e;"># init_assigns.ex
+</span><span style="color:#b48ead;">defmodule </span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">InitAssigns </span><span style="color:#b48ead;">do
+</span><span>  </span><span style="color:#b48ead;">import </span><span style="color:#ebcb8b;">Phoenix</span><span>.</span><span style="color:#ebcb8b;">Component
 </span><span>
-</span><span style="color:#8fa1b3;">server</span><span>:
-</span><span>  </span><span style="color:#65737e;"># Running your server
+</span><span>  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">on_mount</span><span>(</span><span style="color:#a3be8c;">:admin</span><span>, _params, _session, socket) </span><span style="color:#b48ead;">do
+</span><span>    current_page =
+</span><span>      </span><span style="color:#b48ead;">case </span><span style="color:#ebcb8b;">Atom</span><span>.to_string(socket.view) </span><span style="color:#b48ead;">do
+</span><span>        &quot;</span><span style="color:#a3be8c;">Elixir.SutoWeb.Admin.AuthLive</span><span>&quot; &lt;&gt; _rest -&gt;
+</span><span>          </span><span style="color:#a3be8c;">:auth
+</span><span>
+</span><span>        &quot;</span><span style="color:#a3be8c;">Elixir.SutoWeb.Admin.ChannelLive</span><span>&quot; &lt;&gt; _rest -&gt;
+</span><span>          </span><span style="color:#a3be8c;">:channels
+</span><span>
+</span><span>        &quot;</span><span style="color:#a3be8c;">Elixir.SutoWeb.Admin.TimerLive</span><span>&quot; &lt;&gt; _rest -&gt;
+</span><span>          </span><span style="color:#a3be8c;">:timers
+</span><span>
+</span><span>        ...
+</span><span>      </span><span style="color:#b48ead;">end
+</span><span>
+</span><span>    {</span><span style="color:#a3be8c;">:cont</span><span>, assign(socket, </span><span style="color:#a3be8c;">:current_page</span><span>, current_page)}
+</span><span>  </span><span style="color:#b48ead;">end
+</span><span style="color:#b48ead;">end
 </span></code></pre>
-<p>And that's it. Also, make sure your variables are properly defined (such as <code>FOO=bar</code>, without quotes) because having additional quotes may cause issues (some loaders would escape quotes).</p>
-<p>Not a revolutionary take, but better be safe (and clean) than sorry!</p>
+<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#65737e;"># Partial layout
+</span><span>&lt;div class=&quot;</span><span style="color:#a3be8c;">min-h-screen h-full flex flex-row bg-gray-300</span><span>&quot;&gt;
+</span><span>  &lt;.live_component
+</span><span>    module={</span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">Admin</span><span>.</span><span style="color:#ebcb8b;">NavLive</span><span>}
+</span><span>    id=&quot;</span><span style="color:#a3be8c;">nav</span><span>&quot;
+</span><span>    class=&quot;</span><span style="color:#a3be8c;">p-5</span><span>&quot;
+</span><span>    current_page={assigns.current_page}
+</span><span>  /&gt;
+</span><span>  &lt;main class=&quot;</span><span style="color:#a3be8c;">p-5 w-full h-screen overflow-auto</span><span>&quot;&gt;
+</span><span>    &lt;.flash_group flash={@</span><span style="color:#bf616a;">flash</span><span>} /&gt;
+</span><span>    {@</span><span style="color:#bf616a;">inner_content</span><span>}
+</span><span>  &lt;/main&gt;
+</span><span>&lt;/div&gt;
+</span></code></pre>
+<p>And the <code>NavLive</code> module here is just a navigation bar built with <a href="https://petal.build/">Petal Framework</a>, defining list items and picking the right Tailwind class for the active item.</p>
+<p>That's it :) Please keep in mind that using a Live Session for something that could be offloaded to the client (with JavaScript and hooks) isn't great, but this gives you an idea on what structure to use, in case you're building a complex trading dashboard, and you absolutely need to have separate LiveViews on the same page, for concurrency reasons or resilience.</p>
 
   </div>
 
