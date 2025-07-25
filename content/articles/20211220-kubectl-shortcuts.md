@@ -1,5 +1,5 @@
 +++
-title = "Kubectl: Useful shortcuts"
+title = "Kubernetes: Kubectl Useful shortcuts"
 description = "Various and useful kubectl tips to ease your life on your Kubernetes cluster"
 date = 2021-12-20
 [taxonomies]

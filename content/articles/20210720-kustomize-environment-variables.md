@@ -1,5 +1,5 @@
 +++
-title = "Kustomize: Using Environment Variables"
+title = "Kubernetes: Using Environment Variables with Kustomize"
 description = "Using Environment Variables in your Kubernetes manifests"
 date = 2021-07-20
 [taxonomies]
