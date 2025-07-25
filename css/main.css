@@ -100,6 +100,8 @@ div.markdown-content h6 {
 div.markdown-content p {
   line-height: 1.625;
   /* Tailwind 'relaxed' */
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 div.markdown-content ul {
