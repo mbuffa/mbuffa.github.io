@@ -283,7 +283,7 @@
         
     </entry>
     <entry xml:lang="en">
-        <title>Kubectl: Useful shortcuts</title>
+        <title>Kubernetes: Kubectl Useful shortcuts</title>
         <published>2021-12-20T00:00:00+00:00</published>
         <updated>2021-12-20T00:00:00+00:00</updated>
         
@@ -435,7 +435,7 @@
         
     </entry>
     <entry xml:lang="en">
-        <title>Kustomize: Using Environment Variables</title>
+        <title>Kubernetes: Using Environment Variables with Kustomize</title>
         <published>2021-07-20T00:00:00+00:00</published>
         <updated>2021-07-20T00:00:00+00:00</updated>
         
