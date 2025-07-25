@@ -6,6 +6,8 @@ date = 2025-02-27
 tags = ["tip", "unix", "dotenv"]
 +++
 
+## Context
+
 If you're developing a server or a web app, and this server needs to interact with third-party services, you're probably going to use a `.env` (dotenv) file to define those variables. At least, when running your project locally.
 
 So, you would probably end up doing something like `export $(cat .env | xargs)`, and then running your process.
