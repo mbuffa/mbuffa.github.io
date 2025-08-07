@@ -353,7 +353,7 @@
 <p>I wanted to make an update a while ago to state one thing: you probably don't need a library such as <code>env</code> in your application. You just have to remember the following statements:</p>
 <ul>
 <li>Your configuration is split between environments (<code>config/{dev,test,prod}.exs</code>) which is built at compilation time</li>
-<li>You have to make sure your environment variables are defined at compilation time if you make calls to <code>System.get_env</code>, otherwise, your config would contain empty settings You can check <a href="/articles/20250227-loading-env-without-leaks">this article</a> for the most optimal way to do that locally.</li>
+<li>You have to make sure your environment variables are defined at compilation time if you make calls to <code>System.get_env</code>, otherwise, your config would contain empty settings. You can check <a href="/articles/20250227-loading-env-without-leaks">this article</a> for the most optimal way to do that locally.</li>
 <li>There's one exception to that: <code>config/runtime.exs</code> is <em>always</em> evaluated at runtime, and not only in production. This is where you can reliably call <code>System.get_env</code>. Just be cautious and insert production configuration inside the right "block" in there, because it's also used for dev and test.</li>
 </ul>
 <p>There's actually another exception you may come across in older Elixir projects, which is <code>config/releases.exs</code>, used until Elixir v1.11.0.</p>
