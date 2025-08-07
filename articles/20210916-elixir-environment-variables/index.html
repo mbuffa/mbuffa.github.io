@@ -241,6 +241,18 @@
         
       </li>
       
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20210916-elixir-environment-variables/#2025-update" title="2025 Update">
+  2025 Update
+</a>
+
+        
+      </li>
+      
     </ol>
   </div>
 </aside>
@@ -293,22 +305,22 @@
 </span></code></pre>
 <p>And the same call would work in your application source code.</p>
 <p>However, you may want to avoid scattering those calls in every corner, and use a config file instead to centralize your settings and your default values.</p>
-<p>Newer versions of Mix no longer generate config files by default, so you'd have to create one of those, like this:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">mix</span><span> new test
-</span><span style="color:#96b5b4;">cd</span><span> test
+<p>Mix doesn't generate config files by default, so you'd have to create one of those, like this:</p>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">mix</span><span> new foo
+</span><span style="color:#96b5b4;">cd</span><span> foo
 </span><span style="color:#bf616a;">mkdir</span><span> config
 </span><span style="color:#bf616a;">touch</span><span> config/config.exs
 </span></code></pre>
 <p>And edit your <code>config/config.exs</code> file, like this:</p>
 <pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#b48ead;">import </span><span style="color:#ebcb8b;">Config
 </span><span>
-</span><span>config </span><span style="color:#a3be8c;">:test</span><span>, </span><span style="color:#d08770;">hello: </span><span style="color:#ebcb8b;">System</span><span>.get_env(&quot;</span><span style="color:#a3be8c;">HELLO</span><span>&quot;)
+</span><span>config </span><span style="color:#a3be8c;">:foo</span><span>, </span><span style="color:#d08770;">hello: </span><span style="color:#ebcb8b;">System</span><span>.get_env(&quot;</span><span style="color:#a3be8c;">HELLO</span><span>&quot;)
 </span></code></pre>
-<p>And lastly, modify <code>lib/test.ex</code> like this, to actually use the key-value pair we defined:</p>
-<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span>module </span><span style="color:#ebcb8b;">Test </span><span style="color:#b48ead;">do
+<p>And lastly, modify <code>lib/foo.ex</code> like this, to actually use the key-value pair we defined:</p>
+<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span>module </span><span style="color:#ebcb8b;">Foo </span><span style="color:#b48ead;">do
 </span><span style="color:#65737e;">  # ...
 </span><span>  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">hello </span><span style="color:#b48ead;">do
-</span><span>    </span><span style="color:#ebcb8b;">Application</span><span>.get_env(</span><span style="color:#a3be8c;">:test</span><span>, </span><span style="color:#a3be8c;">:hello</span><span>, &quot;</span><span style="color:#a3be8c;">default</span><span>&quot;)
+</span><span>    </span><span style="color:#ebcb8b;">Application</span><span>.get_env(</span><span style="color:#a3be8c;">:foo</span><span>, </span><span style="color:#a3be8c;">:hello</span><span>, &quot;</span><span style="color:#a3be8c;">default</span><span>&quot;)
 </span><span>  </span><span style="color:#b48ead;">end
 </span><span style="color:#b48ead;">end
 </span></code></pre>
@@ -317,10 +329,10 @@
 </span><span style="color:#bf616a;">MIX_ENV</span><span>=</span><span style="color:#a3be8c;">prod </span><span style="color:#bf616a;">mix</span><span> release
 </span></code></pre>
 <p>Now let's run an interactive terminal to our build, and let's override that env variable along the way:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">HELLO</span><span>=</span><span style="color:#a3be8c;">bar </span><span style="color:#bf616a;">./_build/prod/rel/test/bin/test</span><span> start_iex
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">HELLO</span><span>=</span><span style="color:#a3be8c;">bar </span><span style="color:#bf616a;">./_build/prod/rel/foo/bin/foo</span><span> start_iex
 </span></code></pre>
-<p>There, calling <code>Test.hello</code> would return "foo", not "bar".</p>
-<p>You can easily get surprises when releasing your first Elixir app, because this is not something you can reproduce with <code>iex -S mix</code>.</p>
+<p>There, calling <code>Foo.hello</code> would return "foo", not "bar".</p>
+<p>You can easily get surprises when releasing your first Elixir app, because this is not something you can reliably reproduce with <code>iex -S mix</code> locally.</p>
 <h2 id="what-happened">What happened</h2>
 <p>Well basically, <code>exs</code> files are script files: they're used at build or test times, and aren't present in your final build. When building your release, Mix interpreted <code>System.get_env</code> directly and hardcoded the value.</p>
 <h2 id="solutions">Solutions</h2>
@@ -337,6 +349,15 @@
 </span></code></pre>
 <p><em>Et voilà !</em> Hope this helps.</p>
 <p>If you want to know more about Elixir builds and releases, as always, <a href="https://hexdocs.pm/mix/1.12/Mix.Tasks.Release.html">the official documentation is a great place to start</a>.</p>
+<h2 id="2025-update">2025 Update</h2>
+<p>I wanted to make an update a while ago to state one thing: you probably don't need a library such as <code>env</code> in your application. You just have to remember the following statements:</p>
+<ul>
+<li>Your configuration is split between environments (<code>config/{dev,test,prod}.exs</code>) which is built at compilation time</li>
+<li>You have to make sure your environment variables are defined at compilation time if you make calls to <code>System.get_env</code>, otherwise, your config would contain empty settings You can check <a href="/articles/20250227-loading-env-without-leaks">this article</a> for the most optimal way to do that locally.</li>
+<li>There's one exception to that: <code>config/runtime.exs</code> is <em>always</em> evaluated at runtime, and not only in production. This is where you can reliably call <code>System.get_env</code>. Just be cautious and insert production configuration inside the right "block" in there, because it's also used for dev and test.</li>
+</ul>
+<p>There's actually another exception you may come across in older Elixir projects, which is <code>config/releases.exs</code>, used until Elixir v1.11.0.</p>
+<p>Finally, checking both <a href="https://hexdocs.pm/elixir/config-and-releases.html">Elixir</a> and <a href="https://hexdocs.pm/mix/1.18.4/Mix.Tasks.Release.html">Mix</a> documentations for your versions is always a good idea.</p>
 
   </div>
 

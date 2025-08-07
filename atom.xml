@@ -387,22 +387,22 @@
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;And the same call would work in your application source code.&lt;&#x2F;p&gt;
 &lt;p&gt;However, you may want to avoid scattering those calls in every corner, and use a config file instead to centralize your settings and your default values.&lt;&#x2F;p&gt;
-&lt;p&gt;Newer versions of Mix no longer generate config files by default, so you&#x27;d have to create one of those, like this:&lt;&#x2F;p&gt;
-&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mix&lt;&#x2F;span&gt;&lt;span&gt; new test
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt; test
+&lt;p&gt;Mix doesn&#x27;t generate config files by default, so you&#x27;d have to create one of those, like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mix&lt;&#x2F;span&gt;&lt;span&gt; new foo
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt; foo
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mkdir&lt;&#x2F;span&gt;&lt;span&gt; config
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;touch&lt;&#x2F;span&gt;&lt;span&gt; config&#x2F;config.exs
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;And edit your &lt;code&gt;config&#x2F;config.exs&lt;&#x2F;code&gt; file, like this:&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Config
 &lt;&#x2F;span&gt;&lt;span&gt;
-&lt;&#x2F;span&gt;&lt;span&gt;config &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:test&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;hello: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;System&lt;&#x2F;span&gt;&lt;span&gt;.get_env(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;HELLO&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;config &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:foo&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;hello: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;System&lt;&#x2F;span&gt;&lt;span&gt;.get_env(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;HELLO&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;And lastly, modify &lt;code&gt;lib&#x2F;test.ex&lt;&#x2F;code&gt; like this, to actually use the key-value pair we defined:&lt;&#x2F;p&gt;
-&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span&gt;module &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Test &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
+&lt;p&gt;And lastly, modify &lt;code&gt;lib&#x2F;foo.ex&lt;&#x2F;code&gt; like this, to actually use the key-value pair we defined:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;elixir&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-elixir &quot;&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span&gt;module &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Foo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;  # ...
 &lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;hello &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;do
-&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Application&lt;&#x2F;span&gt;&lt;span&gt;.get_env(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:test&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:hello&lt;&#x2F;span&gt;&lt;span&gt;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;default&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ebcb8b;&quot;&gt;Application&lt;&#x2F;span&gt;&lt;span&gt;.get_env(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:foo&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;:hello&lt;&#x2F;span&gt;&lt;span&gt;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;default&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
 &lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;end
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
@@ -411,10 +411,10 @@
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;MIX_ENV&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;prod &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mix&lt;&#x2F;span&gt;&lt;span&gt; release
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;Now let&#x27;s run an interactive terminal to our build, and let&#x27;s override that env variable along the way:&lt;&#x2F;p&gt;
-&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HELLO&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;bar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;.&#x2F;_build&#x2F;prod&#x2F;rel&#x2F;test&#x2F;bin&#x2F;test&lt;&#x2F;span&gt;&lt;span&gt; start_iex
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HELLO&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;bar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;.&#x2F;_build&#x2F;prod&#x2F;rel&#x2F;foo&#x2F;bin&#x2F;foo&lt;&#x2F;span&gt;&lt;span&gt; start_iex
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;There, calling &lt;code&gt;Test.hello&lt;&#x2F;code&gt; would return &quot;foo&quot;, not &quot;bar&quot;.&lt;&#x2F;p&gt;
-&lt;p&gt;You can easily get surprises when releasing your first Elixir app, because this is not something you can reproduce with &lt;code&gt;iex -S mix&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;There, calling &lt;code&gt;Foo.hello&lt;&#x2F;code&gt; would return &quot;foo&quot;, not &quot;bar&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;You can easily get surprises when releasing your first Elixir app, because this is not something you can reliably reproduce with &lt;code&gt;iex -S mix&lt;&#x2F;code&gt; locally.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;what-happened&quot;&gt;What happened&lt;&#x2F;h2&gt;
 &lt;p&gt;Well basically, &lt;code&gt;exs&lt;&#x2F;code&gt; files are script files: they&#x27;re used at build or test times, and aren&#x27;t present in your final build. When building your release, Mix interpreted &lt;code&gt;System.get_env&lt;&#x2F;code&gt; directly and hardcoded the value.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;solutions&quot;&gt;Solutions&lt;&#x2F;h2&gt;
@@ -431,6 +431,15 @@
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;&lt;em&gt;Et voilà !&lt;&#x2F;em&gt; Hope this helps.&lt;&#x2F;p&gt;
 &lt;p&gt;If you want to know more about Elixir builds and releases, as always, &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;mix&#x2F;1.12&#x2F;Mix.Tasks.Release.html&quot;&gt;the official documentation is a great place to start&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;2025-update&quot;&gt;2025 Update&lt;&#x2F;h2&gt;
+&lt;p&gt;I wanted to make an update a while ago to state one thing: you probably don&#x27;t need a library such as &lt;code&gt;env&lt;&#x2F;code&gt; in your application. You just have to remember the following statements:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Your configuration is split between environments (&lt;code&gt;config&#x2F;{dev,test,prod}.exs&lt;&#x2F;code&gt;) which is built at compilation time&lt;&#x2F;li&gt;
+&lt;li&gt;You have to make sure your environment variables are defined at compilation time if you make calls to &lt;code&gt;System.get_env&lt;&#x2F;code&gt;, otherwise, your config would contain empty settings You can check &lt;a href=&quot;&#x2F;articles&#x2F;20250227-loading-env-without-leaks&quot;&gt;this article&lt;&#x2F;a&gt; for the most optimal way to do that locally.&lt;&#x2F;li&gt;
+&lt;li&gt;There&#x27;s one exception to that: &lt;code&gt;config&#x2F;runtime.exs&lt;&#x2F;code&gt; is &lt;em&gt;always&lt;&#x2F;em&gt; evaluated at runtime, and not only in production. This is where you can reliably call &lt;code&gt;System.get_env&lt;&#x2F;code&gt;. Just be cautious and insert production configuration inside the right &quot;block&quot; in there, because it&#x27;s also used for dev and test.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;There&#x27;s actually another exception you may come across in older Elixir projects, which is &lt;code&gt;config&#x2F;releases.exs&lt;&#x2F;code&gt;, used until Elixir v1.11.0.&lt;&#x2F;p&gt;
+&lt;p&gt;Finally, checking both &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;elixir&#x2F;config-and-releases.html&quot;&gt;Elixir&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;mix&#x2F;1.18.4&#x2F;Mix.Tasks.Release.html&quot;&gt;Mix&lt;&#x2F;a&gt; documentations for your versions is always a good idea.&lt;&#x2F;p&gt;
 </content>
         
     </entry>
