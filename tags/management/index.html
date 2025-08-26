@@ -5,7 +5,7 @@
   
 
   
-  <title>Kubernetes: Kubectl Useful shortcuts</title>
+  <title>Maxime Buffa</title>
   
 
   
@@ -22,7 +22,7 @@
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
 
-  <meta name="description" content="Various and useful kubectl tips to ease your life on your Kubernetes cluster" />
+  <meta name="description" content="My personal website with tips and rants." />
 </head>
 
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -201,148 +201,47 @@
         
 
 
-<aside class="w-full lg:w-3/12">
-  <div class="sticky flex top-50">
-    <ol class="w-full m-0 pl-4 list-decimal">
+<article class="w-full">
+  <table class="w-full">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="text-left">
+          <h1 class="m-2 p-2 inline-block font-bold text-2xl">Pages tagged with &#x27;management&#x27;</h1>
+          <p class="m-2 p-2 inline-block font-normal dark:text-white text-black">
+            
+          </p>
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
       
-      <li>
-        
-<a class="
-    inline-block px-2 text-sm w-full underline hover:no-underline
-  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/#context" title="Context">
-  Context
-</a>
+      <tr class="leading-10">
+        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white">2025-08-26</td>
+        <td class="w-4/6">
+          <a class="
+              underline hover:no-underline
+              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+            href="https://mbuffa.github.io/articles/20250826-burn-your-team-in-six-months/">Management: Burn your team in six months</a>
+        </td>
+        <td>
+          
+          
+<span class="rounded-sm text-xs p-2 m-2
+  dark:bg-orange-500 dark:text-black
+    
+"><a href="/tags/opinion" title="Opinion">Opinion</a>
+</span>
 
-        
-      </li>
+          
+        </td>
+      </tr>
       
-      <li>
-        
-<a class="
-    inline-block px-2 text-sm w-full underline hover:no-underline
-  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/#a-good-entrypoint" title="A good entrypoint">
-  A good entrypoint
-</a>
-
-        
-      </li>
-      
-      <li>
-        
-<a class="
-    inline-block px-2 text-sm w-full underline hover:no-underline
-  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/#a-simple-way-to-open-a-tty-to-your-pod" title="A simple way to open a TTY to your pod">
-  A simple way to open a TTY to your pod
-</a>
-
-        
-      </li>
-      
-      <li>
-        
-<a class="
-    inline-block px-2 text-sm w-full underline hover:no-underline
-  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-  href="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/#accessing-multiple-apps-logs" title="Accessing multiple apps logs">
-  Accessing multiple apps logs
-</a>
-
-        
-      </li>
-      
-    </ol>
-  </div>
-</aside>
-
-
-
-<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
-
-  <header class="text-center">
-    <h1 class="text-2xl font-bold m-2 p-2">
-      Kubernetes: Kubectl Useful shortcuts
-    </h1>
-    
-    <p class="subtitle">
-      Published on 2021-12-20
-    </p>
-    
-    
-    
-<p class="max-w-fit m-auto">
-  
-  <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/tip">
-    tip
-  </a>
-  
-  <a class="inline-block m-1 p-1 underline hover:no-underline"
-    href="/tags/k8s">
-    k8s
-  </a>
-  
-</p>
-
-    
-  </header>
-
-  
-
-  
-
-  
-
-  <div class="markdown-content">
-    <h2 id="context">Context</h2>
-<p><code>kubectl</code> is the command line tool for accessing and interacting with your Kubernetes cluster. It's quite intuitive and easy-to-use, but here is a small summary of some very useful commands to get you started if you're new to Kube.</p>
-<p>You should already know a few basics about building a Docker container and firing a simple deployment on Kubernetes though. This won't help you much if you don't know Kubernetes at all :-)</p>
-<p>Anyway, here's a quick catch-up:</p>
-<ul>
-<li>To deploy a basic app on Kube, you would typically write a <em>Deployment</em>, featuring a template with a list of <em>Container</em>s.</li>
-<li>Once applied, this <em>Deployment</em> will have an associated <em>ReplicaSet</em> linked to the template you specified, and managed by Kube.</li>
-<li>Each <em>ReplicaSet</em> will then create <em>Pod</em>s accordingly (depending on the amount of replicas you set).</li>
-<li>And finally, each <em>Pod</em> will wrap the <em>Container</em>s you specified in the aforementioned template.</li>
-<li>Additionally, <em>Service</em>s will provide a single <strong>Endpoint</strong> to your app <strong>inside</strong> your cluster, while <em>Ingress</em>es will provide access from <strong>outside</strong> your cluster, redirecting traffic to the <strong>Service</strong>.</li>
-</ul>
-<p>I'll try to update this article if I discover or remember some good shortcuts. It would be pretty long and tedious if it was a full tutorial, so I'll keep this light.</p>
-<h2 id="a-good-entrypoint">A good entrypoint</h2>
-<p><code>kubectl explain</code> is here to help you. You can use it on any kind of ressources inside Kubernetes:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">kubectl</span><span> explain deployments
-</span></code></pre>
-<p>This is really useful, especially when combined with some IDE plugins. VSCode has some that add snippets, and even a cluster visualizer that lets you browse all your ressources from inside your editor! You can easily learn something about a new type of ressource you didn't know about.</p>
-<h2 id="a-simple-way-to-open-a-tty-to-your-pod">A simple way to open a TTY to your pod</h2>
-<p>You may already know that you can open a terminal over SSH by simply running:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">kubectl</span><span> exec</span><span style="color:#bf616a;"> -it</span><span> my-app-1234-5678 -- /bin/sh
-</span></code></pre>
-<p>If you're deploying quite often, the replicaset attached to your deployment will change, and pods will be recreated. Therefore, opening a new TTY can be tedious.</p>
-<p>But fortunately, you can use the service as a shortcut:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">kubectl</span><span> exec</span><span style="color:#bf616a;"> -it</span><span> service/my-app -- /bin/sh
-</span></code></pre>
-<h2 id="accessing-multiple-apps-logs">Accessing multiple apps logs</h2>
-<p>You may know that you can access a container logs, either statically or continuously, by running this:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">kubectl</span><span> logs </span><span style="color:#b48ead;">[</span><span>-f</span><span style="color:#b48ead;">]</span><span> my-app-1234-5678 container_name
-</span></code></pre>
-<p>But yet again, the pod may be replaced, and you may be interested to fetch logs from multiple pods of the same app, or even logs coming from various apps, but serving a common purpose.</p>
-<p>You can do just that by adding <strong><a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">Labels</a></strong> to your ressources (especially deployments), and running the same command, but with <em>Label Selector</em>s instead:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">kubectl</span><span> logs </span><span style="color:#b48ead;">[</span><span>-f</span><span style="color:#b48ead;">]</span><span style="color:#bf616a;"> -l</span><span> app=my-app</span><span style="color:#bf616a;"> -c</span><span> container_name
-</span></code></pre>
-<p>In fact, selectors can be used with many commands, including all <code>get</code> calls, to fetch ressources of different nature grouped by-whatever-your-semantic-grouping-is. No more <code>grep</code> :-)</p>
-
-  </div>
-
-  
-  <script src="https://giscus.app/client.js"
-    data-repo="mbuffa/mbuffa.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
-    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
-    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
-    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
-    </script>
-  
+    </tbody>
+  </table>
 </article>
+
 
       </div>
 

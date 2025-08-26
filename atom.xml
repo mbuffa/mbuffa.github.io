@@ -4,8 +4,111 @@
     <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2025-07-25T00:00:00+00:00</updated>
+    <updated>2025-08-26T00:00:00+00:00</updated>
     <id>https://mbuffa.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Management: Burn your team in six months</title>
+        <published>2025-08-26T00:00:00+00:00</published>
+        <updated>2025-08-26T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20250826-burn-your-team-in-six-months/"/>
+        <id>https://mbuffa.github.io/articles/20250826-burn-your-team-in-six-months/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20250826-burn-your-team-in-six-months/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;After more than a decade of software development in professional contexts, I&#x27;ve seen numerous behaviors in the teams I have worked in or have worked with, sometimes directly experiencing some of them with my CEOs, CTOs, engineering managers or tech leads.&lt;&#x2F;p&gt;
+&lt;p&gt;The patterns I will describe do apply to software development teams, but I believe they do apply to any work environment that involves management and teams, or even business to business relationships. I&#x27;ll give a lot of examples centered around software engineering though, to avoid beeing too abstract.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;disclaimer&quot;&gt;Disclaimer&lt;&#x2F;h2&gt;
+&lt;p&gt;Writing this article addresses two needs:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;The need to put some thoughts on paper and stop thinking about them, and,&lt;&#x2F;li&gt;
+&lt;li&gt;Leverage this as an opportunity to become a better leader or manager myself; experiencing and noticing bad behaviors is as instructive as reading a training book, and I&#x27;m sure I demonstrated some of those behaviors myself.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Being aware of issues is the best way to detect, avoid or fix them in the future. And no, I&#x27;m not quoting Thufir Hawat :-)&lt;&#x2F;p&gt;
+&lt;p&gt;Also, this is absolutely not a critique against my current employer. I&#x27;m also not targetting individuals themselves, but individual behaviors that can hurt productivity or mental health. Finally, my opinions are mine and do not reflect any third parties&#x27; opinions I have or currently am working with.&lt;&#x2F;p&gt;
+&lt;p&gt;Lastly, this will be a mixed bag of leadership and management issues.&lt;&#x2F;p&gt;
+&lt;p&gt;So, now that the frame has been set, how do you burn your team in six months? Where do you start?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-guide-to-burn-out&quot;&gt;A guide to burn-out&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;sink-your-team-under-hours-of-pointless-meetings-and-reportings&quot;&gt;Sink your team under hours of pointless meetings and reportings&lt;&#x2F;h3&gt;
+&lt;p&gt;One of the best things you can do is to schedule a lot of meetings. Bonus points for stand ups that last 45 minutes. Bonus point if you&#x27;re a slow speaker that never pauses, blocking others from reacting to what you say. Bonus point if you spend a lot of time talking about this country house you&#x27;re repairing.&lt;&#x2F;p&gt;
+&lt;p&gt;Even better: schedule loose daily meetings, with no specific beginning or end or topic, and make others adapt to your schedule, so that they cannot start focusing on their own work. And take your personal phone calls during those meetings.&lt;&#x2F;p&gt;
+&lt;p&gt;Try to schedule daily reportings, such as KPIs for Sales. Bonus point if they have to reach the tech team to get their numbers. Bonus point if they spend more than two hours a day making slides for the next day.&lt;&#x2F;p&gt;
+&lt;p&gt;Meetings should be short, have a purpose, a specific start and end time, and be organised between teams that can take actions to solve issues. There&#x27;s no point in putting tech performers in sales meetings 30 minutes a day every day.&lt;&#x2F;p&gt;
+&lt;p&gt;Your team shouldn&#x27;t take 25% or 40% just making reports.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;give-weak-instructions-have-high-expectations&quot;&gt;Give weak instructions, have high expectations&lt;&#x2F;h3&gt;
+&lt;p&gt;Whether or not you&#x27;re a fan of AGILE or KANBAN, your work will be divided in small units of work, and whether or not you call them tickets or something else, any unit of work must &lt;em&gt;at least&lt;&#x2F;em&gt; contain a short description about &lt;strong&gt;what&lt;&#x2F;strong&gt; must be done. Well-made acceptance criteria for features are even better, because they describe a context, an event and an expected result.&lt;&#x2F;p&gt;
+&lt;p&gt;Giving enough context and instructions can be very time consuming. In that case, the person in charge of this task can submit a draft for what they&#x27;re going to do, and request comments from their manager before starting the task. It can be even better this way, because the performer can inspect what&#x27;s already there and draft specs more accurately.&lt;&#x2F;p&gt;
+&lt;p&gt;So, what&#x27;s the worst thing to do here?&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Write empty tasks with vague titles, or scratch &quot;Build a Back-Office&quot; on a napkin.&lt;&#x2F;li&gt;
+&lt;li&gt;Ignore review requests on business and technical specs.&lt;&#x2F;li&gt;
+&lt;li&gt;Use work review to complain that X or Y feature ie missing.&lt;&#x2F;li&gt;
+&lt;li&gt;Use work review to question the reason behind this task.&lt;&#x2F;li&gt;
+&lt;li&gt;Put the responsibility on the performer for the delay.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;do-not-follow-your-own-rules&quot;&gt;Do not follow your own rules&lt;&#x2F;h3&gt;
+&lt;p&gt;Theere is a book called &quot;The Art of War&quot; from Sun Tzu. It is very short and quite easy to read, and often quoted in personal development lectures. It is sometimes also mocked because, as some people say, it states the obvious, such as &quot;Don&#x27;t let your men starve&quot;, or statements like this.&lt;&#x2F;p&gt;
+&lt;p&gt;This is &lt;strong&gt;wrong&lt;&#x2F;strong&gt;. No matter how often a subject will be discussed, nothing is ever too obvious. And there&#x27;s a specific teaching from the book that applies to any leader: leaders lead by example.&lt;&#x2F;p&gt;
+&lt;p&gt;And they also make sure their men are fed, and they themselves eat last, but this is not a lecture about charisma :-)&lt;&#x2F;p&gt;
+&lt;p&gt;In a management context, this means that any rule you force your team to follow, you have to follow it yourself.&lt;&#x2F;p&gt;
+&lt;p&gt;You require code review on any pull request that they will open? Fine. Then at least open a pull request for your own work too. Do not push directly on the main branch, break the CI and then complain to them that their pull request &quot;broke the tests&quot;. If you do not have a developer role, this, of course, does not apply to you.
+But being a CTO doesn&#x27;t erase the responsibilities of a Developer role when you do developer tasks.&lt;&#x2F;p&gt;
+&lt;p&gt;You allow yourself to work remotely? Fine, as long as it applies to your team too. Do not schedule bullshit meetings at 7PM in the office, while you&#x27;re baby-sitting your kid on your lap, half listening to a report that you might as well read yourself.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;be-the-bottleneck-of-your-own-team&quot;&gt;Be the bottleneck of your own team&lt;&#x2F;h3&gt;
+&lt;p&gt;One of the best quality of a manager (or of a hands-on engineering manager) is being able to delegate work and give directions.&lt;&#x2F;p&gt;
+&lt;p&gt;What&#x27;s the worse that can happen?&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Considering that you&#x27;re the only one able to get things done correctly.&lt;&#x2F;li&gt;
+&lt;li&gt;Using your veto on any decision, inside or outside of your team.&lt;&#x2F;li&gt;
+&lt;li&gt;Get yourself overwhelmed.&lt;&#x2F;li&gt;
+&lt;li&gt;Delay others&#x27; work further because you want to check everything.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;ignoring-other-people-s-time-work-or-input&quot;&gt;Ignoring other people&#x27;s time, work or input&lt;&#x2F;h3&gt;
+&lt;p&gt;After a few studies, we now know that multi-tasking is pretty bad for your brain, and for your mental health.
+We also know that anyone will keep thinking about something if they do not consider that this thing is done and behind them.&lt;&#x2F;p&gt;
+&lt;p&gt;So, what can we do about that, as a tech lead or similar role?&lt;&#x2F;p&gt;
+&lt;p&gt;Well, we can task somebody to do something, and force them to rewrite everything after a few days, by sneaking up a pull request during the night that completely changes parts of the codebase, and we can even blame the delay on them. Bonus point if we slip a little &quot;We should use another library and drop the old one while doing this task&quot; once this task is nearly done.&lt;&#x2F;p&gt;
+&lt;p&gt;We can also do pointless code reviews, ie. making people format their code manually, following arbitrary rules not enforced by the formatter. Even better if those code reviews are meetings.&lt;&#x2F;p&gt;
+&lt;p&gt;We can give them never-ending tasks, transforming a simple MVP draft into a moving target that keeps changing and being more complex.&lt;&#x2F;p&gt;
+&lt;p&gt;We can also put all of our ego into the codebase, arguing about the tiniest change, blocking a big merge for one thing that we don&#x27;t like, but that won&#x27;t affect production, forcing the person in charge to delay other tasks on the sprint&#x27;s last day, just because we can&#x27;t accept improvements, even if they come as soon as the next sprint&#x27;s first day, and even if they&#x27;re the best option to pick.&lt;&#x2F;p&gt;
+&lt;p&gt;We can of course, make somebody work on something, and having them re-do everything because we do not like the shape of it. Bonus point if we do an infinite number of reviews, and even better if a review voids the last review changes.&lt;&#x2F;p&gt;
+&lt;p&gt;And of course, we can require code review on pull requests while our own schedule do not allow it, delaying them and making the performer go back to tasks he did three weeks ago. Bonus point if the changes are about changing &quot;lorem ipsum&quot; to &quot;ipsum lorem&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;The request &quot;Please make another ticket&quot; is not a mark of laziness. I mean, sometimes, it can be. But there are good reasons to shape something, to consider it &lt;em&gt;not perfect&lt;&#x2F;em&gt;, but &lt;em&gt;good enough&lt;&#x2F;em&gt;, and to improve it with iterations. Especially if a first version has been manually tested. You don&#x27;t want to risk regressions because new feautres popped in after QA.&lt;&#x2F;p&gt;
+&lt;p&gt;Working in a company with uncertain funding or market fit is a lot about timing, tests, quick (and stable) prototypes that you improve, and listening to your team is also important.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;denying-reality&quot;&gt;Denying reality&lt;&#x2F;h3&gt;
+&lt;p&gt;There&#x27;s nothing worse for a leader than denying reality about the market he&#x27;s trying to enter in, or about the financial status of his own company.&lt;&#x2F;p&gt;
+&lt;p&gt;The leader is the ship&#x27;s captain. If your team feels numbers aren&#x27;t good, and your only response is to hide metrics on the next week slides, not discussing measures, or in general, not mentioning the elephant in the room, then your team anxiety level is going to increase, significantly.&lt;&#x2F;p&gt;
+&lt;p&gt;Working in a startup is hard. From my humble experience, leading small teams is even harder.  But ignoring the hole in the ship&#x27;s hull is not going to help.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;bitching-about-others-and-denying-responsibility&quot;&gt;Bitching about others and denying responsibility&lt;&#x2F;h3&gt;
+&lt;p&gt;It is certain that a shortage of funds and treasury can damage a company (or even a person) in many ways. And people can indeed demonstrate skill issues, or take actions that will have deep negative consequences.&lt;&#x2F;p&gt;
+&lt;p&gt;But the worst thing somebody can do is bitching about others, whether they&#x27;re still in the company or have been fired, or &lt;em&gt;encouraged&lt;&#x2F;em&gt; to leave, or whether they can even hear you in the next room.&lt;&#x2F;p&gt;
+&lt;p&gt;Everybody makes mistakes, except people doing nothing, and while there&#x27;s no point in blaming yurself forever for something you did, you should always acknowledge that you did that mistake. No need for humiliating speeches in front of 300 people, just a simple statement such as: &quot;Ok, I did this [because I thought this], it didn&#x27;t go well. Now, here&#x27;s how I plan to fix it.&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;Do not blame a junior account manager sending a few hundreds to the wrong bank account, insulting them in the next room, while you do not take responsibility for your own implementation that makes the company lose money by the thousands on a monthly basis.&lt;&#x2F;p&gt;
+&lt;p&gt;Also, do not blame a performer for the time a feature took, if you were one of the bottlenecks behind it, whether by lack of time or planning.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;wrapping-up&quot;&gt;Wrapping up&lt;&#x2F;h2&gt;
+&lt;p&gt;I&#x27;m in no way considering myself a good manager. I&#x27;m pretty sure I did a lot of mistakes when I had to manage a team myself, and I&#x27;m pretty sure the pressure is even worse when you build a company and put your time and energy behind it.&lt;&#x2F;p&gt;
+&lt;p&gt;So, what makes a good manager or startup leader? I&#x27;m definitely not sure about that, but I do have a few ideas:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Be trustful.&lt;&#x2F;li&gt;
+&lt;li&gt;Be respectful. Always. If you have complainings, go to the person and tell them about it, do not bitch over somebody else&#x27;s shoulder at ear&#x27;s distance.&lt;&#x2F;li&gt;
+&lt;li&gt;Listen to your team.&lt;&#x2F;li&gt;
+&lt;li&gt;Take responsibility when necessary.&lt;&#x2F;li&gt;
+&lt;li&gt;Allow others to fail and take accountability, don&#x27;t be the gatekeeper to everything.&lt;&#x2F;li&gt;
+&lt;li&gt;Do not delay hard decisions.&lt;&#x2F;li&gt;
+&lt;li&gt;Keep the long personal stories for the coffee breaks and afterworks.&lt;&#x2F;li&gt;
+&lt;li&gt;Finally, feed your soldiers and eat last.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Of course, I do not pretend to be the guardian of truth, and I would be more than happy to get feedback, and to hear from you in the comments section, or on the various social medias I will link this article from.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>Elixir: Having multiple Live Views on the same page</title>
         <published>2025-07-25T00:00:00+00:00</published>
