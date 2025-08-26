@@ -28,9 +28,11 @@
         </td>
         <td>
           {% if "tip" in list_item.taxonomies["tags"] %}
-            {{ badge_macro::badge(href="/tags/tip", title="Tip") }}
+          {{ badge_macro::badge(href="/tags/tip", title="Tip") }}
           {% elif "tutorial" in list_item.taxonomies["tags"] %}
-            {{ badge_macro::badge(href="/tags/tutorial", title="Tutorial") }}
+          {{ badge_macro::badge(href="/tags/tutorial", title="Tutorial") }}
+          {% elif "opinion" in list_item.taxonomies["tags"] %}
+          {{ badge_macro::badge(href="/tags/opinion", title="Opinion") }}
           {% endif %}
         </td>
       </tr>
