@@ -2,6 +2,7 @@
 title = "Management: Burn your team in six months"
 description = "A guide to burn-out"
 date = 2025-08-26
+draft = true
 [taxonomies]
 tags = ["opinion", "management", "leadership"]
 +++
@@ -26,8 +27,10 @@ So, now that the frame has been set, how do you burn your team in six months? Wh
 
 ## A guide to burn-out
 
-### Sink your team under hours of pointless meetings and reportings
-One of the best things you can do is to schedule a lot of meetings. Bonus points for stand ups that last 45 minutes. Bonus point if you're a slow speaker that never pauses, blocking others from reacting to what you say. Bonus point if you spend a lot of time talking about this country house you're repairing.
+### Planning
+
+#### Drowning your team under hours of pointless meetings and reportings
+One of the best things you can do is to schedule a lot of meetings. Bonus points for stand ups that last 45 minutes. Bonus point if you're a slow speaker that never pauses, preventing others from reacting. Bonus point if you spend a lot of time talking about this house in the countryside you're fixing.
 
 Even better: schedule loose daily meetings, with no specific beginning or end or topic, and make others adapt to your schedule, so that they cannot start focusing on their own work. And take your personal phone calls during those meetings.
 
@@ -37,7 +40,7 @@ Meetings should be short, have a purpose, a specific start and end time, and be 
 
 Your team shouldn't take 25% or 40% just making reports.
 
-### Give weak instructions, have high expectations
+#### Giving weak instructions, having high expectations
 Whether or not you're a fan of AGILE or KANBAN, your work will be divided in small units of work, and whether or not you call them tickets or something else, any unit of work must *at least* contain a short description about **what** must be done. Well-made acceptance criteria for features are even better, because they describe a context, an event and an expected result.
 
 Giving enough context and instructions can be very time consuming. In that case, the person in charge of this task can submit a draft for what they're going to do, and request comments from their manager before starting the task. It can be even better this way, because the performer can inspect what's already there and draft specs more accurately.
@@ -49,7 +52,22 @@ So, what's the worst thing to do here?
 * Use work review to question the reason behind this task.
 * Put the responsibility on the performer for the delay.
 
-### Do not follow your own rules
+### Control
+
+#### Becoming the bottleneck of your own team
+Ask to be the center of every decision your team will make, and whenever possible, do it for external teams as well. Make your designer and product team require your validation for any tiny update in the design system. Do the same for the marketing team and the emails design. Consider you're the only person able to do the job correctly.
+
+Hire people to do a specific tasks, but don't let them do it autonomously.
+
+Use your veto on decisions you don't like, and make up excuses for it.
+
+Ask for systematic code review on every pull request, even though you work in a startup and have to ship things quickly.
+
+Get yourself overwhelmed and delay other's work because you do not have time to do everything.
+
+### Attitude
+
+#### Not following your own rules
 Theere is a book called "The Art of War" from Sun Tzu. It is very short and quite easy to read, and often quoted in personal development lectures. It is sometimes also mocked because, as some people say, it states the obvious, such as "Don't let your men starve", or statements like this.
 
 This is **wrong**. No matter how often a subject will be discussed, nothing is ever too obvious. And there's a specific teaching from the book that applies to any leader: leaders lead by example.
@@ -63,16 +81,7 @@ But being a CTO doesn't erase the responsibilities of a Developer role when you 
 
 You allow yourself to work remotely? Fine, as long as it applies to your team too. Do not schedule bullshit meetings at 7PM in the office, while you're baby-sitting your kid on your lap, half listening to a report that you might as well read yourself.
 
-### Be the bottleneck of your own team
-One of the best quality of a manager (or of a hands-on engineering manager) is being able to delegate work and give directions.
-
-What's the worse that can happen?
-* Considering that you're the only one able to get things done correctly.
-* Using your veto on any decision, inside or outside of your team.
-* Get yourself overwhelmed.
-* Delay others' work further because you want to check everything.
-
-### Ignoring other people's time, work or input
+#### Ignoring other people's time, work or input
 After a few studies, we now know that multi-tasking is pretty bad for your brain, and for your mental health.
 We also know that anyone will keep thinking about something if they do not consider that this thing is done and behind them.
 
@@ -92,16 +101,16 @@ And of course, we can require code review on pull requests while our own schedul
 
 The request "Please make another ticket" is not a mark of laziness. I mean, sometimes, it can be. But there are good reasons to shape something, to consider it *not perfect*, but *good enough*, and to improve it with iterations. Especially if a first version has been manually tested. You don't want to risk regressions because new feautres popped in after QA.
 
-Working in a company with uncertain funding or market fit is a lot about timing, tests, quick (and stable) prototypes that you improve, and listening to your team is also important.
+Working in a company with uncertain funding or market fit is a lot about timing, tests, quick (and stable) prototypes that you improve or esentually replace, and listening to your team is also important.
 
-### Denying reality
+#### Denying reality
 There's nothing worse for a leader than denying reality about the market he's trying to enter in, or about the financial status of his own company.
 
 The leader is the ship's captain. If your team feels numbers aren't good, and your only response is to hide metrics on the next week slides, not discussing measures, or in general, not mentioning the elephant in the room, then your team anxiety level is going to increase, significantly.
 
 Working in a startup is hard. From my humble experience, leading small teams is even harder.  But ignoring the hole in the ship's hull is not going to help.
 
-### Bitching about others and denying responsibility
+#### Bitching about others and denying responsibility
 It is certain that a shortage of funds and treasury can damage a company (or even a person) in many ways. And people can indeed demonstrate skill issues, or take actions that will have deep negative consequences.
 
 But the worst thing somebody can do is bitching about others, whether they're still in the company or have been fired, or *encouraged* to leave, or whether they can even hear you in the next room.
@@ -117,7 +126,7 @@ I'm in no way considering myself a good manager. I'm pretty sure I did a lot of 
 
 So, what makes a good manager or startup leader? I'm definitely not sure about that, but I do have a few ideas:
 * Be trustful.
-* Be respectful. Always. If you have complainings, go to the person and tell them about it, do not bitch over somebody else's shoulder at ear's distance.
+* Be respectful. Always. If you have complainings, go to the person and tell them about it, do not bitch over somebody else's shoulder at hearing distance.
 * Listen to your team.
 * Take responsibility when necessary.
 * Allow others to fail and take accountability, don't be the gatekeeper to everything.
