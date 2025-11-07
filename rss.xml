@@ -1,28 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
-    <title></title>
-    <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
-    <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
-    <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2025-11-07T00:00:00+00:00</updated>
-    <id>https://mbuffa.github.io/atom.xml</id>
-    <entry xml:lang="en">
-        <title>LLM: Stop using Claude Code</title>
-        <published>2025-11-07T00:00:00+00:00</published>
-        <updated>2025-11-07T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20251107-stop-using-claude-code/"/>
-        <id>https://mbuffa.github.io/articles/20251107-stop-using-claude-code/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20251107-stop-using-claude-code/">&lt;h2 id=&quot;be-aware&quot;&gt;Be aware&lt;&#x2F;h2&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title></title>
+      <link>https://mbuffa.github.io</link>
+      <description></description>
+      <generator>Zola</generator>
+      <language>en</language>
+      <atom:link href="https://mbuffa.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+      <lastBuildDate>Fri, 07 Nov 2025 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>LLM: Stop using Claude Code</title>
+          <pubDate>Fri, 07 Nov 2025 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20251107-stop-using-claude-code/</link>
+          <guid>https://mbuffa.github.io/articles/20251107-stop-using-claude-code/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20251107-stop-using-claude-code/">&lt;h2 id=&quot;be-aware&quot;&gt;Be aware&lt;&#x2F;h2&gt;
 &lt;p&gt;Stop using Claude Code.&lt;&#x2F;p&gt;
 &lt;p&gt;I&#x27;ve discovered how to transcend your daily developer experience. How?&lt;&#x2F;p&gt;
 &lt;p&gt;With Jean-Claude Code. The only one capable of high-kicking your features into shape.&lt;&#x2F;p&gt;
@@ -53,26 +45,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;p&gt;On the other hand, the opportunities for solopreneurs and very small teams seem immense. As long as we show discipline. And as long as subscription prices don&#x27;t go through the roof.&lt;&#x2F;p&gt;
 &lt;p&gt;Please feel free to share your thoughts on the subject :)&lt;&#x2F;p&gt;
 &lt;p&gt;Disclaimer: This article is purely hand-written, but was translated from French to English using a LLM.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Elixir: Having multiple Live Views on the same page</title>
-        <published>2025-07-25T00:00:00+00:00</published>
-        <updated>2025-07-25T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20250725-live-view-session/"/>
-        <id>https://mbuffa.github.io/articles/20250725-live-view-session/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20250725-live-view-session/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Elixir: Having multiple Live Views on the same page</title>
+          <pubDate>Fri, 25 Jul 2025 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20250725-live-view-session/</link>
+          <guid>https://mbuffa.github.io/articles/20250725-live-view-session/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20250725-live-view-session/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;In its early versions and up until v1.0, Phoenix LiveView has been designed to let you manage one LiveView at a time. But in a few cases, you&#x27;ll need to be able to manage multiple Live Views, for either a complex dashboard, or even a navigation menu living on the side.&lt;&#x2F;p&gt;
 &lt;p&gt;In my case, I had to implement a navigation bar in one of my projects, with a different class for the active element. Using a Live Component was not possible, because those can&#x27;t be called from a regular (non-Live) template.&lt;&#x2F;p&gt;
 &lt;p&gt;Although, since Live Views are GenServers, and therefore Processes, having one Process per user constantly running just for displaying a dynamic navigation bar isn&#x27;t great. It would be much better to save those few kilobytes of RAM, and do the work with pure CSS and JS hooks, therefore offloading the logic to the client. But let&#x27;s just consider we need two LiveViews sitting next to each other for our use case.&lt;&#x2F;p&gt;
@@ -137,26 +118,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;And the &lt;code&gt;NavLive&lt;&#x2F;code&gt; module here is just a navigation bar built with &lt;a href=&quot;https:&#x2F;&#x2F;petal.build&#x2F;&quot;&gt;Petal Framework&lt;&#x2F;a&gt;, defining list items and picking the right Tailwind class for the active item.&lt;&#x2F;p&gt;
 &lt;p&gt;That&#x27;s it :) Please keep in mind that using a Live Session for something that could be offloaded to the client (with JavaScript and hooks) isn&#x27;t great, but this gives you an idea on what structure to use, in case you&#x27;re building a complex trading dashboard, and you absolutely need to have separate LiveViews on the same page, for concurrency reasons or resilience.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Unix: Loading env variables, without messing up your environment</title>
-        <published>2025-02-27T00:00:00+00:00</published>
-        <updated>2025-02-27T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/"/>
-        <id>https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Unix: Loading env variables, without messing up your environment</title>
+          <pubDate>Thu, 27 Feb 2025 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/</link>
+          <guid>https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20250227-loading-env-without-leaks/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;If you&#x27;re developing a server or a web app, and this server needs to interact with third-party services, you&#x27;re probably going to use a &lt;code&gt;.env&lt;&#x2F;code&gt; (dotenv) file to define those variables. At least, when running your project locally.&lt;&#x2F;p&gt;
 &lt;p&gt;So, you would probably end up doing something like &lt;code&gt;export $(cat .env | xargs)&lt;&#x2F;code&gt;, and then running your process.&lt;&#x2F;p&gt;
 &lt;p&gt;This approach has one major drawback: it updates the environment of your current shell, and it has a few implications:&lt;&#x2F;p&gt;
@@ -181,26 +151,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;And that&#x27;s it. Also, make sure your variables are properly defined (such as &lt;code&gt;FOO=bar&lt;&#x2F;code&gt;, without quotes) because having additional quotes may cause issues (some loaders would escape quotes).&lt;&#x2F;p&gt;
 &lt;p&gt;Not a revolutionary take, but better be safe (and clean) than sorry!&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Postgres: Using SQL generated columns</title>
-        <published>2024-01-30T00:00:00+00:00</published>
-        <updated>2024-01-30T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/"/>
-        <id>https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Postgres: Using SQL generated columns</title>
+          <pubDate>Tue, 30 Jan 2024 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/</link>
+          <guid>https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20231212-postgres-autogenerated-fields/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;&lt;strong&gt;Attention: This feature isn&#x27;t specific to PG, but that&#x27;s the only RDBMS I use on a regular basis, so variations may apply.&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;TL;DR: You can define a field generated at row insertion, instead of inferring a dynamic value.&lt;&#x2F;p&gt;
@@ -255,26 +214,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;p&gt;This will return the raw SQL statement used to generate new values. It&#x27;s a bit sketchy, but you can parse this expression with simple regexps and extract what you need.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
 &lt;p&gt;Generated fields are a simple but powerful tool, and you can use it in a lot of scenarios I didn&#x27;t mention, such as generating a tsvector for full text search, or simplifying basic yet cumbersome checks.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>A* (A Star) Live Demo</title>
-        <published>2022-11-20T00:00:00+00:00</published>
-        <updated>2022-11-20T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/demos/20221120-astar-live-demo/"/>
-        <id>https://mbuffa.github.io/demos/20221120-astar-live-demo/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/demos/20221120-astar-live-demo/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>A* (A Star) Live Demo</title>
+          <pubDate>Sun, 20 Nov 2022 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/demos/20221120-astar-live-demo/</link>
+          <guid>https://mbuffa.github.io/demos/20221120-astar-live-demo/</guid>
+          <description xml:base="https://mbuffa.github.io/demos/20221120-astar-live-demo/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;This is a live demonstration of the A* pathfinding algorithm implemented in Elixir using LiveView. The implementation itself is a functional step-by-step version of the famous A* algorithm, which is most commonly used in video games.&lt;&#x2F;p&gt;
 &lt;p&gt;I hacked the original version of this demo over a weekend in Feb 2021, ingesting a lot of content about pathing, and a bit about LiveView, in order to showcase it during an internal talk at Pandascore. I got back to it and refactored the whole thing later to clean it up.&lt;&#x2F;p&gt;
 &lt;p&gt;Please keep in mind that this is, however, not a perfect example of algorithmic efficiency (there&#x27;s a lot of linear search through lists and it could probably be better), and that there might be mistakes or imprecisions about my implementation.&lt;&#x2F;p&gt;
@@ -288,26 +236,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;p&gt;You control the robot. Pick a target, find the path, and walk the path.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;repo&quot;&gt;Repo&lt;&#x2F;h2&gt;
 &lt;p&gt;Source code is available on &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mbuffa&#x2F;elixir-pathfinding-demo&quot;&gt;Github&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Kubernetes: Creating and using Operators</title>
-        <published>2022-01-22T00:00:00+00:00</published>
-        <updated>2022-01-22T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20220122-kubernetes-operators/"/>
-        <id>https://mbuffa.github.io/articles/20220122-kubernetes-operators/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20220122-kubernetes-operators/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Kubernetes: Creating and using Operators</title>
+          <pubDate>Sat, 22 Jan 2022 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20220122-kubernetes-operators/</link>
+          <guid>https://mbuffa.github.io/articles/20220122-kubernetes-operators/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20220122-kubernetes-operators/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;I recently had to deploy a variant of an existing application, with a small set of common REST APIs with additional endpoints, and a few specific applications to fit the business needs of that product. I encountered an issue though: my ingress configuration (using Traefik) needed to have access to my certificate in that same namespace. I&#x27;m pretty sure Kubernetes namespaces are completely isolated compartments, but I tried to access that secret in my default namespace nonetheless, without success.&lt;&#x2F;p&gt;
 &lt;p&gt;Also, that certificate would be renewed every once in a while.&lt;&#x2F;p&gt;
 &lt;p&gt;So I basically had three solutions:&lt;&#x2F;p&gt;
@@ -329,26 +266,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;p&gt;In my case, I ended up having a specific deployment for every namespace I deployed (and that is intended to not be a temporary namespace, and have a lifetime superior to the renewal period). I could have deployed only one operator and have it update the secret in all namespaces at once, but that basically killed the principle of compartmented and independant namespaces.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;the-do-it-yourself-way&quot;&gt;The Do-It-Yourself way&lt;&#x2F;h2&gt;
 &lt;p&gt;I also like to master what&#x27;s happening and have a low-level understanding of things, so I&#x27;ll try to update this article (or create a new one) about creating your own operator soon. Yeah, sorry, that section is currently a scam.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Kubernetes: Kubectl Useful shortcuts</title>
-        <published>2021-12-20T00:00:00+00:00</published>
-        <updated>2021-12-20T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/"/>
-        <id>https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Kubernetes: Kubectl Useful shortcuts</title>
+          <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/</link>
+          <guid>https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20211220-kubectl-shortcuts/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;&lt;code&gt;kubectl&lt;&#x2F;code&gt; is the command line tool for accessing and interacting with your Kubernetes cluster. It&#x27;s quite intuitive and easy-to-use, but here is a small summary of some very useful commands to get you started if you&#x27;re new to Kube.&lt;&#x2F;p&gt;
 &lt;p&gt;You should already know a few basics about building a Docker container and firing a simple deployment on Kubernetes though. This won&#x27;t help you much if you don&#x27;t know Kubernetes at all :-)&lt;&#x2F;p&gt;
 &lt;p&gt;Anyway, here&#x27;s a quick catch-up:&lt;&#x2F;p&gt;
@@ -382,26 +308,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kubectl&lt;&#x2F;span&gt;&lt;span&gt; logs &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;-f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -l&lt;&#x2F;span&gt;&lt;span&gt; app=my-app&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -c&lt;&#x2F;span&gt;&lt;span&gt; container_name
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;In fact, selectors can be used with many commands, including all &lt;code&gt;get&lt;&#x2F;code&gt; calls, to fetch ressources of different nature grouped by-whatever-your-semantic-grouping-is. No more &lt;code&gt;grep&lt;&#x2F;code&gt; :-)&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Unix: Saving and restoring your Homebrew packages</title>
-        <published>2021-10-29T00:00:00+00:00</published>
-        <updated>2021-10-29T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20211029-homebrew-bundles/"/>
-        <id>https://mbuffa.github.io/articles/20211029-homebrew-bundles/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20211029-homebrew-bundles/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Unix: Saving and restoring your Homebrew packages</title>
+          <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20211029-homebrew-bundles/</link>
+          <guid>https://mbuffa.github.io/articles/20211029-homebrew-bundles/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20211029-homebrew-bundles/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;If you&#x27;re using the Homebrew package manager on your Mac, there&#x27;s a small chance you may want to backup your list of packages and to be able to restore them in one command, especially if you got a computer for personal use and another one for professional use, or in case you have to restore your setup for whatever reason.&lt;&#x2F;p&gt;
 &lt;p&gt;Homebrew provides bundles that does just that. To create one, just open your terminal and type:&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;brew&lt;&#x2F;span&gt;&lt;span&gt; bundle dump
@@ -409,26 +324,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;p&gt;This will create a Brewfile containing all custom repositories and the list of all the packages you installed.&lt;&#x2F;p&gt;
 &lt;p&gt;To restore it, simply run &lt;code&gt;brew bundle&lt;&#x2F;code&gt; and Homebrew will make sure you have all those packages installed.&lt;&#x2F;p&gt;
 &lt;p&gt;This isn&#x27;t something huge, but I thought this deserved a bit of coverage from yet another Github Page :-)&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Elixir: Using Environment Variables</title>
-        <published>2021-09-16T00:00:00+00:00</published>
-        <updated>2021-09-16T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20210916-elixir-environment-variables/"/>
-        <id>https://mbuffa.github.io/articles/20210916-elixir-environment-variables/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20210916-elixir-environment-variables/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Elixir: Using Environment Variables</title>
+          <pubDate>Thu, 16 Sep 2021 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20210916-elixir-environment-variables/</link>
+          <guid>https://mbuffa.github.io/articles/20210916-elixir-environment-variables/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20210916-elixir-environment-variables/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;An environment variable is a widespread programming concept that refers to a value coming from the system, being read by an application at runtime. Elixir can be a bit surprising on that aspect for beginners.&lt;&#x2F;p&gt;
 &lt;p&gt;This is one way of accessing an environment variable:&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&amp;gt; HELLO=world iex
@@ -490,26 +394,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;&#x2F;ul&gt;
 &lt;p&gt;There&#x27;s actually another exception you may come across in older Elixir projects, which is &lt;code&gt;config&#x2F;releases.exs&lt;&#x2F;code&gt;, used until Elixir v1.11.0.&lt;&#x2F;p&gt;
 &lt;p&gt;Finally, checking both &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;elixir&#x2F;config-and-releases.html&quot;&gt;Elixir&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;mix&#x2F;1.18.4&#x2F;Mix.Tasks.Release.html&quot;&gt;Mix&lt;&#x2F;a&gt; documentations for your versions is always a good idea.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Kubernetes: Using Environment Variables with Kustomize</title>
-        <published>2021-07-20T00:00:00+00:00</published>
-        <updated>2021-07-20T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/"/>
-        <id>https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Kubernetes: Using Environment Variables with Kustomize</title>
+          <pubDate>Tue, 20 Jul 2021 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/</link>
+          <guid>https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20210720-kustomize-environment-variables/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;Using environment variables in your Kubernetes manifests built with Kustomize may be a bit tedious, but I recently found how you can actually use some.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;&#x2F;h2&gt;
 &lt;p&gt;I won&#x27;t go into too much details about Kubernetes manifests, or deploying on Kubernetes in general. I learned as I went, mostly by looking at examples and documentation. If you&#x27;re looking for tutorials or courses, there are pretty good resources available for free. &lt;a href=&quot;https:&#x2F;&#x2F;prefetch.net&#x2F;blog&#x2F;2019&#x2F;10&#x2F;16&#x2F;the-beginners-guide-to-creating-kubernetes-manifests&#x2F;&quot;&gt;This great article&lt;&#x2F;a&gt; gives some very useful tips to learn by doing, and there&#x27;s even &lt;a href=&quot;https:&#x2F;&#x2F;kubernetes.io&#x2F;docs&#x2F;tutorials&#x2F;kubernetes-basics&#x2F;deploy-app&#x2F;deploy-interactive&#x2F;&quot;&gt;an official interactive tutorial&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
@@ -645,26 +538,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;p&gt;Tada!&lt;&#x2F;p&gt;
 &lt;p&gt;Kustomize has a predefined list of fields it&#x27;ll actually replace corresponding patterns with environment variables. You can check this list &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kubernetes-sigs&#x2F;kustomize&#x2F;blob&#x2F;a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce&#x2F;api&#x2F;konfig&#x2F;builtinpluginconsts&#x2F;varreference.go&quot;&gt;directly in the repository&lt;&#x2F;a&gt;. If you want to do variable substitution in a field that is not in that list, you can follow the section &lt;code&gt;I want to put $VAR in some (currently disallowed) field&lt;&#x2F;code&gt; &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;kubernetes-sigs&#x2F;kustomize&#x2F;issues&#x2F;2052&quot;&gt;on this Github issue&lt;&#x2F;a&gt;, which points to the aforementioned source file.&lt;&#x2F;p&gt;
 &lt;p&gt;Hope this will help some people stumbling around here.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Postgres: Filtering with COUNT()</title>
-        <published>2021-07-06T00:00:00+00:00</published>
-        <updated>2021-07-06T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/"/>
-        <id>https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Postgres: Filtering with COUNT()</title>
+          <pubDate>Tue, 06 Jul 2021 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/</link>
+          <guid>https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20210706-postgres-filtering-with-count/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;Doing a COUNT() in SQL is pretty simple, but sometimes you want to return several counts at once with different filters. To achieve this, you would typically do multiple queries, &lt;a href=&quot;https:&#x2F;&#x2F;www.postgresql.org&#x2F;docs&#x2F;9.1&#x2F;queries-with.html&quot;&gt;optionally with a &lt;code&gt;WITH&lt;&#x2F;code&gt; query&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
 &lt;p&gt;Thankfully, there&#x27;s a way simpler way to do this in PostgreSQL, with &lt;code&gt;FILTER&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
 &lt;p&gt;Let&#x27;s consider we have a simple table (&lt;code&gt;racoons&lt;&#x2F;code&gt;) with a few fields, and we want to return a &lt;code&gt;caretaker_id&lt;&#x2F;code&gt;, the total number of racoons taken care by this person, and the number of racoons that have been released to the wilds.&lt;&#x2F;p&gt;
@@ -676,26 +558,15 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;GROUP BY &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;r&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;caretaker_id&lt;&#x2F;span&gt;&lt;span&gt;;
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kb.objectrocket.com&#x2F;postgresql&#x2F;how-to-use-the-filter-clause-in-postgresql-881&quot;&gt;This page&lt;&#x2F;a&gt; has a bit more information, especially if you&#x27;re working with a PostgreSQL database prior to 9.4.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Elixir: Troubleshooting Mnesia</title>
-        <published>2020-11-11T00:00:00+00:00</published>
-        <updated>2020-11-11T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/"/>
-        <id>https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Elixir: Troubleshooting Mnesia</title>
+          <pubDate>Wed, 11 Nov 2020 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/</link>
+          <guid>https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20201111-elixir-troubleshooting-mnesia/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;Mnesia is a powerful DBMS implemented in Erlang which you can use in your Elixir application.&lt;&#x2F;p&gt;
 &lt;p&gt;Why would you want to do that?&lt;&#x2F;p&gt;
 &lt;ul&gt;
@@ -1229,26 +1100,15 @@ that we only want to reference it in our release, to avoid :mnesia creating a sc
 &lt;p&gt;Note that there&#x27;s also the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;beardedeagle&#x2F;mnesiac&quot;&gt;Mnesiac&lt;&#x2F;a&gt; library, which is an Elixir layer on top of Mnesia. I prefer using low-level libraries directly, at least for learning, but it might be a good fit for production though.&lt;&#x2F;p&gt;
 &lt;p&gt;Last, but not least, I &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mbuffa&#x2F;elixir-mnesia-example&quot;&gt;created a repository&lt;&#x2F;a&gt; with a small and clear commit history, in case you want to tinker with it.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;em&gt;Et voilà.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Elixir: Clustering on Kubernetes</title>
-        <published>2020-10-21T00:00:00+00:00</published>
-        <updated>2020-10-21T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/"/>
-        <id>https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Elixir: Clustering on Kubernetes</title>
+          <pubDate>Wed, 21 Oct 2020 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/</link>
+          <guid>https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20201022-elixir-clustering-on-kubernetes/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;When developing Elixir applications, you may want to create a cluster of Erlang nodes at some point, for example, to provide redundancy, high availability,or to share a global state on the cluster (with Mnesia, for example) without hitting an outside DBMS.&lt;&#x2F;p&gt;
 &lt;p&gt;This can be easily achieved with &lt;code&gt;libcluster&lt;&#x2F;code&gt;. As you can see &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;libcluster&#x2F;readme.html&quot;&gt;in the docs&lt;&#x2F;a&gt;, it supports multiple strategies.&lt;&#x2F;p&gt;
 &lt;p&gt;I&#x27;ll assume you want to deploy to a Kubernetes cluster, and I&#x27;ll be covering this strategy only (&lt;code&gt;Cluster.Strategy.Kubernetes&lt;&#x2F;code&gt;) for simplicity sake, but you may find some bits interesting even if that doesn&#x27;t apply to your case. I&#x27;ll also assume that you already have a working basic Kubernetes deployment setup.&lt;&#x2F;p&gt;
@@ -1421,26 +1281,15 @@ Since at least its version &lt;code&gt;1.10&lt;&#x2F;code&gt;, Mix can handle th
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
 &lt;p&gt;This article is a bit long and rough around the edges, but it should give you a better understanding on how to deploy Elixir applications as a cluster.&lt;&#x2F;p&gt;
 &lt;p&gt;I strongly suggest that you follow the official documentations of Elixir, Erlang and libraries. The snippets I included may get outdated over time, though I don&#x27;t expect the process to be easier than it currently is :)&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Developing on WSL</title>
-        <published>2020-08-16T00:00:00+00:00</published>
-        <updated>2020-08-16T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20200816-developing-on-wsl/"/>
-        <id>https://mbuffa.github.io/articles/20200816-developing-on-wsl/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20200816-developing-on-wsl/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Developing on WSL</title>
+          <pubDate>Sun, 16 Aug 2020 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20200816-developing-on-wsl/</link>
+          <guid>https://mbuffa.github.io/articles/20200816-developing-on-wsl/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20200816-developing-on-wsl/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;The latest versions of Windows 10 have seen the maturation of WSL, the Windows Subsystem for Linux. Basically, it allows installing a Linux distribution that&#x27;ll use a special Linux kernel running &quot;nativaly&quot; on Windows 10. It doesn&#x27;t run on a virtualized environment, although it seems to use a Hyper-V volume for storage.&lt;&#x2F;p&gt;
 &lt;p&gt;Oh, and you can also use their shiny new &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;terminal&quot;&gt;Terminal&lt;&#x2F;a&gt; for ultimate ease of use.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;the-good&quot;&gt;The Good&lt;&#x2F;h2&gt;
@@ -1476,26 +1325,15 @@ And sure, there&#x27;s bugtracking through Github, but I think WSL as a whole is
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
 &lt;p&gt;I&#x27;m very satisfied with WSL and its related developments so far. My primary reason for using it is the need for good UI and accessibility tools, because I have an extremely low vision (but I&#x27;ll run into details in a future article) but it&#x27;s also really satisfying to leverage a good CPU (in that case, a Ryzen 3800X) instead of the traditional coughing overpriced Macbook Pro any startup company grants its employees with.&lt;&#x2F;p&gt;
 &lt;p&gt;And of course, you can launch a game or two when you need a break.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Rails: Deprecate an ActiveRecord attribute</title>
-        <published>2020-08-15T00:00:00+00:00</published>
-        <updated>2020-08-15T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              mbuffa@users.noreply.github.com (Maxime Buffa)
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/"/>
-        <id>https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/</id>
-        
-        <content type="html" xml:base="https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+</description>
+      </item>
+      <item>
+          <title>Rails: Deprecate an ActiveRecord attribute</title>
+          <pubDate>Sat, 15 Aug 2020 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/</link>
+          <guid>https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20200815-rails-deprecate-activerecord-attribute/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
 &lt;p&gt;When working on a growing application relying on a database, it is not uncommon to have a data model that collects dust: some of its data may become obsolete, but you may not want to delete it just yet, because you may need to migrate it, prepare its deletion later or keep it as history.&lt;&#x2F;p&gt;
 &lt;p&gt;You might want to flag this data as deprecated, so that no one (including you) would rely on this no longer updated or relevant data.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;how&quot;&gt;How&lt;&#x2F;h2&gt;
@@ -1530,7 +1368,7 @@ And sure, there&#x27;s bugtracking through Github, but I think WSL as a whole is
 &lt;&#x2F;span&gt;&lt;span&gt;owner_id is deprecated, please favor Racoon#caretaker_id
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;&lt;em&gt;Et voilà.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-</feed>
+</description>
+      </item>
+    </channel>
+</rss>
