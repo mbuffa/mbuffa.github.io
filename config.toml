@@ -1,8 +1,10 @@
 # title = ""
-# zola_version = 0.19.2
+# zola_version = 0.21.0
 base_url = "https://mbuffa.github.io"
+author = "mbuffa@users.noreply.github.com (Maxime Buffa)"
 compile_sass = true
 generate_feeds = true
+feed_filenames = ["atom.xml", "rss.xml"]
 build_search_index = true
 
 taxonomies = [

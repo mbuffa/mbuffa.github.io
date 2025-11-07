@@ -26,6 +26,19 @@
     {% if page.taxonomies["tags"] %}
     {{ tags::tags(terms=page.taxonomies["tags"]) }}
     {% endif %}
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom Feed
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS Feed
+      </a>
+    </p>
   </header>
 
   {% if page.extra.wasm is defined %}

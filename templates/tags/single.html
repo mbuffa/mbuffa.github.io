@@ -2,6 +2,6 @@
 {% import "articles/_articles.html" as macros %}
 
 {% block content %}
-{% set term_title = "Pages tagged with '" ~ term.name ~ "'" %}
-{{ macros::articles_list(title=term_title, subtitle="", list=term.pages) }}
+  {% set term_title = "Pages tagged with '" ~ term.name ~ "'" %}
+  {{ macros::articles_list(title=term_title, subtitle="", list=term.pages) }}
 {% endblock content %}
