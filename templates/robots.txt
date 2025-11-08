@@ -69,4 +69,4 @@ Disallow: /
 User-agent: *
 Disallow:
 
-Sitemap: https://mbuffa.github.io/sitemap.xml
+Sitemap: {{ get_url(path="sitemap.xml") }}
