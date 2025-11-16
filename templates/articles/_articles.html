@@ -47,6 +47,8 @@
           {{ badge_macro::badge(href="/tags/tutorial", title="Tutorial") }}
           {% elif "opinion" in list_item.taxonomies["tags"] %}
           {{ badge_macro::badge(href="/tags/opinion", title="Opinion") }}
+          {% elif "blog" in list_item.taxonomies["tags"] %}
+          {{ badge_macro::badge(href="/tags/blog", title="Blog") }}
           {% endif %}
         </td>
       </tr>
