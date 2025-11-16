@@ -1,0 +1,424 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+  <title>Blog: Hacking my Linux server at home - Part 1</title>
+  
+
+  
+  
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap"
+    rel="stylesheet">
+
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+
+  
+    <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
+  
+
+  
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="https://mbuffa.github.io/rss.xml">
+  
+
+  <meta name="description" content="It is not the destination that matters, it is the journey." />
+</head>
+
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateGiscusStyle(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+            break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+            break;
+
+          default:
+            activeMode = "dark";
+            break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateGiscusStyle(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+
+  <main class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white bg-blue-900 dark:bg-transparent
+    ">
+    <div class="w-228 max-w-screen m-auto p-4 bg-slate-200 dark:bg-transparent">
+      <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul
+      class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+      
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;">Home</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;articles">Articles</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;demos">Demos</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;tags">Tags</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;contact">Contact</a>
+      </li>
+      
+      <li class="ml-auto">
+        <a class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
+            name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
+            name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+      <div class="
+        w-11/12 m-auto mt-2 p-4
+        flex justify-center
+        flex-col flex-wrap
+        lg:flex-row lg:flex-nowrap
+        dark:bg-black dark:bg-opacity-60
+    ">
+        
+
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/#goals" title="Goals">
+  Goals
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/#the-hardware" title="The Hardware">
+  The Hardware
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/#the-software" title="The Software">
+  The Software
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/#setting-things-up" title="Setting things up">
+  Setting things up
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Blog: Hacking my Linux server at home - Part 1
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2025-11-10
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/blog">
+    blog
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/server">
+    server
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/sysadmin">
+    sysadmin
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/dev-ops">
+    dev-ops
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/k8s">
+    k8s
+  </a>
+  
+</p>
+
+    
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom Feed
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS Feed
+      </a>
+    </p>
+  </header>
+
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
+<p>This summer, I went back to hacking my own server at home for fun and educational purposes, and I wanted to start a blog to share the goals, the highs and lows, the ruminations and the moments of great fulfillment.</p>
+<h2 id="goals">Goals</h2>
+<p>My goals with this small project are:</p>
+<ul>
+<li>To have my own software "forge" and Kubernetes cluster, on which to deploy my pre-alpha apps; basically, I want a cheap staging environment.</li>
+<li>To get back to sysadmin and devops and tinker on some software I really want to try.</li>
+<li>To have a cheaper, and, I hope, more reliable alternative to some online providers.</li>
+</ul>
+<h2 id="the-hardware">The Hardware</h2>
+<p>From, maybe, 2009 to 2014, I managed a small server at my parents house. It wasn't doing much, and I had picked a cubic Lian-Li case of a smaller frame (ITX or micro-ATX, I don't remember exactly which one that was). This server would act as a file storage server, a Bittorrent client, and, occasionally, a Minecraft server, although the performance wasn't that great.</p>
+<p>This server was made a bit redundant when I finally acquired a (Synology) NAS, which I still use to this day, with two 2TB hard disk drives mounted in RAID-1. Now that I think of it, those disks may need to be replaced, but RAID-1 ensures a minimum level of security.</p>
+<p>For my new setup, I decided to go for a used Thinkcentre small PC. This may be the first time I buy used hardware, as I usually want my devices to be spot-free, especially for mouses, keyboards, cases and core components (like CPUs and GPUs), but I figured I wouldn't mind this much for a server, especially considering the fact that it came with a brand new NVME (I bought from a reseller). Also, I favored that option rather than buying extra cheap hardware from Aliexpress, or full-blown $3000 rack servers. I do not quite need this war equipment just yet :)</p>
+<p>I would have went for an ARM CPU if I have had the possibility, but this wasn't really in the same budget target (I paid roughly 180 EUR for the Thinkcentre). That Ryzen tech will be good enough for a while.</p>
+<h2 id="the-software">The Software</h2>
+<p>I went for Arch Linux for the OS. I used Debian, then Ubuntu for a couple of years before switching to Gentoo, and finally Arch around 2009. Arch combines the benefits of a rolling release OS, without having the need to recompile all of your OS when glibc gets upgraded (hello Gentoo).</p>
+<p>Using a rolling release OS might not be wise for a server, but I had a few issues with migrating "regular" setups from one LTS version to another one, and in my experience, the Arch Linux website always mentions breaking changes, so you can almost always repair those small issues before shutting down your machine.</p>
+<p>There have been a couple of new distributions more recently though. I typically like to use Alpine a lot for containers images, but I didn't believe its UX would be that great for a "long-lived" server.</p>
+<p>There also have been a couple of Arch derivatives that popped up, but I'd rather tinker on user-level software rather than wondering why my Kernel stopped working for no reason. Also, Arch tends (or tended?) to be <em>minimalistic</em>, meaning that packaged software often do not vary that much compared to tarballs distributed by the software itself. Also, Arch's wiki has the reputation to be one of the best in the Linux universe.</p>
+<h2 id="setting-things-up">Setting things up</h2>
+<p>So, after creating a bootable USB drive and connecting my small PC with a keyboard, I ended up following the Arch Handbook I followed a decade ago. It went smooth, apart from a tiny obstacle I encountered quite early, at the bootloader prompt.</p>
+<p>Around 2010, if I remember correctly, the Linux kernel gained framebuffer support for the TTY. This meant support for wide resolutions, instead of the legacy default (which I believe was 800x600 pixels). This made the terminal look much better, but it also made it completely unreadable for me.</p>
+<p>A simple solution for this issue is to simply edit the bootloader command with a shortcut (was it <code>Tab</code> or <code>;</code> or <code>,</code>?) and append <code>video=800x600</code> to the kernel arguments. This wasn't pretty on a 21:9 screen, but at least I could read.</p>
+<p>The initial setup was pretty straightforward, disk partitioning was kept very simple, with a root and swap partition, along the usual GPT partition that you have to setup to boot.
+I followed the Arch handbook, but also asked a LLM to make me a summary for setting up the network, correctly set up locales, things like that. I'm not quite used to the newer <code>ip addr</code> commands yet (I was used to <code>ipconfig</code>) and I wanted to see how a LLM would fare. It went well.</p>
+<p>I quickly finished the initial setup, which was involving:</p>
+<ul>
+<li>Having the server run on both WLAN and Ethernet, which a permanent DHCP-attributed IP address.</li>
+<li>Having a SSH server up and running.</li>
+<li>Having a Gitea server to host my most <em>precious</em> source codes.</li>
+<li>Having a PostgreSQL database server for my projects (and Gitea) accessible on my local network.</li>
+</ul>
+<p>I won't paste all the commands I used here, but the setup went pretty well. You may not know Gitea: this is an alternative to Gitlab, written in Go. It is still a bit less mature than Gitlab, but it consumes much less memory, is faster, and almost 100% compatible with Github Actions workflow files. Nice! I'll be able to run both Github and Gitea CIs and compare :)</p>
+<p>The PostgreSQL setup was pretty straightforward as well, even though I'm not a bit fan of using a database installed with a system package: when you update that package, you typically have to migrate your owl database t othe new format. You probably want to dump your old database before updating then, but this is a bit tedious to do.</p>
+<p>Arch provides a legacy package for this purpose, eg. when upgrading from PG 17 to 18, you would be able to install PG 17 binaries in your system to use PG's internal migration tool.</p>
+<p>But, to be honest, I'll eventually run Postgres in its own environment eventually, probably in a container so that I can swap binaries at will, with a Docker volume exposing the data folder that I'll be able to migrate easily. This will prevent me from breaking my database when running system updates.</p>
+<p>With all that setup, I was able to start pushing my projects to my server. In my next post, I'll detail how I configured my own Gitea CI to be able to run tests, and to deploy on my Kubernetes cluster using Minikube :)</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+</article>
+
+      </div>
+
+      <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written by Maxime Buffa with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://www.getzola.org/" target="_blank">Zola</a> and <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/"
+      target="_blank">Tailwind</a>
+  </span>
+</footer>
+    </div>
+    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link.
+    <br>
+  </main>
+
+  <!-- Heap Analytics loader -->
+    <script type="text/javascript">
+      window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
+      heap.load("4008293954");
+    </script>
+    <script
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+    <script type="module"
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+
+</html>

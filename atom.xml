@@ -4,8 +4,64 @@
     <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2025-11-07T00:00:00+00:00</updated>
+    <updated>2025-11-10T00:00:00+00:00</updated>
     <id>https://mbuffa.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Blog: Hacking my Linux server at home - Part 1</title>
+        <published>2025-11-10T00:00:00+00:00</published>
+        <updated>2025-11-10T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              mbuffa@users.noreply.github.com (Maxime Buffa)
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/"/>
+        <id>https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;This summer, I went back to hacking my own server at home for fun and educational purposes, and I wanted to start a blog to share the goals, the highs and lows, the ruminations and the moments of great fulfillment.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;goals&quot;&gt;Goals&lt;&#x2F;h2&gt;
+&lt;p&gt;My goals with this small project are:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;To have my own software &quot;forge&quot; and Kubernetes cluster, on which to deploy my pre-alpha apps; basically, I want a cheap staging environment.&lt;&#x2F;li&gt;
+&lt;li&gt;To get back to sysadmin and devops and tinker on some software I really want to try.&lt;&#x2F;li&gt;
+&lt;li&gt;To have a cheaper, and, I hope, more reliable alternative to some online providers.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;the-hardware&quot;&gt;The Hardware&lt;&#x2F;h2&gt;
+&lt;p&gt;From, maybe, 2009 to 2014, I managed a small server at my parents house. It wasn&#x27;t doing much, and I had picked a cubic Lian-Li case of a smaller frame (ITX or micro-ATX, I don&#x27;t remember exactly which one that was). This server would act as a file storage server, a Bittorrent client, and, occasionally, a Minecraft server, although the performance wasn&#x27;t that great.&lt;&#x2F;p&gt;
+&lt;p&gt;This server was made a bit redundant when I finally acquired a (Synology) NAS, which I still use to this day, with two 2TB hard disk drives mounted in RAID-1. Now that I think of it, those disks may need to be replaced, but RAID-1 ensures a minimum level of security.&lt;&#x2F;p&gt;
+&lt;p&gt;For my new setup, I decided to go for a used Thinkcentre small PC. This may be the first time I buy used hardware, as I usually want my devices to be spot-free, especially for mouses, keyboards, cases and core components (like CPUs and GPUs), but I figured I wouldn&#x27;t mind this much for a server, especially considering the fact that it came with a brand new NVME (I bought from a reseller). Also, I favored that option rather than buying extra cheap hardware from Aliexpress, or full-blown $3000 rack servers. I do not quite need this war equipment just yet :)&lt;&#x2F;p&gt;
+&lt;p&gt;I would have went for an ARM CPU if I have had the possibility, but this wasn&#x27;t really in the same budget target (I paid roughly 180 EUR for the Thinkcentre). That Ryzen tech will be good enough for a while.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-software&quot;&gt;The Software&lt;&#x2F;h2&gt;
+&lt;p&gt;I went for Arch Linux for the OS. I used Debian, then Ubuntu for a couple of years before switching to Gentoo, and finally Arch around 2009. Arch combines the benefits of a rolling release OS, without having the need to recompile all of your OS when glibc gets upgraded (hello Gentoo).&lt;&#x2F;p&gt;
+&lt;p&gt;Using a rolling release OS might not be wise for a server, but I had a few issues with migrating &quot;regular&quot; setups from one LTS version to another one, and in my experience, the Arch Linux website always mentions breaking changes, so you can almost always repair those small issues before shutting down your machine.&lt;&#x2F;p&gt;
+&lt;p&gt;There have been a couple of new distributions more recently though. I typically like to use Alpine a lot for containers images, but I didn&#x27;t believe its UX would be that great for a &quot;long-lived&quot; server.&lt;&#x2F;p&gt;
+&lt;p&gt;There also have been a couple of Arch derivatives that popped up, but I&#x27;d rather tinker on user-level software rather than wondering why my Kernel stopped working for no reason. Also, Arch tends (or tended?) to be &lt;em&gt;minimalistic&lt;&#x2F;em&gt;, meaning that packaged software often do not vary that much compared to tarballs distributed by the software itself. Also, Arch&#x27;s wiki has the reputation to be one of the best in the Linux universe.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;setting-things-up&quot;&gt;Setting things up&lt;&#x2F;h2&gt;
+&lt;p&gt;So, after creating a bootable USB drive and connecting my small PC with a keyboard, I ended up following the Arch Handbook I followed a decade ago. It went smooth, apart from a tiny obstacle I encountered quite early, at the bootloader prompt.&lt;&#x2F;p&gt;
+&lt;p&gt;Around 2010, if I remember correctly, the Linux kernel gained framebuffer support for the TTY. This meant support for wide resolutions, instead of the legacy default (which I believe was 800x600 pixels). This made the terminal look much better, but it also made it completely unreadable for me.&lt;&#x2F;p&gt;
+&lt;p&gt;A simple solution for this issue is to simply edit the bootloader command with a shortcut (was it &lt;code&gt;Tab&lt;&#x2F;code&gt; or &lt;code&gt;;&lt;&#x2F;code&gt; or &lt;code&gt;,&lt;&#x2F;code&gt;?) and append &lt;code&gt;video=800x600&lt;&#x2F;code&gt; to the kernel arguments. This wasn&#x27;t pretty on a 21:9 screen, but at least I could read.&lt;&#x2F;p&gt;
+&lt;p&gt;The initial setup was pretty straightforward, disk partitioning was kept very simple, with a root and swap partition, along the usual GPT partition that you have to setup to boot.
+I followed the Arch handbook, but also asked a LLM to make me a summary for setting up the network, correctly set up locales, things like that. I&#x27;m not quite used to the newer &lt;code&gt;ip addr&lt;&#x2F;code&gt; commands yet (I was used to &lt;code&gt;ipconfig&lt;&#x2F;code&gt;) and I wanted to see how a LLM would fare. It went well.&lt;&#x2F;p&gt;
+&lt;p&gt;I quickly finished the initial setup, which was involving:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Having the server run on both WLAN and Ethernet, which a permanent DHCP-attributed IP address.&lt;&#x2F;li&gt;
+&lt;li&gt;Having a SSH server up and running.&lt;&#x2F;li&gt;
+&lt;li&gt;Having a Gitea server to host my most &lt;em&gt;precious&lt;&#x2F;em&gt; source codes.&lt;&#x2F;li&gt;
+&lt;li&gt;Having a PostgreSQL database server for my projects (and Gitea) accessible on my local network.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;I won&#x27;t paste all the commands I used here, but the setup went pretty well. You may not know Gitea: this is an alternative to Gitlab, written in Go. It is still a bit less mature than Gitlab, but it consumes much less memory, is faster, and almost 100% compatible with Github Actions workflow files. Nice! I&#x27;ll be able to run both Github and Gitea CIs and compare :)&lt;&#x2F;p&gt;
+&lt;p&gt;The PostgreSQL setup was pretty straightforward as well, even though I&#x27;m not a bit fan of using a database installed with a system package: when you update that package, you typically have to migrate your owl database t othe new format. You probably want to dump your old database before updating then, but this is a bit tedious to do.&lt;&#x2F;p&gt;
+&lt;p&gt;Arch provides a legacy package for this purpose, eg. when upgrading from PG 17 to 18, you would be able to install PG 17 binaries in your system to use PG&#x27;s internal migration tool.&lt;&#x2F;p&gt;
+&lt;p&gt;But, to be honest, I&#x27;ll eventually run Postgres in its own environment eventually, probably in a container so that I can swap binaries at will, with a Docker volume exposing the data folder that I&#x27;ll be able to migrate easily. This will prevent me from breaking my database when running system updates.&lt;&#x2F;p&gt;
+&lt;p&gt;With all that setup, I was able to start pushing my projects to my server. In my next post, I&#x27;ll detail how I configured my own Gitea CI to be able to run tests, and to deploy on my Kubernetes cluster using Minikube :)&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>LLM: Stop using Claude Code</title>
         <published>2025-11-07T00:00:00+00:00</published>

@@ -63,6 +63,10 @@
         <lastmod>2025-11-07</lastmod>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/articles/20251110-blog-server-hacking-part-one/</loc>
+        <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/contact/</loc>
     </url>
     <url>
@@ -76,10 +80,16 @@
         <loc>https://mbuffa.github.io/tags/</loc>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/tags/blog/</loc>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/claude-code/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/demo/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/dev-ops/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/dev/</loc>
@@ -115,7 +125,13 @@
         <loc>https://mbuffa.github.io/tags/rails/</loc>
     </url>
     <url>
+        <loc>https://mbuffa.github.io/tags/server/</loc>
+    </url>
+    <url>
         <loc>https://mbuffa.github.io/tags/software-development/</loc>
+    </url>
+    <url>
+        <loc>https://mbuffa.github.io/tags/sysadmin/</loc>
     </url>
     <url>
         <loc>https://mbuffa.github.io/tags/tip/</loc>
