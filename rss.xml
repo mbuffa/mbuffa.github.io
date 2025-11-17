@@ -7,7 +7,27 @@
       <generator>Zola</generator>
       <language>en</language>
       <atom:link href="https://mbuffa.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-      <lastBuildDate>Mon, 10 Nov 2025 00:00:00 +0000</lastBuildDate>
+      <lastBuildDate>Mon, 17 Nov 2025 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>Elixir: Rate limit your LiveView forms</title>
+          <pubDate>Mon, 17 Nov 2025 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20251117-elixir-live-view-debounce/</link>
+          <guid>https://mbuffa.github.io/articles/20251117-elixir-live-view-debounce/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20251117-elixir-live-view-debounce/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;Not so long ago, on a Friday morning, while I was peacefully making some coffee and preparing for a relaxed day after weeks of crunch, I received a strange message that would eventually transform this day into a totally different experience.&lt;&#x2F;p&gt;
+&lt;p&gt;The feedback was about a specific Live View form that was behaving weirdly, and the phenomenon was supposedly new: using the form was causing some data to be lost, multiple selected items would be erased, and so on.&lt;&#x2F;p&gt;
+&lt;p&gt;I immediately thought about a bad connectivity issue but couldn&#x27;t reproduce the issue on our test environment, even with the integrated browser throttling tools.&lt;&#x2F;p&gt;
+&lt;p&gt;But I eventually made it. With a VPN, connected to servers far away from my servers&#x27; location.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;issue&quot;&gt;Issue&lt;&#x2F;h2&gt;
+&lt;p&gt;Simply put, the culprit was the form itself, and how it was handling validation: on each key stroke. That was causing issues when the user experienced some connection latency (even with a fast connection, because of the delay that may happen between HTTP calls), and so LiveView&#x27;s frontend part was overloading the backend, causing various behaviors, such as a flashing UI, unresponsive widgets, or even lost data.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;&#x2F;h2&gt;
+&lt;p&gt;I remembered encountering a similar situation with React, and this is honestly Frontend Development 101: you have to throttle or debounce your validations, and you don&#x27;t need to execute them while the user isn&#x27;t done typing their name or their phone number anyway.&lt;&#x2F;p&gt;
+&lt;p&gt;Since its early days, &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;phoenix_live_view&#x2F;1.1.17&#x2F;bindings.html#rate-limiting-events-with-debounce-and-throttle&quot;&gt;LiveView provides an easy way to do that&lt;&#x2F;a&gt;. &lt;code&gt;phx-debounce&lt;&#x2F;code&gt; allows passing an integer value representing milliseconds, or &quot;blur&quot;, so that you can decide if you&#x27;ll trigger validation once the input loses focus, or after a varying period of time. &lt;code&gt;phx-throttle&lt;&#x2F;code&gt; does the same thing, except it emits an event on the first change before the rate limit.&lt;&#x2F;p&gt;
+&lt;p&gt;So, nothing revolutionary here, but you&#x27;ll probably want to check and optimize your LiveViews (and your components, and &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;nkezhaya&#x2F;live_phone&#x2F;pull&#x2F;169&quot;&gt;libraries&lt;&#x2F;a&gt;) &lt;em&gt;before&lt;&#x2F;em&gt; it gets used by thousands of people.&lt;&#x2F;p&gt;
+&lt;p&gt;Some days just make you feel you&#x27;re the cop being shot two days before retirement.&lt;&#x2F;p&gt;
+</description>
+      </item>
       <item>
           <title>Blog: Hacking my Linux server at home - Part 1</title>
           <pubDate>Mon, 10 Nov 2025 00:00:00 +0000</pubDate>

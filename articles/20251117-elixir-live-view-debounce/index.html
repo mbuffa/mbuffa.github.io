@@ -5,7 +5,7 @@
   
 
   
-  <title>Maxime Buffa</title>
+  <title>Elixir: Rate limit your LiveView forms</title>
   
 
   
@@ -30,7 +30,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS" href="https://mbuffa.github.io/rss.xml">
   
 
-  <meta name="description" content="My personal website with tips and rants." />
+  <meta name="description" content="Beware of back-and-forths in your Live Views" />
 </head>
 
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -207,84 +207,139 @@
         dark:bg-black dark:bg-opacity-60
     ">
         
-  
-  
-<article class="w-full">
-  <table class="w-full">
-    <thead>
-      <tr>
-        <th></th>
-        <th class="text-left">
-          <h1 class="m-2 p-2 inline-block font-bold text-2xl">Pages tagged with &#x27;phoenix&#x27;</h1>
-          <p class="m-2 p-2 inline-block font-normal dark:text-white text-black">
-            
-          </p>
-          <p class="m-2 p-2">
-            <a href="/atom.xml"
-              class="inline-block text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
-              title="Subscribe to Atom feed">
-              Atom
-            </a>
-            <span class="text-white">&middot;</span>
-            <a href="/rss.xml"
-              class="inline-block text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
-              title="Subscribe to RSS feed">
-              RSS
-            </a>
-          </p>
 
-        </th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
       
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2025-11-17</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/articles/20251117-elixir-live-view-debounce/">Elixir: Rate limit your LiveView forms</a>
-        </td>
-        <td>
-          
-          
-<span class="rounded-sm text-xs p-2 m-2
-  dark:bg-orange-500 dark:text-black
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251117-elixir-live-view-debounce/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251117-elixir-live-view-debounce/#issue" title="Issue">
+  Issue
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251117-elixir-live-view-debounce/#solution" title="Solution">
+  Solution
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Elixir: Rate limit your LiveView forms
+    </h1>
     
-"><a href="/tags/tip" title="Tip">Tip</a>
-</span>
-
-          
-        </td>
-      </tr>
-      
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2025-07-25</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/articles/20250725-live-view-session/">Elixir: Having multiple Live Views on the same page</a>
-        </td>
-        <td>
-          
-          
-<span class="rounded-sm text-xs p-2 m-2
-  dark:bg-orange-500 dark:text-black
+    <p class="subtitle">
+      Published on 2025-11-17
+    </p>
     
-"><a href="/tags/tutorial" title="Tutorial">Tutorial</a>
-</span>
+    
+    
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/tip">
+    tip
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/elixir">
+    elixir
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/phoenix">
+    phoenix
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/liveview">
+    liveview
+  </a>
+  
+</p>
 
-          
-        </td>
-      </tr>
-      
-    </tbody>
-  </table>
+    
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom Feed
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS Feed
+      </a>
+    </p>
+  </header>
+
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
+<p>Not so long ago, on a Friday morning, while I was peacefully making some coffee and preparing for a relaxed day after weeks of crunch, I received a strange message that would eventually transform this day into a totally different experience.</p>
+<p>The feedback was about a specific Live View form that was behaving weirdly, and the phenomenon was supposedly new: using the form was causing some data to be lost, multiple selected items would be erased, and so on.</p>
+<p>I immediately thought about a bad connectivity issue but couldn't reproduce the issue on our test environment, even with the integrated browser throttling tools.</p>
+<p>But I eventually made it. With a VPN, connected to servers far away from my servers' location.</p>
+<h2 id="issue">Issue</h2>
+<p>Simply put, the culprit was the form itself, and how it was handling validation: on each key stroke. That was causing issues when the user experienced some connection latency (even with a fast connection, because of the delay that may happen between HTTP calls), and so LiveView's frontend part was overloading the backend, causing various behaviors, such as a flashing UI, unresponsive widgets, or even lost data.</p>
+<h2 id="solution">Solution</h2>
+<p>I remembered encountering a similar situation with React, and this is honestly Frontend Development 101: you have to throttle or debounce your validations, and you don't need to execute them while the user isn't done typing their name or their phone number anyway.</p>
+<p>Since its early days, <a href="https://hexdocs.pm/phoenix_live_view/1.1.17/bindings.html#rate-limiting-events-with-debounce-and-throttle">LiveView provides an easy way to do that</a>. <code>phx-debounce</code> allows passing an integer value representing milliseconds, or "blur", so that you can decide if you'll trigger validation once the input loses focus, or after a varying period of time. <code>phx-throttle</code> does the same thing, except it emits an event on the first change before the rate limit.</p>
+<p>So, nothing revolutionary here, but you'll probably want to check and optimize your LiveViews (and your components, and <a href="https://github.com/nkezhaya/live_phone/pull/169">libraries</a>) <em>before</em> it gets used by thousands of people.</p>
+<p>Some days just make you feel you're the cop being shot two days before retirement.</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
 </article>
-
 
       </div>
 
