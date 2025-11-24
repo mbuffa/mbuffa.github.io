@@ -1,6 +1,6 @@
 +++
 title = "Elixir: Why your LiveViews `mount/3` shall be minimal and fast"
-description = "Yeah, don't do it"
+description = "You would regret not doing so"
 date = 2025-11-24
 [taxonomies]
 tags = ["tip", "elixir", "phoenix", "liveview"]
