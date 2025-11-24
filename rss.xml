@@ -7,7 +7,25 @@
       <generator>Zola</generator>
       <language>en</language>
       <atom:link href="https://mbuffa.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-      <lastBuildDate>Mon, 17 Nov 2025 00:00:00 +0000</lastBuildDate>
+      <lastBuildDate>Mon, 24 Nov 2025 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>Elixir: Why your LiveViews `mount&#x2F;3` shall be minimal and fast</title>
+          <pubDate>Mon, 24 Nov 2025 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20251124-elixir-live-view-mount-blocking-ops/</link>
+          <guid>https://mbuffa.github.io/articles/20251124-elixir-live-view-mount-blocking-ops/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20251124-elixir-live-view-mount-blocking-ops/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;There&#x27;s one thing that you may do when developping your first LiveView apps (or developping applications in the early days of LV) that may have important consequences in production, or even during development, which may also become a bit hard to track down.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;phoenix_live_view&#x2F;Phoenix.LiveView.html&quot;&gt;LiveView documentation&lt;&#x2F;a&gt; is excellent and easy to read, and there&#x27;s a good paragraph on async operations. But it may not stress out enough how having blocking operations in your &lt;code&gt;mount&#x2F;3&lt;&#x2F;code&gt; callback may be a very terrible idea.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;your-page-lifecycle&quot;&gt;Your page lifecycle&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;code&gt;mount&#x2F;3&lt;&#x2F;code&gt; is called two times: on your first page render, and another time when your socket gets connected, initially. Also, if your frontend disconnects and reconnects, &lt;code&gt;mount&#x2F;3&lt;&#x2F;code&gt; will be called again.&lt;&#x2F;p&gt;
+&lt;p&gt;So, let&#x27;s say you have a typical CRUD app, with a query that would fetch records on the index action, and doing that query in &lt;code&gt;mount&lt;&#x2F;code&gt;. Almost sounds harmless, right?&lt;&#x2F;p&gt;
+&lt;p&gt;But it would actually have a couple of effects.&lt;&#x2F;p&gt;
+&lt;p&gt;After a successful deployment, with a substantial amount of users connected, their LiveViews would try to reconnect to the newly deployed backends, may take a while to reconnect, freeze the UI meanwhile, or even end up in a timeout state. Also, navigations between pages would be much slower and probably noticeable.&lt;&#x2F;p&gt;
+&lt;p&gt;Also, in development, you would eventually trigger the code reloader, that would in turn kill and reset your current LiveView(s). potentially depleting your Ecto pool, and get a frozen UI that would eventually timeout, with a mysterious error in the JS logs (&lt;code&gt;Unable to join (timeout)&lt;&#x2F;code&gt;). It doesn&#x27;t take more than a few tabs open or several active LiveViews to trigger this situation with the default setup of 10 connections.&lt;&#x2F;p&gt;
+&lt;p&gt;Bottom line is: that particular callback should always be minimal, and you should always try to do things asynchronously as much as psosible. &lt;code&gt;start_async&#x2F;3&lt;&#x2F;code&gt; and &lt;code&gt;assign_async&#x2F;3&lt;&#x2F;code&gt; are excellent ways to help you do that. And to be fair, this is not a nice to have. It should be mandatory for all production apps and as such, treated as a high priority flaw to address.&lt;&#x2F;p&gt;
+</description>
+      </item>
       <item>
           <title>Elixir: Rate limit your LiveView forms</title>
           <pubDate>Mon, 17 Nov 2025 00:00:00 +0000</pubDate>

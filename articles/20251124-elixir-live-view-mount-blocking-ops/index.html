@@ -5,7 +5,7 @@
   
 
   
-  <title>Maxime Buffa</title>
+  <title>Elixir: Why your LiveViews `mount&#x2F;3` shall be minimal and fast</title>
   
 
   
@@ -30,7 +30,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS" href="https://mbuffa.github.io/rss.xml">
   
 
-  <meta name="description" content="My personal website with tips and rants." />
+  <meta name="description" content="Yeah, don&#x27;t do it" />
 </head>
 
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -207,118 +207,125 @@
         dark:bg-black dark:bg-opacity-60
     ">
         
+
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251124-elixir-live-view-mount-blocking-ops/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251124-elixir-live-view-mount-blocking-ops/#your-page-lifecycle" title="Your page lifecycle">
+  Your page lifecycle
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Elixir: Why your LiveViews `mount&#x2F;3` shall be minimal and fast
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2025-11-24
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
   
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/tip">
+    tip
+  </a>
   
-<article class="w-full">
-  <table class="w-full">
-    <thead>
-      <tr>
-        <th></th>
-        <th class="text-left">
-          <h1 class="m-2 p-2 inline-block font-bold text-2xl">Pages tagged with &#x27;liveview&#x27;</h1>
-          <p class="m-2 p-2 inline-block font-normal dark:text-white text-black">
-            
-          </p>
-          <p class="m-2 p-2">
-            <a href="/atom.xml"
-              class="inline-block text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
-              title="Subscribe to Atom feed">
-              Atom
-            </a>
-            <span class="text-white">&middot;</span>
-            <a href="/rss.xml"
-              class="inline-block text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
-              title="Subscribe to RSS feed">
-              RSS
-            </a>
-          </p>
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/elixir">
+    elixir
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/phoenix">
+    phoenix
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/liveview">
+    liveview
+  </a>
+  
+</p>
 
-        </th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2025-11-24</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/articles/20251124-elixir-live-view-mount-blocking-ops/">Elixir: Why your LiveViews `mount&#x2F;3` shall be minimal and fast</a>
-        </td>
-        <td>
-          
-          
-<span class="rounded-sm text-xs p-2 m-2
-  dark:bg-orange-500 dark:text-black
     
-"><a href="/tags/tip" title="Tip">Tip</a>
-</span>
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom Feed
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS Feed
+      </a>
+    </p>
+  </header>
 
-          
-        </td>
-      </tr>
-      
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2025-11-17</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/articles/20251117-elixir-live-view-debounce/">Elixir: Rate limit your LiveView forms</a>
-        </td>
-        <td>
-          
-          
-<span class="rounded-sm text-xs p-2 m-2
-  dark:bg-orange-500 dark:text-black
-    
-"><a href="/tags/tip" title="Tip">Tip</a>
-</span>
+  
 
-          
-        </td>
-      </tr>
-      
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2025-07-25</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/articles/20250725-live-view-session/">Elixir: Having multiple Live Views on the same page</a>
-        </td>
-        <td>
-          
-          
-<span class="rounded-sm text-xs p-2 m-2
-  dark:bg-orange-500 dark:text-black
-    
-"><a href="/tags/tutorial" title="Tutorial">Tutorial</a>
-</span>
+  
 
-          
-        </td>
-      </tr>
-      
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2022-11-20</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/demos/20221120-astar-live-demo/">A* (A Star) Live Demo</a>
-        </td>
-        <td>
-          
-        </td>
-      </tr>
-      
-    </tbody>
-  </table>
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
+<p>There's one thing that you may do when developping your first LiveView apps (or developping applications in the early days of LV) that may have important consequences in production, or even during development, which may also become a bit hard to track down.</p>
+<p>The <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html">LiveView documentation</a> is excellent and easy to read, and there's a good paragraph on async operations. But it may not stress out enough how having blocking operations in your <code>mount/3</code> callback may be a very terrible idea.</p>
+<h2 id="your-page-lifecycle">Your page lifecycle</h2>
+<p><code>mount/3</code> is called two times: on your first page render, and another time when your socket gets connected, initially. Also, if your frontend disconnects and reconnects, <code>mount/3</code> will be called again.</p>
+<p>So, let's say you have a typical CRUD app, with a query that would fetch records on the index action, and doing that query in <code>mount</code>. Almost sounds harmless, right?</p>
+<p>But it would actually have a couple of effects.</p>
+<p>After a successful deployment, with a substantial amount of users connected, their LiveViews would try to reconnect to the newly deployed backends, may take a while to reconnect, freeze the UI meanwhile, or even end up in a timeout state. Also, navigations between pages would be much slower and probably noticeable.</p>
+<p>Also, in development, you would eventually trigger the code reloader, that would in turn kill and reset your current LiveView(s). potentially depleting your Ecto pool, and get a frozen UI that would eventually timeout, with a mysterious error in the JS logs (<code>Unable to join (timeout)</code>). It doesn't take more than a few tabs open or several active LiveViews to trigger this situation with the default setup of 10 connections.</p>
+<p>Bottom line is: that particular callback should always be minimal, and you should always try to do things asynchronously as much as psosible. <code>start_async/3</code> and <code>assign_async/3</code> are excellent ways to help you do that. And to be fair, this is not a nice to have. It should be mandatory for all production apps and as such, treated as a high priority flaw to address.</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
 </article>
-
 
       </div>
 
