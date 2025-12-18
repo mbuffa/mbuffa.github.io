@@ -1,0 +1,467 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+  <title>Elixir: LiveView + Stripe + Mobile</title>
+  
+
+  
+  
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap"
+    rel="stylesheet">
+
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+
+  
+    <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
+  
+
+  
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="https://mbuffa.github.io/rss.xml">
+  
+
+  <meta name="description" content="a few things you should be aware of" />
+</head>
+
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateGiscusStyle(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+            break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+            break;
+
+          default:
+            activeMode = "dark";
+            break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateGiscusStyle(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+
+  <main class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white bg-blue-900 dark:bg-transparent
+    ">
+    <div class="w-228 max-w-screen m-auto p-4 bg-slate-200 dark:bg-transparent">
+      <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul
+      class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+      
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;">Home</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;articles">Articles</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;demos">Demos</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;tags">Tags</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;contact">Contact</a>
+      </li>
+      
+      <li class="ml-auto">
+        <a class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
+            name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
+            name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+      <div class="
+        w-11/12 m-auto mt-2 p-4
+        flex justify-center
+        flex-col flex-wrap
+        lg:flex-row lg:flex-nowrap
+        dark:bg-black dark:bg-opacity-60
+    ">
+        
+
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/#setup" title="Setup">
+  Setup
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/#websockets-and-mobile" title="WebSockets. And Mobile.">
+  WebSockets. And Mobile.
+</a>
+
+        
+        <ol>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/#websockets" title="WebSockets">
+  WebSockets
+</a>
+</li>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/#and-mobile" title="And Mobile">
+  And Mobile
+</a>
+</li>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/#how-to-fix-this" title="How to fix this">
+  How to fix this
+</a>
+</li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/#get-me-hooked" title="Get me hooked">
+  Get me hooked
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/#stripe-specificities" title="Stripe specificities">
+  Stripe specificities
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Elixir: LiveView + Stripe + Mobile
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2025-12-18
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/tip">
+    tip
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/elixir">
+    elixir
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/phoenix">
+    phoenix
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/liveview">
+    liveview
+  </a>
+  
+</p>
+
+    
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom Feed
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS Feed
+      </a>
+    </p>
+  </header>
+
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
+<p>I recently had to integrate Stripe into an existing LiveView application used by a few customers in production. I was already quite accustomed to Stripe, but it was a while since I implemented a flow from frontend to backend, and the first time I had to do it inside a LiveView app, moreover, an app receiving async events from another service through a message broker.</p>
+<p>There were a few difficulties that appeared along the way, and I wanted to register and share them to anyone who would eventualy have to work on this kind of topics. Or to my future self.</p>
+<h2 id="setup">Setup</h2>
+<p>I won't be revealing too many details about the project itself, but the app was basically using LiveView, which was also receiving async events from another source. Stripe.js and a backend client to communicate with Stripe, as well as a custom Stripe form built with Stripe Elements. A couple of hooks from myself would be added to initialize the Stripe Elemments correctly and handle the back-and-forth between backend and frontend. Stripe uses both public and secret keys, because Stripe.js is only allowed to do a subset of the things your backend will be able to do, plus a few other things that only a frontend is supposed to do, like submitting card details to Stripe.</p>
+<h2 id="websockets-and-mobile">WebSockets. And Mobile.</h2>
+<p>Let's start with the latest and the most critical issue I encountered, since the app was already live when it was discovered, and had to be patched quickly.</p>
+<h3 id="websockets">WebSockets</h3>
+<p>LiveView relies on WebSockets, an active connection between a browser and a server that allows sending data both ways. LiveView uses it to send events to both sides, as well as DOM updates.</p>
+<p>One thing I knew was that LV does not handle slow clients very well, and even with a small page, latency can really kill your user experience, making your whole application very laggy and losing state with too much back-and-forth between your backend and frontend. This is not the end of the world though, and you can easily workaround this by debouncing your UI elements (eg. you do not send immediate key stroke events from your inputs), or use more simple JS-based UI components for everything that doesn't need to be tracked by the backend. I covered the former in a previous article, and I believe DaisyUI would be the perfect fit for the latter.</p>
+<h3 id="and-mobile">And Mobile</h3>
+<p>But the thing is that LiveView is also very affected by the unstable nature of mobile networks, so I knew I had some mitigation to put in place if users would wish, for example, to be able to use the app in, let's say, public transports.</p>
+<p>What I didn't know however, was that WebSockets can be very, very quickly killed by just swiping to another application, on older devices, every time. And that is probably aggravated by energy saving mode.</p>
+<p>So, what if you're on a payment form, entering your details, and switching to your banking app to authorize the transaction?</p>
+<p>Boom.</p>
+<h3 id="how-to-fix-this">How to fix this</h3>
+<p>The most reliable, yet not the most simple way to fix this issue was to implement a frontend cache using the browser's Session Storage. When going back to their browser, LiveView's JS would timeout, reconnect and create a new process (representing the LiveView) on the server. State would be cleared, but the cache stored in the Session Storage would be picked up, so that an additional Javascript hook would be able to send a message to the backend, do some transactional stuff, and redirect the user accordingly.</p>
+<p>It took me a bit (two full days) to get this right and to "integrate" that cache resolution in a reasonable way, making sure the UI wouldn't allow the user to take any additional action, and to make sure all edge cases were covered.</p>
+<p>LiveView is great, but I'm not sure it is the perfect fit for such an app, even though it probably simplifies things too when you have to also receive messages from a broker and propagate it to a UI. Also, admittedly, I know a couple of "regular" (React) frontend developers that wouldn't want to bother with mobile browsers, and redirect users to a native mobile app, so I think this is not a liked topic overall.</p>
+<p>If I had to rewrite or adapt it, I would probably try to be the most "low tech" as possible for this, with the possibility of replacing the sensitive parts ofd the app with plain Phoenix templates, and, maybe, Inertia + React.</p>
+<h2 id="get-me-hooked">Get me hooked</h2>
+<p>As a reminder, a basic LiveView hook look like this:</p>
+<pre data-lang="js" style="background-color:#2b303b;color:#c0c5ce;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#b48ead;">var </span><span style="color:#bf616a;">hook </span><span>= {
+</span><span>    </span><span style="color:#8fa1b3;">mounted</span><span>() {
+</span><span>        </span><span style="color:#65737e;">// You can execute some code here.
+</span><span>
+</span><span>        </span><span style="color:#bf616a;">this</span><span>.</span><span style="color:#96b5b4;">handleEvent</span><span>(&quot;</span><span style="color:#a3be8c;">event</span><span>&quot;, (</span><span style="color:#bf616a;">payload</span><span>) </span><span style="color:#b48ead;">=&gt; </span><span>{
+</span><span>            </span><span style="color:#65737e;">// You can send events back to the backend:
+</span><span>            </span><span style="color:#65737e;">// this.pushEvent(&quot;event-response&quot;, {})
+</span><span>        })
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>This is a "glue", and it is essential when you have to send messages between frontend and backend and when you need some form of JS interoperability (calling the browser API).</p>
+<p>But you have to keep in mind that your HTML gets rendered progressively, once your <code>mount/3</code> callback in your backend has already been called once. So, If you're, for example, sending a request from a server and waiting for the response to send it to your frontend using <code>push_event</code>, you may face a race condition situation: Your LiveView pushes an event, but your hook isn't ready to handle it yet, and it's lost into abyss.</p>
+<p>There are several things you can do to avoid that.</p>
+<p>First, you could try to place your hook "upper" in your templates. If your hook isn't tied to a specific page, that may be completely fine.</p>
+<p>Another thing I tried to do was to keep the hook where it was supposed to be, and added a "root" event listener on top of my Javascript, which would intercept the message, and try "pass" the event to the hook using a Promise, with a retry mechanism that would keep trying until the hook was ready.</p>
+<p>I felt very smart at first, but this was a very overkill, unreliable, and pretty stupid piece of code that I eventually just replaced with DOM.</p>
+<p>As a general advice, I think it is much better to rely on LiveView's capability to track changes on socket assigns, and to pass the relevant arguments you want to pass to your components by using <code>data-</code> attributes, or equivalent. For instance:</p>
+<pre data-lang="html" style="background-color:#2b303b;color:#c0c5ce;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#65737e;">&lt;!-- LiveView --&gt;
+</span><span>&lt;</span><span style="color:#bf616a;">div</span><span>&gt;
+</span><span>    &lt;.LiveComponent /&gt;
+</span><span>    &lt;.LiveComponent&gt;
+</span><span>        &lt;.LiveComponent /&gt; </span><span style="color:#65737e;">&lt;!-- You want to pass one of the LV assigns here. --&gt;
+</span><span>    &lt;/.LiveComponent&gt;
+</span><span>    &lt;.LiveComponent /&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">div</span><span>&gt;
+</span></code></pre>
+<p>You can just pass data using <code>data-</code> attributes. That's what they've been made for. You should use <code>push_event</code> only if you don't want the target component to not re-render completely.</p>
+<p>And this of course applies to events your LiveView would receive from Phoenix PubSub: just update your socket assigns, do not push an event while your DOM may not be ready.</p>
+<h2 id="stripe-specificities">Stripe specificities</h2>
+<p>One final issue I wanted to mention is that Stripe seems to set a couple of safety measures in place to protect the end-user. When you use Stripe Elements, you basically end up with one <code>&lt;iframe&gt;</code> for each form element you include (if you're not using a prebuilt form), and Stripe.js uses promises to make the communication happen between your Javascript, and the iframe's Javascript. Those promises can fail if you happen to, for example, put a loder modal with a high Z index.</p>
+<p>If you want to warn your user that a background processing is taking place, then you probably want to disable and alter the submit button, and avoid modals entirely.</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+</article>
+
+      </div>
+
+      <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written by Maxime Buffa with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://www.getzola.org/" target="_blank">Zola</a> and <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/"
+      target="_blank">Tailwind</a>
+  </span>
+</footer>
+    </div>
+    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link.
+    <br>
+  </main>
+
+  <!-- Heap Analytics loader -->
+    <script type="text/javascript">
+      window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
+      heap.load("4008293954");
+    </script>
+    <script
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+    <script type="module"
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+
+</html>

@@ -4,8 +4,81 @@
     <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2025-11-24T00:00:00+00:00</updated>
+    <updated>2025-12-18T00:00:00+00:00</updated>
     <id>https://mbuffa.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Elixir: LiveView + Stripe + Mobile</title>
+        <published>2025-12-18T00:00:00+00:00</published>
+        <updated>2025-12-18T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              mbuffa@users.noreply.github.com (Maxime Buffa)
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/"/>
+        <id>https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20251218-elixir-live-view-stripe-mobile/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;I recently had to integrate Stripe into an existing LiveView application used by a few customers in production. I was already quite accustomed to Stripe, but it was a while since I implemented a flow from frontend to backend, and the first time I had to do it inside a LiveView app, moreover, an app receiving async events from another service through a message broker.&lt;&#x2F;p&gt;
+&lt;p&gt;There were a few difficulties that appeared along the way, and I wanted to register and share them to anyone who would eventualy have to work on this kind of topics. Or to my future self.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;setup&quot;&gt;Setup&lt;&#x2F;h2&gt;
+&lt;p&gt;I won&#x27;t be revealing too many details about the project itself, but the app was basically using LiveView, which was also receiving async events from another source. Stripe.js and a backend client to communicate with Stripe, as well as a custom Stripe form built with Stripe Elements. A couple of hooks from myself would be added to initialize the Stripe Elemments correctly and handle the back-and-forth between backend and frontend. Stripe uses both public and secret keys, because Stripe.js is only allowed to do a subset of the things your backend will be able to do, plus a few other things that only a frontend is supposed to do, like submitting card details to Stripe.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;websockets-and-mobile&quot;&gt;WebSockets. And Mobile.&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s start with the latest and the most critical issue I encountered, since the app was already live when it was discovered, and had to be patched quickly.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;websockets&quot;&gt;WebSockets&lt;&#x2F;h3&gt;
+&lt;p&gt;LiveView relies on WebSockets, an active connection between a browser and a server that allows sending data both ways. LiveView uses it to send events to both sides, as well as DOM updates.&lt;&#x2F;p&gt;
+&lt;p&gt;One thing I knew was that LV does not handle slow clients very well, and even with a small page, latency can really kill your user experience, making your whole application very laggy and losing state with too much back-and-forth between your backend and frontend. This is not the end of the world though, and you can easily workaround this by debouncing your UI elements (eg. you do not send immediate key stroke events from your inputs), or use more simple JS-based UI components for everything that doesn&#x27;t need to be tracked by the backend. I covered the former in a previous article, and I believe DaisyUI would be the perfect fit for the latter.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;and-mobile&quot;&gt;And Mobile&lt;&#x2F;h3&gt;
+&lt;p&gt;But the thing is that LiveView is also very affected by the unstable nature of mobile networks, so I knew I had some mitigation to put in place if users would wish, for example, to be able to use the app in, let&#x27;s say, public transports.&lt;&#x2F;p&gt;
+&lt;p&gt;What I didn&#x27;t know however, was that WebSockets can be very, very quickly killed by just swiping to another application, on older devices, every time. And that is probably aggravated by energy saving mode.&lt;&#x2F;p&gt;
+&lt;p&gt;So, what if you&#x27;re on a payment form, entering your details, and switching to your banking app to authorize the transaction?&lt;&#x2F;p&gt;
+&lt;p&gt;Boom.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;how-to-fix-this&quot;&gt;How to fix this&lt;&#x2F;h3&gt;
+&lt;p&gt;The most reliable, yet not the most simple way to fix this issue was to implement a frontend cache using the browser&#x27;s Session Storage. When going back to their browser, LiveView&#x27;s JS would timeout, reconnect and create a new process (representing the LiveView) on the server. State would be cleared, but the cache stored in the Session Storage would be picked up, so that an additional Javascript hook would be able to send a message to the backend, do some transactional stuff, and redirect the user accordingly.&lt;&#x2F;p&gt;
+&lt;p&gt;It took me a bit (two full days) to get this right and to &quot;integrate&quot; that cache resolution in a reasonable way, making sure the UI wouldn&#x27;t allow the user to take any additional action, and to make sure all edge cases were covered.&lt;&#x2F;p&gt;
+&lt;p&gt;LiveView is great, but I&#x27;m not sure it is the perfect fit for such an app, even though it probably simplifies things too when you have to also receive messages from a broker and propagate it to a UI. Also, admittedly, I know a couple of &quot;regular&quot; (React) frontend developers that wouldn&#x27;t want to bother with mobile browsers, and redirect users to a native mobile app, so I think this is not a liked topic overall.&lt;&#x2F;p&gt;
+&lt;p&gt;If I had to rewrite or adapt it, I would probably try to be the most &quot;low tech&quot; as possible for this, with the possibility of replacing the sensitive parts ofd the app with plain Phoenix templates, and, maybe, Inertia + React.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;get-me-hooked&quot;&gt;Get me hooked&lt;&#x2F;h2&gt;
+&lt;p&gt;As a reminder, a basic LiveView hook look like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hook &lt;&#x2F;span&gt;&lt;span&gt;= {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;mounted&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; You can execute some code here.
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;handleEvent&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;event&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;payload&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; You can send events back to the backend:
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; this.pushEvent(&amp;quot;event-response&amp;quot;, {})
+&lt;&#x2F;span&gt;&lt;span&gt;        })
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is a &quot;glue&quot;, and it is essential when you have to send messages between frontend and backend and when you need some form of JS interoperability (calling the browser API).&lt;&#x2F;p&gt;
+&lt;p&gt;But you have to keep in mind that your HTML gets rendered progressively, once your &lt;code&gt;mount&#x2F;3&lt;&#x2F;code&gt; callback in your backend has already been called once. So, If you&#x27;re, for example, sending a request from a server and waiting for the response to send it to your frontend using &lt;code&gt;push_event&lt;&#x2F;code&gt;, you may face a race condition situation: Your LiveView pushes an event, but your hook isn&#x27;t ready to handle it yet, and it&#x27;s lost into abyss.&lt;&#x2F;p&gt;
+&lt;p&gt;There are several things you can do to avoid that.&lt;&#x2F;p&gt;
+&lt;p&gt;First, you could try to place your hook &quot;upper&quot; in your templates. If your hook isn&#x27;t tied to a specific page, that may be completely fine.&lt;&#x2F;p&gt;
+&lt;p&gt;Another thing I tried to do was to keep the hook where it was supposed to be, and added a &quot;root&quot; event listener on top of my Javascript, which would intercept the message, and try &quot;pass&quot; the event to the hook using a Promise, with a retry mechanism that would keep trying until the hook was ready.&lt;&#x2F;p&gt;
+&lt;p&gt;I felt very smart at first, but this was a very overkill, unreliable, and pretty stupid piece of code that I eventually just replaced with DOM.&lt;&#x2F;p&gt;
+&lt;p&gt;As a general advice, I think it is much better to rely on LiveView&#x27;s capability to track changes on socket assigns, and to pass the relevant arguments you want to pass to your components by using &lt;code&gt;data-&lt;&#x2F;code&gt; attributes, or equivalent. For instance:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;html&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&amp;lt;!-- LiveView --&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;div&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;.LiveComponent &#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;.LiveComponent&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &amp;lt;.LiveComponent &#x2F;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&amp;lt;!-- You want to pass one of the LV assigns here. --&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;&#x2F;.LiveComponent&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &amp;lt;.LiveComponent &#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;div&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can just pass data using &lt;code&gt;data-&lt;&#x2F;code&gt; attributes. That&#x27;s what they&#x27;ve been made for. You should use &lt;code&gt;push_event&lt;&#x2F;code&gt; only if you don&#x27;t want the target component to not re-render completely.&lt;&#x2F;p&gt;
+&lt;p&gt;And this of course applies to events your LiveView would receive from Phoenix PubSub: just update your socket assigns, do not push an event while your DOM may not be ready.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;stripe-specificities&quot;&gt;Stripe specificities&lt;&#x2F;h2&gt;
+&lt;p&gt;One final issue I wanted to mention is that Stripe seems to set a couple of safety measures in place to protect the end-user. When you use Stripe Elements, you basically end up with one &lt;code&gt;&amp;lt;iframe&amp;gt;&lt;&#x2F;code&gt; for each form element you include (if you&#x27;re not using a prebuilt form), and Stripe.js uses promises to make the communication happen between your Javascript, and the iframe&#x27;s Javascript. Those promises can fail if you happen to, for example, put a loder modal with a high Z index.&lt;&#x2F;p&gt;
+&lt;p&gt;If you want to warn your user that a background processing is taking place, then you probably want to disable and alter the submit button, and avoid modals entirely.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>Elixir: Why your LiveViews `mount&#x2F;3` shall be minimal and fast</title>
         <published>2025-11-24T00:00:00+00:00</published>
