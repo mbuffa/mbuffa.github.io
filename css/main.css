@@ -119,6 +119,7 @@ div.markdown-content a:hover {
 div.markdown-content pre {
   margin: 1rem;
   padding: .5rem;
+  overflow-x: scroll;
 }
 
 div.markdown-content blockquote {

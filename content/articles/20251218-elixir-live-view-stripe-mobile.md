@@ -12,7 +12,7 @@ I recently had to integrate Stripe into an existing LiveView application used by
 There were a few difficulties that appeared along the way, and I wanted to register and share them to anyone who would eventualy have to work on this kind of topics. Or to my future self.
 
 ## Setup
-I won't be revealing too many details about the project itself, but the app was basically using LiveView, which was also receiving async events from another source. Stripe.js and a backend client to communicate with Stripe, as well as a custom Stripe form built with Stripe Elements. A couple of hooks from myself would be added to initialize the Stripe Elemments correctly and handle the back-and-forth between backend and frontend. Stripe uses both public and secret keys, because Stripe.js is only allowed to do a subset of the things your backend will be able to do, plus a few other things that only a frontend is supposed to do, like submitting card details to Stripe.
+I won't be revealing too many details about the project itself, but the app was basically using LiveView and receiving async events from another service, Stripe.js and a backend client to communicate with Stripe, as well as a custom Stripe form built with Stripe Elements. A couple of hooks from myself would be added to initialize the Stripe Elemments correctly and handle the back-and-forth between backend and frontend. Stripe uses both public and secret keys, because Stripe.js is only allowed to do a subset of the things your backend will be able to do, plus a few other things that only a frontend is supposed to do, like submitting card details to Stripe.
 
 ## WebSockets. And Mobile.
 Let's start with the latest and the most critical issue I encountered, since the app was already live when it was discovered, and had to be patched quickly.
@@ -31,17 +31,19 @@ So, what if you're on a payment form, entering your details, and switching to yo
 
 Boom.
 
+The page would reload, and the user would have to enter all their details again, even though they had already paid. And because of some technical choices made, it was impossible to retrieve the user "cart".
+
 ### How to fix this
-The most reliable, yet not the most simple way to fix this issue was to implement a frontend cache using the browser's Session Storage. When going back to their browser, LiveView's JS would timeout, reconnect and create a new process (representing the LiveView) on the server. State would be cleared, but the cache stored in the Session Storage would be picked up, so that an additional Javascript hook would be able to send a message to the backend, do some transactional stuff, and redirect the user accordingly.
+The most immediate and reliable way to fix this issue was to implement a frontend cache using the browser's Session Storage. When going back to their browser, LiveView's JS would timeout, reconnect and create a new process (representing the LiveView) on the server. State would be cleared, but the cache stored in the Session Storage would be picked up, so that an additional Javascript hook would be able to send a message to the backend, do some transactional stuff, and redirect the user accordingly.
 
 It took me a bit (two full days) to get this right and to "integrate" that cache resolution in a reasonable way, making sure the UI wouldn't allow the user to take any additional action, and to make sure all edge cases were covered.
 
-LiveView is great, but I'm not sure it is the perfect fit for such an app, even though it probably simplifies things too when you have to also receive messages from a broker and propagate it to a UI. Also, admittedly, I know a couple of "regular" (React) frontend developers that wouldn't want to bother with mobile browsers, and redirect users to a native mobile app, so I think this is not a liked topic overall.
+LiveView is great, but since it stores the initial state in the backend, I'm not sure it is the perfect fit for such an app, even though it probably simplifies things too when you have to also receive messages from a broker and propagate it to a UI. Also, admittedly, I know a couple of "regular" (React) frontend developers that wouldn't want to bother with mobile browsers, and redirect users to a native mobile app, so I think this is not a liked topic overall.
 
-If I had to rewrite or adapt it, I would probably try to be the most "low tech" as possible for this, with the possibility of replacing the sensitive parts ofd the app with plain Phoenix templates, and, maybe, Inertia + React.
+If I had to rewrite or adapt it, I would probably try to be the most "low tech" as possible for this, with the possibility of replacing the sensitive parts of the app with plain Phoenix templates, and, maybe, Inertia + React.
 
 ## Get me hooked
-As a reminder, a basic LiveView hook look like this:
+As a reminder, a basic LiveView hook looks like this:
 ```js
 var hook = {
     mounted() {
