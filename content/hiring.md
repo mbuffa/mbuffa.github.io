@@ -42,6 +42,7 @@ Here's a list of missions that I could handle for you:
 * Improving Developer Experience
 * Debugging, Deploying, Monitoring and Measuring
 * Refactoring, Clustering and Scaling existing services
+* Implementing App-Level Observability (OpenTelemetry)
 * ...and more!
 
 ### Principles
