@@ -1,8 +1,7 @@
 +++
-title = "Management: Burn your team in six months"
+title = "Management: Burn out your team in six months"
 description = "A guide to burn-out"
 date = 2025-08-26
-draft = true
 [taxonomies]
 tags = ["opinion", "management", "leadership"]
 +++
@@ -41,7 +40,7 @@ Meetings should be short, have a purpose, a specific start and end time, and be 
 Your team shouldn't take 25% or 40% just making reports.
 
 #### Giving weak instructions, having high expectations
-Whether or not you're a fan of AGILE or KANBAN, your work will be divided in small units of work, and whether or not you call them tickets or something else, any unit of work must *at least* contain a short description about **what** must be done. Well-made acceptance criteria for features are even better, because they describe a context, an event and an expected result.
+Whether or not you're a fan of AGILE or KANBAN, your work will be divided in small units of work, and whether or not you call them tickets or something else, any unit of work must *at least* feature a short description about **what** must be done. Well-made acceptance criteria for features are even better, because they describe a context, an event and an expected result.
 
 Giving enough context and instructions can be very time consuming. In that case, the person in charge of this task can submit a draft for what they're going to do, and request comments from their manager before starting the task. It can be even better this way, because the performer can inspect what's already there and draft specs more accurately.
 
@@ -68,7 +67,7 @@ Get yourself overwhelmed and delay other's work because you do not have time to 
 ### Attitude
 
 #### Not following your own rules
-Theere is a book called "The Art of War" from Sun Tzu. It is very short and quite easy to read, and often quoted in personal development lectures. It is sometimes also mocked because, as some people say, it states the obvious, such as "Don't let your men starve", or statements like this.
+Theere is a book called "The Art of War" from Sun Tzu. It is very short and quite easy to read, and often quoted in personal development lectures. It is sometimes also mocked because, as some people say, it sometimes state the obvious, such as "Don't let your men starve", or statements like this.
 
 This is **wrong**. No matter how often a subject will be discussed, nothing is ever too obvious. And there's a specific teaching from the book that applies to any leader: leaders lead by example.
 
@@ -82,7 +81,7 @@ But being a CTO doesn't erase the responsibilities of a Developer role when you 
 You allow yourself to work remotely? Fine, as long as it applies to your team too. Do not schedule bullshit meetings at 7PM in the office, while you're baby-sitting your kid on your lap, half listening to a report that you might as well read yourself.
 
 #### Ignoring other people's time, work or input
-After a few studies, we now know that multi-tasking is pretty bad for your brain, and for your mental health.
+A few studies highlighted that multi-tasking is pretty bad for your brain, and for your mental health.
 We also know that anyone will keep thinking about something if they do not consider that this thing is done and behind them.
 
 So, what can we do about that, as a tech lead or similar role?
@@ -93,13 +92,13 @@ We can also do pointless code reviews, ie. making people format their code manua
 
 We can give them never-ending tasks, transforming a simple MVP draft into a moving target that keeps changing and being more complex.
 
-We can also put all of our ego into the codebase, arguing about the tiniest change, blocking a big merge for one thing that we don't like, but that won't affect production, forcing the person in charge to delay other tasks on the sprint's last day, just because we can't accept improvements, even if they come as soon as the next sprint's first day, and even if they're the best option to pick.
+We can also put all of our ego into the codebase, arguing about the tiniest change, blocking a big merge for one thing that we don't like, but that won't affect production, forcing the person in charge to delay other tasks on the sprint's last day, just because we can't accept later improvements, even if they come as soon as the next sprint's first day, and even if they're the best option to pick.
 
 We can of course, make somebody work on something, and having them re-do everything because we do not like the shape of it. Bonus point if we do an infinite number of reviews, and even better if a review voids the last review changes.
 
 And of course, we can require code review on pull requests while our own schedule do not allow it, delaying them and making the performer go back to tasks he did three weeks ago. Bonus point if the changes are about changing "lorem ipsum" to "ipsum lorem".
 
-The request "Please make another ticket" is not a mark of laziness. I mean, sometimes, it can be. But there are good reasons to shape something, to consider it *not perfect*, but *good enough*, and to improve it with iterations. Especially if a first version has been manually tested. You don't want to risk regressions because new feautres popped in after QA.
+The request "Please make another ticket" is not a mark of laziness. I mean, sometimes, it can be. But there are good reasons to shape something, to consider it *not perfect*, but *good enough*, and to improve it with iterations. Especially if a first version has been manually tested. You don't want to risk regressions because new features popped in after QA.
 
 Working in a company with uncertain funding or market fit is a lot about timing, tests, quick (and stable) prototypes that you improve or esentually replace, and listening to your team is also important.
 
@@ -126,12 +125,12 @@ I'm in no way considering myself a good manager. I'm pretty sure I did a lot of 
 
 So, what makes a good manager or startup leader? I'm definitely not sure about that, but I do have a few ideas:
 * Be trustful.
-* Be respectful. Always. If you have complainings, go to the person and tell them about it, do not bitch over somebody else's shoulder at hearing distance.
+* Be respectful. Always. If you have complaints, go to the person and tell them about it, do not bitch over somebody else's shoulder at hearing distance.
 * Listen to your team.
 * Take responsibility when necessary.
 * Allow others to fail and take accountability, don't be the gatekeeper to everything.
 * Do not delay hard decisions.
 * Keep the long personal stories for the coffee breaks and afterworks.
-* Finally, feed your soldiers and eat last.
+* Finally, feed your soldiers and eat last :)
 
-Of course, I do not pretend to be the guardian of truth, and I would be more than happy to get feedback, and to hear from you in the comments section, or on the various social medias I will link this article from.
+Of course, I do not pretend to be the guardian of truth, and I would be more than happy to get feedback, and to hear from you in the comments section, or on the various social medias I will link this article on.
