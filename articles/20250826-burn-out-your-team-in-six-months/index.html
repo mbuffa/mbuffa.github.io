@@ -1,0 +1,480 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+  <title>Management: Burn out your team in six months</title>
+  
+
+  
+  
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap"
+    rel="stylesheet">
+
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+
+  
+    <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
+  
+
+  
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="https://mbuffa.github.io/rss.xml">
+  
+
+  <meta name="description" content="A guide to burn-out" />
+</head>
+
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateGiscusStyle(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+            break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+            break;
+
+          default:
+            activeMode = "dark";
+            break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateGiscusStyle(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+
+  <main class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white bg-blue-900 dark:bg-transparent
+    ">
+    <div class="w-228 max-w-screen m-auto p-4 bg-slate-200 dark:bg-transparent">
+      <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul
+      class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+      
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;">Home</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;articles">Articles</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;demos">Demos</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;tags">Tags</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;contact">Contact</a>
+      </li>
+      
+      <li class="ml-auto">
+        <a class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
+            name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
+            name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+      <div class="
+        w-11/12 m-auto mt-2 p-4
+        flex justify-center
+        flex-col flex-wrap
+        lg:flex-row lg:flex-nowrap
+        dark:bg-black dark:bg-opacity-60
+    ">
+        
+
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250826-burn-out-your-team-in-six-months/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250826-burn-out-your-team-in-six-months/#disclaimer" title="Disclaimer">
+  Disclaimer
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250826-burn-out-your-team-in-six-months/#a-guide-to-burn-out" title="A guide to burn-out">
+  A guide to burn-out
+</a>
+
+        
+        <ol>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250826-burn-out-your-team-in-six-months/#planning" title="Planning">
+  Planning
+</a>
+</li>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250826-burn-out-your-team-in-six-months/#control" title="Control">
+  Control
+</a>
+</li>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250826-burn-out-your-team-in-six-months/#attitude" title="Attitude">
+  Attitude
+</a>
+</li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20250826-burn-out-your-team-in-six-months/#wrapping-up" title="Wrapping up">
+  Wrapping up
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-1 pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Management: Burn out your team in six months
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2025-08-26
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/opinion">
+    opinion
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/management">
+    management
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/leadership">
+    leadership
+  </a>
+  
+</p>
+
+    
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom Feed
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS Feed
+      </a>
+    </p>
+  </header>
+
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
+<p>After more than a decade of software development in professional contexts, I've seen numerous behaviors in the teams I have worked in or have worked with, sometimes directly experiencing some of them with my CEOs, CTOs, engineering managers or tech leads.</p>
+<p>The patterns I will describe do apply to software development teams, but I believe they do apply to any work environment that involves management and teams, or even business to business relationships. I'll give a lot of examples centered around software engineering though, to avoid beeing too abstract.</p>
+<h2 id="disclaimer">Disclaimer</h2>
+<p>Writing this article addresses two needs:</p>
+<ul>
+<li>The need to put some thoughts on paper and stop thinking about them, and,</li>
+<li>Leverage this as an opportunity to become a better leader or manager myself; experiencing and noticing bad behaviors is as instructive as reading a training book, and I'm sure I demonstrated some of those behaviors myself.</li>
+</ul>
+<p>Being aware of issues is the best way to detect, avoid or fix them in the future. And no, I'm not quoting Thufir Hawat :-)</p>
+<p>Also, this is absolutely not a critique against my current employer. I'm also not targetting individuals themselves, but individual behaviors that can hurt productivity or mental health. Finally, my opinions are mine and do not reflect any third parties' opinions I have or currently am working with.</p>
+<p>Lastly, this will be a mixed bag of leadership and management issues.</p>
+<p>So, now that the frame has been set, how do you burn your team in six months? Where do you start?</p>
+<h2 id="a-guide-to-burn-out">A guide to burn-out</h2>
+<h3 id="planning">Planning</h3>
+<h4 id="drowning-your-team-under-hours-of-pointless-meetings-and-reportings">Drowning your team under hours of pointless meetings and reportings</h4>
+<p>One of the best things you can do is to schedule a lot of meetings. Bonus points for stand ups that last 45 minutes. Bonus point if you're a slow speaker that never pauses, preventing others from reacting. Bonus point if you spend a lot of time talking about this house in the countryside you're fixing.</p>
+<p>Even better: schedule loose daily meetings, with no specific beginning or end or topic, and make others adapt to your schedule, so that they cannot start focusing on their own work. And take your personal phone calls during those meetings.</p>
+<p>Try to schedule daily reportings, such as KPIs for Sales. Bonus point if they have to reach the tech team to get their numbers. Bonus point if they spend more than two hours a day making slides for the next day.</p>
+<p>Meetings should be short, have a purpose, a specific start and end time, and be organised between teams that can take actions to solve issues. There's no point in putting tech performers in sales meetings 30 minutes a day every day.</p>
+<p>Your team shouldn't take 25% or 40% just making reports.</p>
+<h4 id="giving-weak-instructions-having-high-expectations">Giving weak instructions, having high expectations</h4>
+<p>Whether or not you're a fan of AGILE or KANBAN, your work will be divided in small units of work, and whether or not you call them tickets or something else, any unit of work must <em>at least</em> feature a short description about <strong>what</strong> must be done. Well-made acceptance criteria for features are even better, because they describe a context, an event and an expected result.</p>
+<p>Giving enough context and instructions can be very time consuming. In that case, the person in charge of this task can submit a draft for what they're going to do, and request comments from their manager before starting the task. It can be even better this way, because the performer can inspect what's already there and draft specs more accurately.</p>
+<p>So, what's the worst thing to do here?</p>
+<ul>
+<li>Write empty tasks with vague titles, or scratch "Build a Back-Office" on a napkin.</li>
+<li>Ignore review requests on business and technical specs.</li>
+<li>Use work review to complain that X or Y feature ie missing.</li>
+<li>Use work review to question the reason behind this task.</li>
+<li>Put the responsibility on the performer for the delay.</li>
+</ul>
+<h3 id="control">Control</h3>
+<h4 id="becoming-the-bottleneck-of-your-own-team">Becoming the bottleneck of your own team</h4>
+<p>Ask to be the center of every decision your team will make, and whenever possible, do it for external teams as well. Make your designer and product team require your validation for any tiny update in the design system. Do the same for the marketing team and the emails design. Consider you're the only person able to do the job correctly.</p>
+<p>Hire people to do a specific tasks, but don't let them do it autonomously.</p>
+<p>Use your veto on decisions you don't like, and make up excuses for it.</p>
+<p>Ask for systematic code review on every pull request, even though you work in a startup and have to ship things quickly.</p>
+<p>Get yourself overwhelmed and delay other's work because you do not have time to do everything.</p>
+<h3 id="attitude">Attitude</h3>
+<h4 id="not-following-your-own-rules">Not following your own rules</h4>
+<p>Theere is a book called "The Art of War" from Sun Tzu. It is very short and quite easy to read, and often quoted in personal development lectures. It is sometimes also mocked because, as some people say, it sometimes state the obvious, such as "Don't let your men starve", or statements like this.</p>
+<p>This is <strong>wrong</strong>. No matter how often a subject will be discussed, nothing is ever too obvious. And there's a specific teaching from the book that applies to any leader: leaders lead by example.</p>
+<p>And they also make sure their men are fed, and they themselves eat last, but this is not a lecture about charisma :-)</p>
+<p>In a management context, this means that any rule you force your team to follow, you have to follow it yourself.</p>
+<p>You require code review on any pull request that they will open? Fine. Then at least open a pull request for your own work too. Do not push directly on the main branch, break the CI and then complain to them that their pull request "broke the tests". If you do not have a developer role, this, of course, does not apply to you.
+But being a CTO doesn't erase the responsibilities of a Developer role when you do developer tasks.</p>
+<p>You allow yourself to work remotely? Fine, as long as it applies to your team too. Do not schedule bullshit meetings at 7PM in the office, while you're baby-sitting your kid on your lap, half listening to a report that you might as well read yourself.</p>
+<h4 id="ignoring-other-people-s-time-work-or-input">Ignoring other people's time, work or input</h4>
+<p>A few studies highlighted that multi-tasking is pretty bad for your brain, and for your mental health.
+We also know that anyone will keep thinking about something if they do not consider that this thing is done and behind them.</p>
+<p>So, what can we do about that, as a tech lead or similar role?</p>
+<p>Well, we can task somebody to do something, and force them to rewrite everything after a few days, by sneaking up a pull request during the night that completely changes parts of the codebase, and we can even blame the delay on them. Bonus point if we slip a little "We should use another library and drop the old one while doing this task" once this task is nearly done.</p>
+<p>We can also do pointless code reviews, ie. making people format their code manually, following arbitrary rules not enforced by the formatter. Even better if those code reviews are meetings.</p>
+<p>We can give them never-ending tasks, transforming a simple MVP draft into a moving target that keeps changing and being more complex.</p>
+<p>We can also put all of our ego into the codebase, arguing about the tiniest change, blocking a big merge for one thing that we don't like, but that won't affect production, forcing the person in charge to delay other tasks on the sprint's last day, just because we can't accept later improvements, even if they come as soon as the next sprint's first day, and even if they're the best option to pick.</p>
+<p>We can of course, make somebody work on something, and having them re-do everything because we do not like the shape of it. Bonus point if we do an infinite number of reviews, and even better if a review voids the last review changes.</p>
+<p>And of course, we can require code review on pull requests while our own schedule do not allow it, delaying them and making the performer go back to tasks he did three weeks ago. Bonus point if the changes are about changing "lorem ipsum" to "ipsum lorem".</p>
+<p>The request "Please make another ticket" is not a mark of laziness. I mean, sometimes, it can be. But there are good reasons to shape something, to consider it <em>not perfect</em>, but <em>good enough</em>, and to improve it with iterations. Especially if a first version has been manually tested. You don't want to risk regressions because new features popped in after QA.</p>
+<p>Working in a company with uncertain funding or market fit is a lot about timing, tests, quick (and stable) prototypes that you improve or esentually replace, and listening to your team is also important.</p>
+<h4 id="denying-reality">Denying reality</h4>
+<p>There's nothing worse for a leader than denying reality about the market he's trying to enter in, or about the financial status of his own company.</p>
+<p>The leader is the ship's captain. If your team feels numbers aren't good, and your only response is to hide metrics on the next week slides, not discussing measures, or in general, not mentioning the elephant in the room, then your team anxiety level is going to increase, significantly.</p>
+<p>Working in a startup is hard. From my humble experience, leading small teams is even harder.  But ignoring the hole in the ship's hull is not going to help.</p>
+<h4 id="bitching-about-others-and-denying-responsibility">Bitching about others and denying responsibility</h4>
+<p>It is certain that a shortage of funds and treasury can damage a company (or even a person) in many ways. And people can indeed demonstrate skill issues, or take actions that will have deep negative consequences.</p>
+<p>But the worst thing somebody can do is bitching about others, whether they're still in the company or have been fired, or <em>encouraged</em> to leave, or whether they can even hear you in the next room.</p>
+<p>Everybody makes mistakes, except people doing nothing, and while there's no point in blaming yurself forever for something you did, you should always acknowledge that you did that mistake. No need for humiliating speeches in front of 300 people, just a simple statement such as: "Ok, I did this [because I thought this], it didn't go well. Now, here's how I plan to fix it.".</p>
+<p>Do not blame a junior account manager sending a few hundreds to the wrong bank account, insulting them in the next room, while you do not take responsibility for your own implementation that makes the company lose money by the thousands on a monthly basis.</p>
+<p>Also, do not blame a performer for the time a feature took, if you were one of the bottlenecks behind it, whether by lack of time or planning.</p>
+<h2 id="wrapping-up">Wrapping up</h2>
+<p>I'm in no way considering myself a good manager. I'm pretty sure I did a lot of mistakes when I had to manage a team myself, and I'm pretty sure the pressure is even worse when you build a company and put your time and energy behind it.</p>
+<p>So, what makes a good manager or startup leader? I'm definitely not sure about that, but I do have a few ideas:</p>
+<ul>
+<li>Be trustful.</li>
+<li>Be respectful. Always. If you have complaints, go to the person and tell them about it, do not bitch over somebody else's shoulder at hearing distance.</li>
+<li>Listen to your team.</li>
+<li>Take responsibility when necessary.</li>
+<li>Allow others to fail and take accountability, don't be the gatekeeper to everything.</li>
+<li>Do not delay hard decisions.</li>
+<li>Keep the long personal stories for the coffee breaks and afterworks.</li>
+<li>Finally, feed your soldiers and eat last :)</li>
+</ul>
+<p>Of course, I do not pretend to be the guardian of truth, and I would be more than happy to get feedback, and to hear from you in the comments section, or on the various social medias I will link this article on.</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+</article>
+
+      </div>
+
+      <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written by Maxime Buffa with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://www.getzola.org/" target="_blank">Zola</a> and <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/"
+      target="_blank">Tailwind</a>
+  </span>
+</footer>
+    </div>
+    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link.
+    <br>
+  </main>
+
+  <!-- Heap Analytics loader -->
+    <script type="text/javascript">
+      window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
+      heap.load("4008293954");
+    </script>
+    <script
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+    <script type="module"
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+
+</html>
