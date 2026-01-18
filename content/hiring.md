@@ -14,36 +14,37 @@ You can also find my [Resume][0] here.
 ### Criteria & Rates
 
 I'm currently:
-* Preferring freelancing and contracting (B2B), but open to permanent positions depending on conditions
-* Rates will depend on the tech, responsibilities (management, on-calls, work on week-ends) and/or my seniority relative to the role. For positions where I prefectly match, my daily rate stands at **EUR 500** (hourly: roughly **EUR 60**)
-* Looking for full remote, or hybrid positions with monthly gatherings (inside Europe)
-* Open to all durations, but with a high preference for missions of **at least** a month
-* Comfortable with asynchronous work and operating in different timezones, as well as the increased communication requirements this implies
+* Preferring freelancing and contracting (B2B), but open to permanent positions depending on conditions.
+* Rates will depend on the tech, responsibilities (management, on-calls, work on week-ends) and/or my seniority relative to the role.
+* For positions where I prefectly match, my daily rate starts at **EUR 500** (hourly: roughly **EUR 60**).
+* Looking for full remote, or hybrid positions with monthly gatherings (inside Europe).
+* Open to all durations, but with a high preference for missions of **at least** a month.
+* Comfortable with asynchronous work and operating in different timezones, as well as the increased communication requirements this implies.
 
 ### Positions
 
 Positions I would feel comfortable to fill:
-* Backend Engineer - Proficient with Elixir, Ruby, 13+ years of experience; interests in Go, Python, Scala
-* DevOps or SRE - 4+ years with the ownership of a complete AWS infrastructure, CI/CD, Kubernetes, debugging/tracing and on calls
-* Product Engineer - Comfortable with impersonating user cases and delivering useful features
-* Platform Engineer - Comfortable with building or improving tools or CI workflows to improve developer experience
+* Backend Engineer - Proficient with Elixir, Ruby, 12+ years of experience; interests in Go, Python, Scala.
+* DevOps or SRE - 4+ years with the ownership of a complete AWS infrastructure, CI/CD, Kubernetes, debugging/tracing and on calls.
+* Product Engineer - Comfortable with impersonating user cases and delivering useful features.
+* Platform Engineer - Comfortable with building or improving tools or CI workflows to improve developer experience.
 
 Also open to:
-* Full-stack and Frontend development - Comfortable with the [PETAL][1] stack
-* Tech Lead - Comfortable with leading small teams (2-4 developers) and interacting with designers, PO, PM, roughly 2 years of experience
-* Junior Engineering Manager (hands-on) - Comfortable with interacting with the C-suite, open to new challenges
+* Full-stack and Frontend development - Comfortable with the [PETAL][1] stack.
+* Tech Lead - Comfortable with leading small teams (2-4 developers) and interacting with designers, PO, PM, roughly 2 years of experience.
+* Junior Engineering Manager (hands-on) - Comfortable with interacting with the C-suite, open to new challenges.
 
 ### Missions (Examples)
 
 Here's a list of missions that I could handle for you:
-* Developping features
-* Project Management
-* Cloud Infrastructure setup and optimization
-* Improving Developer Experience
-* Debugging, Deploying, Monitoring and Measuring
-* Refactoring, Clustering and Scaling existing services
-* Implementing App-Level Observability (OpenTelemetry)
-* ...and more!
+* Developping features,
+* Project Management,
+* Cloud Infrastructure setup and optimization,
+* Improving Developer Experience,
+* Debugging, Deploying, Monitoring and Measuring,
+* Refactoring, Clustering and Scaling existing services,
+* Implementing App-Level Observability (OpenTelemetry),
+* ...and more.
 
 ### Principles
 
