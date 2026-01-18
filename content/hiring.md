@@ -15,8 +15,8 @@ You can also find my [Resume][0] here.
 
 I'm currently:
 * Preferring freelancing and contracting (B2B), but open to permanent positions depending on conditions
+* Rates will depend on the tech, responsibilities (management, on-calls, work on week-ends) and/or my seniority relative to the role. For positions where I prefectly match, my daily rate stands at **EUR 500** (hourly: roughly **EUR 60**)
 * Looking for full remote, or hybrid positions with monthly gatherings (inside Europe)
-* Rates will depend on the tech, responsibilities (management, on-calls, work on week-ends) and/or my seniority relative to the role. For positions where I prefectly match, my daily rate stands at EUR 500 (hourly: roughly EUR 60)
 * Open to all durations, but with a high preference for missions of **at least** a month
 * Comfortable with asynchronous work and operating in different timezones, as well as the increased communication requirements this implies
 
