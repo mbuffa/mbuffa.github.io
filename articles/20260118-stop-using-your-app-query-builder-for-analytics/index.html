@@ -5,7 +5,7 @@
   
 
   
-  <title>Maxime Buffa</title>
+  <title>Stop using your app query builder for analytics</title>
   
 
   
@@ -30,7 +30,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS" href="https://mbuffa.github.io/rss.xml">
   
 
-  <meta name="description" content="My personal website with tips and rants." />
+  <meta name="description" content="There are better alternatives." />
 </head>
 
 <body class="stylesheet-mode" onload="loadActiveStylesheet()">
@@ -244,105 +244,117 @@
         dark:bg-black dark:bg-opacity-60
     ">
         
+
+
+
+
+<article class="w-full pb-[50vh]">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Stop using your app query builder for analytics
+    </h1>
+    
+    <p class="subtitle">
+      Published on 2026-01-18
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
   
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/opinion">
+    opinion
+  </a>
   
-<article class="w-full">
-  <table class="w-full">
-    <thead>
-      <tr>
-        <th></th>
-        <th class="text-left">
-          <h1 class="m-2 p-2 inline-block font-bold text-2xl">Pages tagged with &#x27;opinion&#x27;</h1>
-          <p class="m-2 p-2 inline-block font-normal dark:text-white text-black">
-            
-          </p>
-          <p class="m-2 p-2">
-            <a href="/atom.xml"
-              class="inline-block text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
-              title="Subscribe to Atom feed">
-              Atom
-            </a>
-            <span class="text-white">&middot;</span>
-            <a href="/rss.xml"
-              class="inline-block text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
-              title="Subscribe to RSS feed">
-              RSS
-            </a>
-          </p>
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/sql">
+    sql
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/analytics">
+    analytics
+  </a>
+  
+</p>
 
-        </th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2026-01-18</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/articles/20260118-stop-using-your-app-query-builder-for-analytics/">Stop using your app query builder for analytics</a>
-        </td>
-        <td>
-          
-          
-<span class="rounded-sm text-xs p-2 m-2
-  dark:bg-orange-500 dark:text-black
     
-"><a href="/tags/opinion" title="Opinion">Opinion</a>
-</span>
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS
+      </a>
+    </p>
+  </header>
 
-          
-        </td>
-      </tr>
-      
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2025-11-07</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/articles/20251107-stop-using-claude-code/">LLM: Stop using Claude Code</a>
-        </td>
-        <td>
-          
-          
-<span class="rounded-sm text-xs p-2 m-2
-  dark:bg-orange-500 dark:text-black
-    
-"><a href="/tags/opinion" title="Opinion">Opinion</a>
-</span>
+  
 
-          
-        </td>
-      </tr>
-      
-      <tr class="leading-10">
-        <td class="w-1/6 p-0.5 pr-2 text-right dark:text-white font-mono">2025-08-26</td>
-        <td class="w-4/6">
-          <a class="
-              underline hover:no-underline
-              dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-            href="https://mbuffa.github.io/articles/20250826-burn-out-your-team-in-six-months/">Management: Burn out your team in six months</a>
-        </td>
-        <td>
-          
-          
-<span class="rounded-sm text-xs p-2 m-2
-  dark:bg-orange-500 dark:text-black
-    
-"><a href="/tags/opinion" title="Opinion">Opinion</a>
-</span>
+  
 
-          
-        </td>
-      </tr>
-      
-    </tbody>
-  </table>
+  
+
+  <div class="markdown-content">
+    <h2 id="context">Context</h2>
+<p>A few years ago (in 2022 I believe), I had a disagreement with an interviewer debriefing one of my take-home assessment. We were discussing the usage of raw SQL in a codebase, and I believe my position cost me the role (or, alternatively, the way I expressed my disagreement did).</p>
+<p>We were basically arguing over a query that was doing a bit of filtering, grouping, and formatting data. This query took no parameter, and considering the query was used to extract analytics, I decided to go for raw SQL.</p>
+<p>This is relatively easy to do with many frameworks, and it's <a href="https://hexdocs.pm/ecto_sql/Ecto.Adapters.SQL.html#query/4">straightforward in Elixir with Ecto</a>.</p>
+<p>I think I also failed at expressing stronger arguments at the time other than "You don't need the added complexity of an ORM, for a simple query without arguments." and if I recall correctly, the person I was talking to was just saying "it's safer".</p>
+<p>I did a bit more work related to analytics since then, and I gathered stronger arguments. I'll keep it short, but here they are :)</p>
+<h3 id="your-app-query-builder-is-another-layer-of-complexity">Your app query builder is another layer of complexity</h3>
+<p>This is literally another DSL on top of another DSL (which is, in this case, SQL).</p>
+<p>A DSL is a system, and each system comes with some overhead, the possibility of oversights (such as N+1 queries) and bugs related to the library.</p>
+<p>It also comes with limitations. I recently saw that a PHP ORM didn't have support for the <code>WHERE x OR Y</code> syntax for its query builder. I wouldn't be surprised if PostgreSQL's <code>with</code> statements weren't supported in some libraries even to this day.</p>
+<h3 id="sql-is-the-domain-language-for-data-queries">SQL is the domain language for data queries</h3>
+<p>A query builder also forces you to <code>think</code> using its grammar and semantics, which may be very different than the underlying database language.</p>
+<p>Your Database Administrator or DevOps may not know this language, which would be a problem if they had to debug those by themselves.</p>
+<p>And finally, you may eventually have or want to switch libraries, or languages, and you would have to port your queries over.</p>
+<p>Arguably, you could also have or want to switch to another database, with its own DSL. But I assume this would be less likely to happen, at least for a company's typical "core" records (eg. sales, customers, ...).</p>
+<h3 id="you-can-do-better-than-writing-analytics-inside-your-codebase">You can do better than writing analytics inside your codebase</h3>
+<p>I recently worked on a project where we were building a dashboard, with analytics queries written with our ORM.</p>
+<p>The flow went this way:</p>
+<ul>
+<li>A developer would write those queries and merge them to the trunk,</li>
+<li>I would try to use them, write tests to check those were valid,</li>
+<li>Potentially reported bugs, and had to wait a bit before the fix came up,</li>
+<li>Had to implement various export modules, without knowing if the output was correct for the business,</li>
+<li>The person doing the QA would report to me, and I would then have to convince the person who wrote the queries that there was a problem there,</li>
+<li>I would then have to adapt my modules to the potentially new format, and adapt all of my tests.</li>
+</ul>
+<p>This was totally uneffective. A lot of those queries weren't even tested, and the debugging was painful and slow.</p>
+<p>Arguably, some of the things that went wrong could have been avoided by having just one developer do the whole job.</p>
+<p>But I think the best course of action would have been to do it this way:</p>
+<ul>
+<li>Take the time to spin up a <a href="https://www.metabase.com/">Metabase</a> instance (or similar),</li>
+<li>Write queries, <strong>and</strong> validate them on a production replica,</li>
+<li>Validate the output with the QA team,</li>
+<li>Implement a client that would query Metabase's API,</li>
+<li>Implement the export modules.</li>
+</ul>
+<p>Boom. Smooth.</p>
+<p>And this isn't less safe. Arguably, a bit longer to setup, and that Metabase client may have to be implemented, but this would have been so easier to debug.</p>
+<p>Thank you for reading me. Please let me know what you think.</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
 </article>
-
 
       </div>
 

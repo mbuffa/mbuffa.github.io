@@ -4,8 +4,66 @@
     <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2025-12-18T00:00:00+00:00</updated>
+    <updated>2026-01-18T00:00:00+00:00</updated>
     <id>https://mbuffa.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Stop using your app query builder for analytics</title>
+        <published>2026-01-18T00:00:00+00:00</published>
+        <updated>2026-01-18T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              mbuffa@users.noreply.github.com (Maxime Buffa)
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20260118-stop-using-your-app-query-builder-for-analytics/"/>
+        <id>https://mbuffa.github.io/articles/20260118-stop-using-your-app-query-builder-for-analytics/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20260118-stop-using-your-app-query-builder-for-analytics/">&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;A few years ago (in 2022 I believe), I had a disagreement with an interviewer debriefing one of my take-home assessment. We were discussing the usage of raw SQL in a codebase, and I believe my position cost me the role (or, alternatively, the way I expressed my disagreement did).&lt;&#x2F;p&gt;
+&lt;p&gt;We were basically arguing over a query that was doing a bit of filtering, grouping, and formatting data. This query took no parameter, and considering the query was used to extract analytics, I decided to go for raw SQL.&lt;&#x2F;p&gt;
+&lt;p&gt;This is relatively easy to do with many frameworks, and it&#x27;s &lt;a href=&quot;https:&#x2F;&#x2F;hexdocs.pm&#x2F;ecto_sql&#x2F;Ecto.Adapters.SQL.html#query&#x2F;4&quot;&gt;straightforward in Elixir with Ecto&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I think I also failed at expressing stronger arguments at the time other than &quot;You don&#x27;t need the added complexity of an ORM, for a simple query without arguments.&quot; and if I recall correctly, the person I was talking to was just saying &quot;it&#x27;s safer&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;I did a bit more work related to analytics since then, and I gathered stronger arguments. I&#x27;ll keep it short, but here they are :)&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;your-app-query-builder-is-another-layer-of-complexity&quot;&gt;Your app query builder is another layer of complexity&lt;&#x2F;h3&gt;
+&lt;p&gt;This is literally another DSL on top of another DSL (which is, in this case, SQL).&lt;&#x2F;p&gt;
+&lt;p&gt;A DSL is a system, and each system comes with some overhead, the possibility of oversights (such as N+1 queries) and bugs related to the library.&lt;&#x2F;p&gt;
+&lt;p&gt;It also comes with limitations. I recently saw that a PHP ORM didn&#x27;t have support for the &lt;code&gt;WHERE x OR Y&lt;&#x2F;code&gt; syntax for its query builder. I wouldn&#x27;t be surprised if PostgreSQL&#x27;s &lt;code&gt;with&lt;&#x2F;code&gt; statements weren&#x27;t supported in some libraries even to this day.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sql-is-the-domain-language-for-data-queries&quot;&gt;SQL is the domain language for data queries&lt;&#x2F;h3&gt;
+&lt;p&gt;A query builder also forces you to &lt;code&gt;think&lt;&#x2F;code&gt; using its grammar and semantics, which may be very different than the underlying database language.&lt;&#x2F;p&gt;
+&lt;p&gt;Your Database Administrator or DevOps may not know this language, which would be a problem if they had to debug those by themselves.&lt;&#x2F;p&gt;
+&lt;p&gt;And finally, you may eventually have or want to switch libraries, or languages, and you would have to port your queries over.&lt;&#x2F;p&gt;
+&lt;p&gt;Arguably, you could also have or want to switch to another database, with its own DSL. But I assume this would be less likely to happen, at least for a company&#x27;s typical &quot;core&quot; records (eg. sales, customers, ...).&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;you-can-do-better-than-writing-analytics-inside-your-codebase&quot;&gt;You can do better than writing analytics inside your codebase&lt;&#x2F;h3&gt;
+&lt;p&gt;I recently worked on a project where we were building a dashboard, with analytics queries written with our ORM.&lt;&#x2F;p&gt;
+&lt;p&gt;The flow went this way:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A developer would write those queries and merge them to the trunk,&lt;&#x2F;li&gt;
+&lt;li&gt;I would try to use them, write tests to check those were valid,&lt;&#x2F;li&gt;
+&lt;li&gt;Potentially reported bugs, and had to wait a bit before the fix came up,&lt;&#x2F;li&gt;
+&lt;li&gt;Had to implement various export modules, without knowing if the output was correct for the business,&lt;&#x2F;li&gt;
+&lt;li&gt;The person doing the QA would report to me, and I would then have to convince the person who wrote the queries that there was a problem there,&lt;&#x2F;li&gt;
+&lt;li&gt;I would then have to adapt my modules to the potentially new format, and adapt all of my tests.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This was totally uneffective. A lot of those queries weren&#x27;t even tested, and the debugging was painful and slow.&lt;&#x2F;p&gt;
+&lt;p&gt;Arguably, some of the things that went wrong could have been avoided by having just one developer do the whole job.&lt;&#x2F;p&gt;
+&lt;p&gt;But I think the best course of action would have been to do it this way:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Take the time to spin up a &lt;a href=&quot;https:&#x2F;&#x2F;www.metabase.com&#x2F;&quot;&gt;Metabase&lt;&#x2F;a&gt; instance (or similar),&lt;&#x2F;li&gt;
+&lt;li&gt;Write queries, &lt;strong&gt;and&lt;&#x2F;strong&gt; validate them on a production replica,&lt;&#x2F;li&gt;
+&lt;li&gt;Validate the output with the QA team,&lt;&#x2F;li&gt;
+&lt;li&gt;Implement a client that would query Metabase&#x27;s API,&lt;&#x2F;li&gt;
+&lt;li&gt;Implement the export modules.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Boom. Smooth.&lt;&#x2F;p&gt;
+&lt;p&gt;And this isn&#x27;t less safe. Arguably, a bit longer to setup, and that Metabase client may have to be implemented, but this would have been so easier to debug.&lt;&#x2F;p&gt;
+&lt;p&gt;Thank you for reading me. Please let me know what you think.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>Elixir: LiveView + Stripe + Mobile</title>
         <published>2025-12-18T00:00:00+00:00</published>
