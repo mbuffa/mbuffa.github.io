@@ -18,6 +18,9 @@
     <h1 class="text-2xl font-bold m-2 p-2">
       {{ page.title }}
     </h1>
+    {% if page.description %}
+    <div class="p-2">{{ page.description }}</div>
+    {% endif %}
     {% if page.date %}
     <p class="subtitle">
       Published on {{ page.date | date(format="%Y-%m-%d") }}
