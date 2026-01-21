@@ -474,33 +474,33 @@
 <p>In my previous post, I mentioned setting up a home server, which was at this point not doing a lot of things, aside from having a PostgreSQL database and a SSH server.</p>
 <p>In this post, I'll go into details how I managed to get those components up and running:</p>
 <ul>
-<li>A working Gitea (alternative to Github),</li>
-<li>A CI Runner, compatible with Github Actions, for tests and deployments,</li>
+<li>A working Gitea (alternative to GitHub),</li>
+<li>A CI Runner, compatible with GitHub Actions, for tests and deployments,</li>
 <li>A docker registry to hold my services images,</li>
 <li>A Kubernetes cluster, using Minikube,</li>
 <li>A Cloudflare Tunnel, to expose my services to the World Wide Web,</li>
-<li>And finally, the SystemD configuration files needed to make all of this work (almost) smoothly.</li>
+<li>And finally, the Systemd configuration files needed to make all of this work (almost) smoothly.</li>
 </ul>
 <p>So, let's move on! I'll try not to flood this page with configuration files though, to keep it clean and simple.</p>
 <h2 id="gitea">Gitea</h2>
-<p>Gitea was <a href="https://docs.gitea.com/category/installation">straighforward to install</a>. In my case, there was a Arch Linux package ready for me, so I just picked that option. The idea was to have something up and running, with the least possible number of abstractions and dependencies, so I didn't think about running it inside Kubernetes, or a VM. At least, not for now.</p>
+<p>Gitea was <a href="https://docs.gitea.com/category/installation">straightforward to install</a>. In my case, there was a Arch Linux package ready for me, so I just picked that option. The idea was to have something up and running, with the least possible number of abstractions and dependencies, so I didn't think about running it inside Kubernetes, or a VM. At least, not for now.</p>
 <p>Gitea requires a SQL database, so you'd definitely need to provide one, and check that the Postgres database would accept connections for the <code>gitea</code> user in the usual <code>/var/lib/postgres/data/pg_hba.conf</code> configuration file:</p>
 <pre style="background-color:#2b303b;color:#c0c5ce;"><code><span># TYPE  DATABASE        USER            ADDRESS                 METHOD
 </span><span>local   giteadb         gitea                                   scram-sha-256
 </span></code></pre>
-<p>I believe the package was bundled with the proper SystemD config, so a simple <code>systemctl enable gitea</code> was enough to add it to the services SystemD would start on the next reboot.</p>
+<p>I believe the package was bundled with the proper Systemd config, so a simple <code>systemctl enable gitea</code> was enough to add it to the services Systemd would start on the next reboot.</p>
 <p><strong>One important note though</strong>: In my case, the gitea user was configured with a password reset every six months. So, one morning, I had the sad surprise of realizing something was broken in my setup. You can check if your password has expired by running <code>chage -l YOUR_USER</code> and <code>chage -E -1 YOUR_USER</code> to disable the password reset.</p>
-<p>In my case, since my Gitea user was forbidden to accept TTY login, I decided to disable the password reset. It didn't seem very impactful to do so. And that user would be used only with SSH handshakes to save Git repos on disk (and, yeah, run the CI too).</p>
+<p>In my case, since my Gitea user was forbidden from TTY login, I decided to disable the password reset. It didn't seem very impactful to do so. And that user would be used only with SSH handshakes to save Git repos on disk (and, yeah, run the CI too).</p>
 <p>After this initial setup, I was happy to open my numerous and unfinished Git repositories and run <code>git remote add self gitea@SERVER:USER/REPO.git</code>.
-When it would be time to push upstream, a simple <code>git push</code> and <code>git push self</code> (or <code>gp</code> and <code>gp self</code> with shortcuts) would be enough to send to both my Github account and my Gitea server.</p>
+When it would be time to push upstream, a simple <code>git push</code> and <code>git push self</code> (or <code>gp</code> and <code>gp self</code> with shortcuts) would be enough to send to both my GitHub account and my Gitea server.</p>
 <p>I needed a CI to run tests though, but that was requiring two dependencies. Let's move to the next one.</p>
 <h2 id="the-ci-runner">The CI Runner</h2>
-<p>Gitea supports Github Actions, or <a href="https://www.drone.io/">Drone CI</a>. I decided to go with the first option, as I already had a few Github 4s working. I wanted backward compatibility, and to be able to deploy from Github in the event that my server would go down.</p>
-<p>I think I will eventually migrate, to, maybe, <a href="https://argoproj.github.io/cd">ArgoCD</a> though, as Github Actions isn't great by itself, and, as I would discover later, Gitea doesn't actually support 100% of Github Actions. Some differences may emerge, regarding services hostnames within a test step, for example.</p>
+<p>Gitea supports Github Actions, or <a href="https://www.drone.io/">Drone CI</a>. I decided to go with the first option, as I already had a few GitHub 4s working. I wanted backward compatibility, and to be able to deploy from GitHub in the event that my server would go down.</p>
+<p>I think I will eventually migrate, to, maybe, <a href="https://argoproj.github.io/cd">ArgoCD</a> though, as GitHub Actions isn't great by itself, and, as I would discover later, Gitea doesn't actually support 100% of GitHub Actions. Some differences may emerge, regarding services hostnames within a test step, for example.</p>
 <p>But anyway, we needed Docker. Just one package to install, and to make sure the service would start on boot, and we were good to go.</p>
 <p>The <a href="https://gitea.com/gitea/act_runner">Act Runner repository</a> is a good place if you want quick notes on how to install and configure it. Downloaded the binary, ran the command to register the runner, and pasted the token I generated inside Gitea, so that the runner would be able to use it.</p>
 <p>Remember that I'm using a single machine infrastructure. I may eventually get another Thinkcentre, so that I can declare a new K8s node on it, and have redundancy on my services, but for now, I'm configuring things on only one server, so some security configuration may apply if you decide to setup a swarm of machines.</p>
-<p>It was relatively easy to have simple CI tasks such as tests to work. However, I wanted to be also able to deploy both trunk (automatically) and feature branches (manually). This is one part where I wished Github Actions was as good as Gitlab CI, because I wasn't able to DRY my CI with a single "deployment" step with various triggers. I had to declare two separate workflows.</p>
+<p>It was relatively easy to have simple CI tasks such as tests to work. However, I wanted to be also able to deploy both trunk (automatically) and feature branches (manually). This is one part where I wished GitHub Actions was as good as Gitlab CI, because I wasn't able to DRY my CI with a single "deployment" step with various triggers. I had to declare two separate workflows.</p>
 <p>But anyway, we need a Kubernetes cluster, right?</p>
 <h2 id="minikube">Minikube</h2>
 <p>When it comes to having Kubernetes on your calculator, you have a few options, at least three:</p>
@@ -512,7 +512,7 @@ When it would be time to push upstream, a simple <code>git push</code> and <code
 <p>At least.</p>
 <p>To be honest with you there, I quickly watched Canonical's <a href="https://canonical.com/microk8s/compare">comparison table</a>, saw that there was an Arch package for Minikube, and not for the other ones, and decided to go with it.</p>
 <p>Not a professional benchmark, so you would say, but I'll swap the cluster "distribution" the day I lay my hands on another Thinkcentre, as I said, or even buy proper servers.</p>
-<p>Anyway, installing Minikube was very easy, but I wrote my own SystemD service since it wasn't bundled with one:</p>
+<p>Anyway, installing Minikube was very easy, but I wrote my own Systemd service since it wasn't bundled with one:</p>
 <pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>[root@tinker makkusu]# cat /etc/systemd/system/minikube.service 
 </span><span>[Unit]
 </span><span>Description=Kickoff Minikube Cluster
@@ -546,7 +546,7 @@ I wanted to be able to run <code>kubectl</code> from my laptop though, and this 
 <li>set the runner to push Docker images to Docker's registry instead,</li>
 <li>and have every bit work without breaking another.</li>
 </ul>
-<p>And this required a bit of TCP port forwarding. So I needed to add 2 SystemD services using <code>socat</code> to route traffic:</p>
+<p>And this required a bit of TCP port forwarding. So I needed to add 2 Systemd services using <code>socat</code> to route traffic:</p>
 <ul>
 <li>From the Docker IP to my Minikube's registry IP (and port),</li>
 <li>From Any IP to my Minikube API IP (so that kubectl would work in the runner AND on external devices on the network),</li>
@@ -636,7 +636,7 @@ I would eventually evaluate modern SecretOps alternatives. I only used SOPS in t
 </span><span style="color:#bf616a;">cloudflared</span><span> tunnel login </span><span style="color:#65737e;"># Open a Oauth2 page and gets a token
 </span><span style="color:#bf616a;">cloudflared</span><span> tunnel create suto-tunnel </span><span style="color:#65737e;"># Yeah, that&#39;s the name of my app
 </span><span style="color:#bf616a;">cloudflared</span><span> tunnel route dns suto-tunnel suto.MY_SECRET_DOMAIN.io
-</span><span style="color:#bf616a;">sudo</span><span> cloudflared service install </span><span style="color:#65737e;"># To create the SystemD files
+</span><span style="color:#bf616a;">sudo</span><span> cloudflared service install </span><span style="color:#65737e;"># To create the Systemd files
 </span><span style="color:#bf616a;">sudo</span><span> systemctl enable cloudflared
 </span></code></pre>
 <p><code>sudo cloudflared service install</code> created a couple of services, mainly <code>cloudflared.service</code> and a timer update service which was generic enough and that I didn't modify at all.</p>

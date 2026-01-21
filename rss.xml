@@ -22,33 +22,33 @@
 &lt;p&gt;In my previous post, I mentioned setting up a home server, which was at this point not doing a lot of things, aside from having a PostgreSQL database and a SSH server.&lt;&#x2F;p&gt;
 &lt;p&gt;In this post, I&#x27;ll go into details how I managed to get those components up and running:&lt;&#x2F;p&gt;
 &lt;ul&gt;
-&lt;li&gt;A working Gitea (alternative to Github),&lt;&#x2F;li&gt;
-&lt;li&gt;A CI Runner, compatible with Github Actions, for tests and deployments,&lt;&#x2F;li&gt;
+&lt;li&gt;A working Gitea (alternative to GitHub),&lt;&#x2F;li&gt;
+&lt;li&gt;A CI Runner, compatible with GitHub Actions, for tests and deployments,&lt;&#x2F;li&gt;
 &lt;li&gt;A docker registry to hold my services images,&lt;&#x2F;li&gt;
 &lt;li&gt;A Kubernetes cluster, using Minikube,&lt;&#x2F;li&gt;
 &lt;li&gt;A Cloudflare Tunnel, to expose my services to the World Wide Web,&lt;&#x2F;li&gt;
-&lt;li&gt;And finally, the SystemD configuration files needed to make all of this work (almost) smoothly.&lt;&#x2F;li&gt;
+&lt;li&gt;And finally, the Systemd configuration files needed to make all of this work (almost) smoothly.&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
 &lt;p&gt;So, let&#x27;s move on! I&#x27;ll try not to flood this page with configuration files though, to keep it clean and simple.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;gitea&quot;&gt;Gitea&lt;&#x2F;h2&gt;
-&lt;p&gt;Gitea was &lt;a href=&quot;https:&#x2F;&#x2F;docs.gitea.com&#x2F;category&#x2F;installation&quot;&gt;straighforward to install&lt;&#x2F;a&gt;. In my case, there was a Arch Linux package ready for me, so I just picked that option. The idea was to have something up and running, with the least possible number of abstractions and dependencies, so I didn&#x27;t think about running it inside Kubernetes, or a VM. At least, not for now.&lt;&#x2F;p&gt;
+&lt;p&gt;Gitea was &lt;a href=&quot;https:&#x2F;&#x2F;docs.gitea.com&#x2F;category&#x2F;installation&quot;&gt;straightforward to install&lt;&#x2F;a&gt;. In my case, there was a Arch Linux package ready for me, so I just picked that option. The idea was to have something up and running, with the least possible number of abstractions and dependencies, so I didn&#x27;t think about running it inside Kubernetes, or a VM. At least, not for now.&lt;&#x2F;p&gt;
 &lt;p&gt;Gitea requires a SQL database, so you&#x27;d definitely need to provide one, and check that the Postgres database would accept connections for the &lt;code&gt;gitea&lt;&#x2F;code&gt; user in the usual &lt;code&gt;&#x2F;var&#x2F;lib&#x2F;postgres&#x2F;data&#x2F;pg_hba.conf&lt;&#x2F;code&gt; configuration file:&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# TYPE  DATABASE        USER            ADDRESS                 METHOD
 &lt;&#x2F;span&gt;&lt;span&gt;local   giteadb         gitea                                   scram-sha-256
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;I believe the package was bundled with the proper SystemD config, so a simple &lt;code&gt;systemctl enable gitea&lt;&#x2F;code&gt; was enough to add it to the services SystemD would start on the next reboot.&lt;&#x2F;p&gt;
+&lt;p&gt;I believe the package was bundled with the proper Systemd config, so a simple &lt;code&gt;systemctl enable gitea&lt;&#x2F;code&gt; was enough to add it to the services Systemd would start on the next reboot.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;One important note though&lt;&#x2F;strong&gt;: In my case, the gitea user was configured with a password reset every six months. So, one morning, I had the sad surprise of realizing something was broken in my setup. You can check if your password has expired by running &lt;code&gt;chage -l YOUR_USER&lt;&#x2F;code&gt; and &lt;code&gt;chage -E -1 YOUR_USER&lt;&#x2F;code&gt; to disable the password reset.&lt;&#x2F;p&gt;
-&lt;p&gt;In my case, since my Gitea user was forbidden to accept TTY login, I decided to disable the password reset. It didn&#x27;t seem very impactful to do so. And that user would be used only with SSH handshakes to save Git repos on disk (and, yeah, run the CI too).&lt;&#x2F;p&gt;
+&lt;p&gt;In my case, since my Gitea user was forbidden from TTY login, I decided to disable the password reset. It didn&#x27;t seem very impactful to do so. And that user would be used only with SSH handshakes to save Git repos on disk (and, yeah, run the CI too).&lt;&#x2F;p&gt;
 &lt;p&gt;After this initial setup, I was happy to open my numerous and unfinished Git repositories and run &lt;code&gt;git remote add self gitea@SERVER:USER&#x2F;REPO.git&lt;&#x2F;code&gt;.
-When it would be time to push upstream, a simple &lt;code&gt;git push&lt;&#x2F;code&gt; and &lt;code&gt;git push self&lt;&#x2F;code&gt; (or &lt;code&gt;gp&lt;&#x2F;code&gt; and &lt;code&gt;gp self&lt;&#x2F;code&gt; with shortcuts) would be enough to send to both my Github account and my Gitea server.&lt;&#x2F;p&gt;
+When it would be time to push upstream, a simple &lt;code&gt;git push&lt;&#x2F;code&gt; and &lt;code&gt;git push self&lt;&#x2F;code&gt; (or &lt;code&gt;gp&lt;&#x2F;code&gt; and &lt;code&gt;gp self&lt;&#x2F;code&gt; with shortcuts) would be enough to send to both my GitHub account and my Gitea server.&lt;&#x2F;p&gt;
 &lt;p&gt;I needed a CI to run tests though, but that was requiring two dependencies. Let&#x27;s move to the next one.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;the-ci-runner&quot;&gt;The CI Runner&lt;&#x2F;h2&gt;
-&lt;p&gt;Gitea supports Github Actions, or &lt;a href=&quot;https:&#x2F;&#x2F;www.drone.io&#x2F;&quot;&gt;Drone CI&lt;&#x2F;a&gt;. I decided to go with the first option, as I already had a few Github 4s working. I wanted backward compatibility, and to be able to deploy from Github in the event that my server would go down.&lt;&#x2F;p&gt;
-&lt;p&gt;I think I will eventually migrate, to, maybe, &lt;a href=&quot;https:&#x2F;&#x2F;argoproj.github.io&#x2F;cd&quot;&gt;ArgoCD&lt;&#x2F;a&gt; though, as Github Actions isn&#x27;t great by itself, and, as I would discover later, Gitea doesn&#x27;t actually support 100% of Github Actions. Some differences may emerge, regarding services hostnames within a test step, for example.&lt;&#x2F;p&gt;
+&lt;p&gt;Gitea supports Github Actions, or &lt;a href=&quot;https:&#x2F;&#x2F;www.drone.io&#x2F;&quot;&gt;Drone CI&lt;&#x2F;a&gt;. I decided to go with the first option, as I already had a few GitHub 4s working. I wanted backward compatibility, and to be able to deploy from GitHub in the event that my server would go down.&lt;&#x2F;p&gt;
+&lt;p&gt;I think I will eventually migrate, to, maybe, &lt;a href=&quot;https:&#x2F;&#x2F;argoproj.github.io&#x2F;cd&quot;&gt;ArgoCD&lt;&#x2F;a&gt; though, as GitHub Actions isn&#x27;t great by itself, and, as I would discover later, Gitea doesn&#x27;t actually support 100% of GitHub Actions. Some differences may emerge, regarding services hostnames within a test step, for example.&lt;&#x2F;p&gt;
 &lt;p&gt;But anyway, we needed Docker. Just one package to install, and to make sure the service would start on boot, and we were good to go.&lt;&#x2F;p&gt;
 &lt;p&gt;The &lt;a href=&quot;https:&#x2F;&#x2F;gitea.com&#x2F;gitea&#x2F;act_runner&quot;&gt;Act Runner repository&lt;&#x2F;a&gt; is a good place if you want quick notes on how to install and configure it. Downloaded the binary, ran the command to register the runner, and pasted the token I generated inside Gitea, so that the runner would be able to use it.&lt;&#x2F;p&gt;
 &lt;p&gt;Remember that I&#x27;m using a single machine infrastructure. I may eventually get another Thinkcentre, so that I can declare a new K8s node on it, and have redundancy on my services, but for now, I&#x27;m configuring things on only one server, so some security configuration may apply if you decide to setup a swarm of machines.&lt;&#x2F;p&gt;
-&lt;p&gt;It was relatively easy to have simple CI tasks such as tests to work. However, I wanted to be also able to deploy both trunk (automatically) and feature branches (manually). This is one part where I wished Github Actions was as good as Gitlab CI, because I wasn&#x27;t able to DRY my CI with a single &quot;deployment&quot; step with various triggers. I had to declare two separate workflows.&lt;&#x2F;p&gt;
+&lt;p&gt;It was relatively easy to have simple CI tasks such as tests to work. However, I wanted to be also able to deploy both trunk (automatically) and feature branches (manually). This is one part where I wished GitHub Actions was as good as Gitlab CI, because I wasn&#x27;t able to DRY my CI with a single &quot;deployment&quot; step with various triggers. I had to declare two separate workflows.&lt;&#x2F;p&gt;
 &lt;p&gt;But anyway, we need a Kubernetes cluster, right?&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;minikube&quot;&gt;Minikube&lt;&#x2F;h2&gt;
 &lt;p&gt;When it comes to having Kubernetes on your calculator, you have a few options, at least three:&lt;&#x2F;p&gt;
@@ -60,7 +60,7 @@ When it would be time to push upstream, a simple &lt;code&gt;git push&lt;&#x2F;c
 &lt;p&gt;At least.&lt;&#x2F;p&gt;
 &lt;p&gt;To be honest with you there, I quickly watched Canonical&#x27;s &lt;a href=&quot;https:&#x2F;&#x2F;canonical.com&#x2F;microk8s&#x2F;compare&quot;&gt;comparison table&lt;&#x2F;a&gt;, saw that there was an Arch package for Minikube, and not for the other ones, and decided to go with it.&lt;&#x2F;p&gt;
 &lt;p&gt;Not a professional benchmark, so you would say, but I&#x27;ll swap the cluster &quot;distribution&quot; the day I lay my hands on another Thinkcentre, as I said, or even buy proper servers.&lt;&#x2F;p&gt;
-&lt;p&gt;Anyway, installing Minikube was very easy, but I wrote my own SystemD service since it wasn&#x27;t bundled with one:&lt;&#x2F;p&gt;
+&lt;p&gt;Anyway, installing Minikube was very easy, but I wrote my own Systemd service since it wasn&#x27;t bundled with one:&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;[root@tinker makkusu]# cat &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;minikube.service 
 &lt;&#x2F;span&gt;&lt;span&gt;[Unit]
 &lt;&#x2F;span&gt;&lt;span&gt;Description=Kickoff Minikube Cluster
@@ -94,7 +94,7 @@ I wanted to be able to run &lt;code&gt;kubectl&lt;&#x2F;code&gt; from my laptop 
 &lt;li&gt;set the runner to push Docker images to Docker&#x27;s registry instead,&lt;&#x2F;li&gt;
 &lt;li&gt;and have every bit work without breaking another.&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
-&lt;p&gt;And this required a bit of TCP port forwarding. So I needed to add 2 SystemD services using &lt;code&gt;socat&lt;&#x2F;code&gt; to route traffic:&lt;&#x2F;p&gt;
+&lt;p&gt;And this required a bit of TCP port forwarding. So I needed to add 2 Systemd services using &lt;code&gt;socat&lt;&#x2F;code&gt; to route traffic:&lt;&#x2F;p&gt;
 &lt;ul&gt;
 &lt;li&gt;From the Docker IP to my Minikube&#x27;s registry IP (and port),&lt;&#x2F;li&gt;
 &lt;li&gt;From Any IP to my Minikube API IP (so that kubectl would work in the runner AND on external devices on the network),&lt;&#x2F;li&gt;
@@ -184,7 +184,7 @@ I would eventually evaluate modern SecretOps alternatives. I only used SOPS in t
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cloudflared&lt;&#x2F;span&gt;&lt;span&gt; tunnel login &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Open a Oauth2 page and gets a token
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cloudflared&lt;&#x2F;span&gt;&lt;span&gt; tunnel create suto-tunnel &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Yeah, that&amp;#39;s the name of my app
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cloudflared&lt;&#x2F;span&gt;&lt;span&gt; tunnel route dns suto-tunnel suto.MY_SECRET_DOMAIN.io
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; cloudflared service install &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# To create the SystemD files
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; cloudflared service install &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# To create the Systemd files
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; systemctl enable cloudflared
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;&lt;code&gt;sudo cloudflared service install&lt;&#x2F;code&gt; created a couple of services, mainly &lt;code&gt;cloudflared.service&lt;&#x2F;code&gt; and a timer update service which was generic enough and that I didn&#x27;t modify at all.&lt;&#x2F;p&gt;
