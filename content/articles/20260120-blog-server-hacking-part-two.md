@@ -299,9 +299,9 @@ Oh yeah. Dev server, and training.
 Well, next time, I'll probably cover one of those topics:
 * Setting up ArgoCD (GitOps),
 * Setting up Grafana LGTM for Observability, Logs, Tracing (exciting!),
-* Setting up SOPS for secrets management,
+* Setting up SOPS for secrets management (would allow storing the ingress certificate in VCS securely),
 * Adding a new machine as a cluster node (ok, this one is definitely not next, I need to buy the hardware) (and swapping Minikube with MicroK8s?),
-* Server hardening? Since I do not have that many services running or ports open yet, that one may be short.
+* Server hardening.
 
 Yeah. We'll see, we'll see.
 
