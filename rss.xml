@@ -7,7 +7,250 @@
       <generator>Zola</generator>
       <language>en</language>
       <atom:link href="https://mbuffa.github.io/rss.xml" rel="self" type="application/rss+xml"/>
-      <lastBuildDate>Sun, 18 Jan 2026 00:00:00 +0000</lastBuildDate>
+      <lastBuildDate>Tue, 20 Jan 2026 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>Blog: Hacking my Linux server at home - Part 2</title>
+          <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
+          <author>mbuffa@users.noreply.github.com (Maxime Buffa)</author>
+          <link>https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/</link>
+          <guid>https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/</guid>
+          <description xml:base="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/">&lt;h3 id=&quot;see-also&quot;&gt;See also&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;&#x2F;articles&#x2F;20251110-blog-server-hacking-part-one&quot;&gt;Part One&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;In my previous post, I mentioned setting up a home server, which was at this point not doing a lot of things, aside from having a PostgreSQL database and a SSH server.&lt;&#x2F;p&gt;
+&lt;p&gt;In this post, I&#x27;ll go into details how I managed to get those components up and running:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A working Gitea (alternative to Github),&lt;&#x2F;li&gt;
+&lt;li&gt;A CI Runner, compatible with Github Actions, for tests and deployments,&lt;&#x2F;li&gt;
+&lt;li&gt;A docker registry to hold my services images,&lt;&#x2F;li&gt;
+&lt;li&gt;A Kubernetes cluster, using Minikube,&lt;&#x2F;li&gt;
+&lt;li&gt;A Cloudflare Tunnel, to expose my services to the World Wide Web,&lt;&#x2F;li&gt;
+&lt;li&gt;And finally, the SystemD configuration files needed to make all of this work (almost) smoothly.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;So, let&#x27;s move on! I&#x27;ll try not to flood this page with configuration files though, to keep it clean and simple.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;gitea&quot;&gt;Gitea&lt;&#x2F;h2&gt;
+&lt;p&gt;Gitea was &lt;a href=&quot;https:&#x2F;&#x2F;docs.gitea.com&#x2F;category&#x2F;installation&quot;&gt;straighforward to install&lt;&#x2F;a&gt;. In my case, there was a Arch Linux package ready for me, so I just picked that option. The idea was to have something up and running, with the least possible number of abstractions and dependencies, so I didn&#x27;t think about running it inside Kubernetes, or a VM. At least, not for now.&lt;&#x2F;p&gt;
+&lt;p&gt;Gitea requires a SQL database, so you&#x27;d definitely need to provide one, and check that the Postgres database would accept connections for the &lt;code&gt;gitea&lt;&#x2F;code&gt; user in the usual &lt;code&gt;&#x2F;var&#x2F;lib&#x2F;postgres&#x2F;data&#x2F;pg_hba.conf&lt;&#x2F;code&gt; configuration file:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# TYPE  DATABASE        USER            ADDRESS                 METHOD
+&lt;&#x2F;span&gt;&lt;span&gt;local   giteadb         gitea                                   scram-sha-256
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I believe the package was bundled with the proper SystemD config, so a simple &lt;code&gt;systemctl enable gitea&lt;&#x2F;code&gt; was enough to add it to the services SystemD would start on the next reboot.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;One important note though&lt;&#x2F;strong&gt;: In my case, the gitea user was configured with a password reset every six months. So, one morning, I had the sad surprise of realizing something was broken in my setup. You can check if your password has expired by running &lt;code&gt;chage -l YOUR_USER&lt;&#x2F;code&gt; and &lt;code&gt;chage -E -1 YOUR_USER&lt;&#x2F;code&gt; to disable the password reset.&lt;&#x2F;p&gt;
+&lt;p&gt;In my case, since my Gitea user was forbidden to accept TTY login, I decided to disable the password reset. It didn&#x27;t seem very impactful to do so. And that user would be used only with SSH handshakes to save Git repos on disk (and, yeah, run the CI too).&lt;&#x2F;p&gt;
+&lt;p&gt;After this initial setup, I was happy to open my numerous and unfinished Git repositories and run &lt;code&gt;git remote add self gitea@SERVER:USER&#x2F;REPO.git&lt;&#x2F;code&gt;.
+When it would be time to push upstream, a simple &lt;code&gt;git push&lt;&#x2F;code&gt; and &lt;code&gt;git push self&lt;&#x2F;code&gt; (or &lt;code&gt;gp&lt;&#x2F;code&gt; and &lt;code&gt;gp self&lt;&#x2F;code&gt; with shortcuts) would be enough to send to both my Github account and my Gitea server.&lt;&#x2F;p&gt;
+&lt;p&gt;I needed a CI to run tests though, but that was requiring two dependencies. Let&#x27;s move to the next one.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-ci-runner&quot;&gt;The CI Runner&lt;&#x2F;h2&gt;
+&lt;p&gt;Gitea supports Github Actions, or &lt;a href=&quot;https:&#x2F;&#x2F;www.drone.io&#x2F;&quot;&gt;Drone CI&lt;&#x2F;a&gt;. I decided to go with the first option, as I already had a few Github 4s working. I wanted backward compatibility, and to be able to deploy from Github in the event that my server would go down.&lt;&#x2F;p&gt;
+&lt;p&gt;I think I will eventually migrate, to, maybe, &lt;a href=&quot;https:&#x2F;&#x2F;argoproj.github.io&#x2F;cd&quot;&gt;ArgoCD&lt;&#x2F;a&gt; though, as Github Actions isn&#x27;t great by itself, and, as I would discover later, Gitea doesn&#x27;t actually support 100% of Github Actions. Some differences may emerge, regarding services hostnames within a test step, for example.&lt;&#x2F;p&gt;
+&lt;p&gt;But anyway, we needed Docker. Just one package to install, and to make sure the service would start on boot, and we were good to go.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;a href=&quot;https:&#x2F;&#x2F;gitea.com&#x2F;gitea&#x2F;act_runner&quot;&gt;Act Runner repository&lt;&#x2F;a&gt; is a good place if you want quick notes on how to install and configure it. Downloaded the binary, ran the command to register the runner, and pasted the token I generated inside Gitea, so that the runner would be able to use it.&lt;&#x2F;p&gt;
+&lt;p&gt;Remember that I&#x27;m using a single machine infrastructure. I may eventually get another Thinkcentre, so that I can declare a new K8s node on it, and have redundancy on my services, but for now, I&#x27;m configuring things on only one server, so some security configuration may apply if you decide to setup a swarm of machines.&lt;&#x2F;p&gt;
+&lt;p&gt;It was relatively easy to have simple CI tasks such as tests to work. However, I wanted to be also able to deploy both trunk (automatically) and feature branches (manually). This is one part where I wished Github Actions was as good as Gitlab CI, because I wasn&#x27;t able to DRY my CI with a single &quot;deployment&quot; step with various triggers. I had to declare two separate workflows.&lt;&#x2F;p&gt;
+&lt;p&gt;But anyway, we need a Kubernetes cluster, right?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;minikube&quot;&gt;Minikube&lt;&#x2F;h2&gt;
+&lt;p&gt;When it comes to having Kubernetes on your calculator, you have a few options, at least three:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Minikube,&lt;&#x2F;li&gt;
+&lt;li&gt;K3s,&lt;&#x2F;li&gt;
+&lt;li&gt;and MicroK8s.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;At least.&lt;&#x2F;p&gt;
+&lt;p&gt;To be honest with you there, I quickly watched Canonical&#x27;s &lt;a href=&quot;https:&#x2F;&#x2F;canonical.com&#x2F;microk8s&#x2F;compare&quot;&gt;comparison table&lt;&#x2F;a&gt;, saw that there was an Arch package for Minikube, and not for the other ones, and decided to go with it.&lt;&#x2F;p&gt;
+&lt;p&gt;Not a professional benchmark, so you would say, but I&#x27;ll swap the cluster &quot;distribution&quot; the day I lay my hands on another Thinkcentre, as I said, or even buy proper servers.&lt;&#x2F;p&gt;
+&lt;p&gt;Anyway, installing Minikube was very easy, but I wrote my own SystemD service since it wasn&#x27;t bundled with one:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;[root@tinker makkusu]# cat &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;minikube.service 
+&lt;&#x2F;span&gt;&lt;span&gt;[Unit]
+&lt;&#x2F;span&gt;&lt;span&gt;Description=Kickoff Minikube Cluster
+&lt;&#x2F;span&gt;&lt;span&gt;After=docker.service
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Service]
+&lt;&#x2F;span&gt;&lt;span&gt;Type=oneshot
+&lt;&#x2F;span&gt;&lt;span&gt;ExecStart=&#x2F;usr&#x2F;bin&#x2F;minikube start --apiserver-ips=ETHERNET_ADDR
+&lt;&#x2F;span&gt;&lt;span&gt;RemainAfterExit=true
+&lt;&#x2F;span&gt;&lt;span&gt;ExecStop=&#x2F;usr&#x2F;bin&#x2F;minikube stop
+&lt;&#x2F;span&gt;&lt;span&gt;StandardOutput=journal
+&lt;&#x2F;span&gt;&lt;span&gt;User=makkusu
+&lt;&#x2F;span&gt;&lt;span&gt;Group=makkusu
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Install]
+&lt;&#x2F;span&gt;&lt;span&gt;WantedBy=multi-user.target
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The &lt;code&gt;--apiserver&lt;&#x2F;code&gt; part is interesting. Since my server does have two interfaces (a wireless, and an ethernet one), i needed to specify one in order to be able to use &lt;code&gt;kubectl&lt;&#x2F;code&gt; on my laptop. I believe you may use &lt;code&gt;0.0.0.0&lt;&#x2F;code&gt; here.&lt;&#x2F;p&gt;
+&lt;p&gt;I also had to make sure it would run after the docker service was started, because I ended up using Docker&#x27;s registry for images pull. Minikube does come with its own registry, but I wasn&#x27;t able to make my cluster pull from it.&lt;&#x2F;p&gt;
+&lt;p&gt;Also, I decided to make it run under my user, just like the basic official example shows. One would &lt;strong&gt;probably&lt;&#x2F;strong&gt; want to isolate the runtime to a user that isn&#x27;t in the &lt;code&gt;sudoers&lt;&#x2F;code&gt; list though... I&#x27;ll probably try to setup MicroK8s this way at some point.&lt;&#x2F;p&gt;
+&lt;p&gt;Once the cluster is started, you can check that it&#x27;s running by just using &lt;code&gt;kubectl get pods&lt;&#x2F;code&gt; or deploying hello world apps on it.
+I wanted to be able to run &lt;code&gt;kubectl&lt;&#x2F;code&gt; from my laptop though, and this required generating a certificate on the server, copy it to my laptop alongside the &lt;code&gt;~&#x2F;.kube&#x2F;config&lt;&#x2F;code&gt; configuration, and adapt the hostname. I won&#x27;t copy that here for obvious reasons.&lt;&#x2F;p&gt;
+&lt;p&gt;Anyway, that&#x27;s where the &quot;interesting stuff&quot; begins.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;making-the-runner-actually-deploy&quot;&gt;Making the Runner actually deploy&lt;&#x2F;h2&gt;
+&lt;p&gt;This is where things got interesting, and it required me a bit of trial and error to get it right, or at least working. I&#x27;m sure there is some streamlining (and hardening) opportunity at arm&#x27;s length.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;ll spare you the details about the intermediate steps, but it took a bit of work:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;to get the runner to be able to push Docker images to Minikube&#x27;s registry,&lt;&#x2F;li&gt;
+&lt;li&gt;to be able to connect to Minikube&#x27;s API to run kubectl commands in the runner (like &lt;code&gt;kubectl apply -f&lt;&#x2F;code&gt;),&lt;&#x2F;li&gt;
+&lt;li&gt;realize pods weren&#x27;t able to pull images,&lt;&#x2F;li&gt;
+&lt;li&gt;set the runner to push Docker images to Docker&#x27;s registry instead,&lt;&#x2F;li&gt;
+&lt;li&gt;and have every bit work without breaking another.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;And this required a bit of TCP port forwarding. So I needed to add 2 SystemD services using &lt;code&gt;socat&lt;&#x2F;code&gt; to route traffic:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;From the Docker IP to my Minikube&#x27;s registry IP (and port),&lt;&#x2F;li&gt;
+&lt;li&gt;From Any IP to my Minikube API IP (so that kubectl would work in the runner AND on external devices on the network),&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This resulted in those two files:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# minikube-registry-forward.service
+&lt;&#x2F;span&gt;&lt;span&gt;[Unit]
+&lt;&#x2F;span&gt;&lt;span&gt;Description=Forward Docker bridge to Minikube registry
+&lt;&#x2F;span&gt;&lt;span&gt;After=minikube.service
+&lt;&#x2F;span&gt;&lt;span&gt;Requires=minikube.service
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Service]
+&lt;&#x2F;span&gt;&lt;span&gt;Type=simple
+&lt;&#x2F;span&gt;&lt;span&gt;ExecStart=&#x2F;usr&#x2F;bin&#x2F;socat TCP-LISTEN:5000,bind=DOCKER_IP,fork,reuseaddr TCP:MINIKUBE_IP:5000
+&lt;&#x2F;span&gt;&lt;span&gt;Restart=always
+&lt;&#x2F;span&gt;&lt;span&gt;RestartSec=5
+&lt;&#x2F;span&gt;&lt;span&gt;StandardOutput=journal
+&lt;&#x2F;span&gt;&lt;span&gt;StandardError=journal
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Install]
+&lt;&#x2F;span&gt;&lt;span&gt;WantedBy=multi-user.target
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# minikube-api-forward.service 
+&lt;&#x2F;span&gt;&lt;span&gt;[Unit]
+&lt;&#x2F;span&gt;&lt;span&gt;Description=Forward Docker bridge to Minikube API server
+&lt;&#x2F;span&gt;&lt;span&gt;After=minikube.service docker.service
+&lt;&#x2F;span&gt;&lt;span&gt;Requires=minikube.service docker.service
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Service]
+&lt;&#x2F;span&gt;&lt;span&gt;Type=simple
+&lt;&#x2F;span&gt;&lt;span&gt;ExecStart=&#x2F;usr&#x2F;bin&#x2F;socat TCP-LISTEN:8443,fork,bind=0.0.0.0,reuseaddr TCP:MINIKUBE_IP:8443 
+&lt;&#x2F;span&gt;&lt;span&gt;Restart=always
+&lt;&#x2F;span&gt;&lt;span&gt;RestartSec=5
+&lt;&#x2F;span&gt;&lt;span&gt;StandardOutput=journal
+&lt;&#x2F;span&gt;&lt;span&gt;StandardError=journal
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;# Security hardening
+&lt;&#x2F;span&gt;&lt;span&gt;NoNewPrivileges=true
+&lt;&#x2F;span&gt;&lt;span&gt;PrivateTmp=true
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Install]
+&lt;&#x2F;span&gt;&lt;span&gt;WantedBy=multi-user.target
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now that I see it posted, it seems ridiculously straightforward. But I did loose a bit of hair when trying to figure out why my CI would work one day, and would stop working the next one, after I fixed &lt;code&gt;kubectl&lt;&#x2F;code&gt; on my laptop.&lt;&#x2F;p&gt;
+&lt;p&gt;I previously mentioned that my k8s pods weren&#x27;t able to pull images initially. I honestly do not remember what the message was, and maybe I was just missinbg a port forward, or some authorization, but I ended up using Docker&#x27;s registry anyway.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;one-more-port-forward&quot;&gt;One more port forward&lt;&#x2F;h3&gt;
+&lt;p&gt;One more port forward needed to route HTTPS traffic to the cluster&#x27;s ingress!&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# ingress-https-forward.service
+&lt;&#x2F;span&gt;&lt;span&gt;[Unit]
+&lt;&#x2F;span&gt;&lt;span&gt;Description=Forward HTTPS to Minikube Ingress NodePort
+&lt;&#x2F;span&gt;&lt;span&gt;After=network.target
+&lt;&#x2F;span&gt;&lt;span&gt;After=minikube.service
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Service]
+&lt;&#x2F;span&gt;&lt;span&gt;Type=simple
+&lt;&#x2F;span&gt;&lt;span&gt;ExecStartPre=&#x2F;bin&#x2F;bash -c &amp;#39;until nc -z MINIKUBE_API_IP 32655; do sleep 5; done&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;ExecStart=&#x2F;usr&#x2F;bin&#x2F;socat TCP-LISTEN:443,bind=0.0.0.0,fork,reuseaddr TCP:MINIKUBE_API_IP:32655
+&lt;&#x2F;span&gt;&lt;span&gt;Restart=always
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Install]
+&lt;&#x2F;span&gt;&lt;span&gt;WantedBy=multi-user.target
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This is an interesting one. You can see that I&#x27;m starting the service after the network interface and minikube are started. But that doesn&#x27;t mean they would be ready to use.&lt;&#x2F;p&gt;
+&lt;p&gt;Hence the &lt;code&gt;ExecStartPre=&#x2F;bin&#x2F;bash -c &#x27;until nc -z MINIKUBE_API_IP 32655; do sleep 5; done&#x27;&lt;&#x2F;code&gt; line, to delay the service start until Minikube is actually ready to welcome traffic.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;32655&lt;&#x2F;code&gt; is my Minikube port for HTTPS.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;one-last-thing&quot;&gt;One last thing&lt;&#x2F;h3&gt;
+&lt;p&gt;I needed a TLS certificate, stored as a Kubernetes secret. Of course, that secret would stay on the server. I would only reference it in my k8s files in Git.
+I would eventually evaluate modern SecretOps alternatives. I only used SOPS in the past.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;ll obviously skip all the TLS generation part, which ends up with a &lt;code&gt;.pem&lt;&#x2F;code&gt; and a &lt;code&gt;.key&lt;&#x2F;code&gt;. Those are common but quite tedious to generate.&lt;&#x2F;p&gt;
+&lt;p&gt;Things were not over though. At this point, I was able to access my server over my local network with a simple &lt;code&gt;&#x2F;etc&#x2F;hosts&lt;&#x2F;code&gt; entry, but I wanted to be able to access my pods over the Internet.&lt;&#x2F;p&gt;
+&lt;p&gt;Gitea would stay local network only.&lt;&#x2F;p&gt;
+&lt;p&gt;I remembered about DynDNS a lifetime ago. I wanted to have something similar setup, and to avoid needing a static IP address from my ISP. So I decided to go with Cloudflare Tunnels.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;opening-to-the-internet&quot;&gt;Opening to the Internet&lt;&#x2F;h2&gt;
+&lt;p&gt;I already had a cool domain name. Now it was about time to use it.&lt;&#x2F;p&gt;
+&lt;p&gt;The plan was:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;To create the tunnel, and run &lt;code&gt;cloudflared&lt;&#x2F;code&gt; on the server,&lt;&#x2F;li&gt;
+&lt;li&gt;To modify some DNS entries to redirect to Cloudflare&#x27;s Tunnel,&lt;&#x2F;li&gt;
+&lt;li&gt;And to make sure traffic was effectively hitting the Tunnel, the Ingress, and eventually, the Pods&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;You can say I saw that Cloudflare &quot;Gateway Error&quot; gray page for a few hours.&lt;&#x2F;p&gt;
+&lt;p&gt;Setup was relatively easy to follow. You can basically choose to create Tunnels from their dashboard, or yourself with the CLI, which I believe they call &quot;Self-Managed Tunnels&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;But I had forgotten to remove the &lt;code&gt;&#x2F;etc&#x2F;hosts&lt;&#x2F;code&gt; entry at some point. So I was quite a bi confused with the debugging.&lt;&#x2F;p&gt;
+&lt;p&gt;The setup went basically like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pacman -Ss&lt;&#x2F;span&gt;&lt;span&gt; cloudflare
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;yay -S&lt;&#x2F;span&gt;&lt;span&gt; cloudflared
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cloudflared&lt;&#x2F;span&gt;&lt;span&gt; tunnel login &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Open a Oauth2 page and gets a token
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cloudflared&lt;&#x2F;span&gt;&lt;span&gt; tunnel create suto-tunnel &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Yeah, that&amp;#39;s the name of my app
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cloudflared&lt;&#x2F;span&gt;&lt;span&gt; tunnel route dns suto-tunnel suto.MY_SECRET_DOMAIN.io
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; cloudflared service install &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# To create the SystemD files
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; systemctl enable cloudflared
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;sudo cloudflared service install&lt;&#x2F;code&gt; created a couple of services, mainly &lt;code&gt;cloudflared.service&lt;&#x2F;code&gt; and a timer update service which was generic enough and that I didn&#x27;t modify at all.&lt;&#x2F;p&gt;
+&lt;p&gt;However, my &lt;code&gt;cloudflared.service&lt;&#x2F;code&gt; file ended up looking like this:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;# cloudflared.service
+&lt;&#x2F;span&gt;&lt;span&gt;[Unit]
+&lt;&#x2F;span&gt;&lt;span&gt;Description=cloudflared
+&lt;&#x2F;span&gt;&lt;span&gt;After=network-online.target
+&lt;&#x2F;span&gt;&lt;span&gt;After=ingress-https-forward.service
+&lt;&#x2F;span&gt;&lt;span&gt;Wants=network-online.target
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Service]
+&lt;&#x2F;span&gt;&lt;span&gt;TimeoutStartSec=15
+&lt;&#x2F;span&gt;&lt;span&gt;Type=notify
+&lt;&#x2F;span&gt;&lt;span&gt;ExecStart=&#x2F;usr&#x2F;bin&#x2F;cloudflared --loglevel debug --config &#x2F;etc&#x2F;cloudflared&#x2F;config.yml tunnel run
+&lt;&#x2F;span&gt;&lt;span&gt;Restart=on-failure
+&lt;&#x2F;span&gt;&lt;span&gt;RestartSec=5s
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;[Install]
+&lt;&#x2F;span&gt;&lt;span&gt;WantedBy=multi-user.target
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;One trivial detail: Using &lt;code&gt;create suto-tunnel&lt;&#x2F;code&gt; and &lt;code&gt;route dns&lt;&#x2F;code&gt; cloudflared subcommands would update your user&#x27;s``~&#x2F;.cloudflared&#x2F;config.yaml&lt;code&gt;. So you have to make sure your services point to the right config files, if you decided to put those into &lt;&#x2F;code&gt;&#x2F;etc&#x2F;cloudflared`, of course.&lt;&#x2F;p&gt;
+&lt;p&gt;I also thought that the service journal wasn&#x27;t verbose at all, hence the &lt;code&gt;--loglevel debug&lt;&#x2F;code&gt;. I was getting crazy, not knowing if my external requests were actually hitting the tunnel, or if my DNS entries weren&#x27;t properly set up or refreshed.&lt;&#x2F;p&gt;
+&lt;p&gt;I still had issues with TLS though. So CF&#x27;s default configuration ended up like this for me:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;tunnel: TUNNEL_ID
+&lt;&#x2F;span&gt;&lt;span&gt;credentials-file: &#x2F;home&#x2F;makkusu&#x2F;.cloudflared&#x2F;TUNNEL_ID.json
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;ingress:
+&lt;&#x2F;span&gt;&lt;span&gt;  - hostname: suto.MY_SECRET_DOMAIN.io
+&lt;&#x2F;span&gt;&lt;span&gt;    service: https:&#x2F;&#x2F;localhost:443
+&lt;&#x2F;span&gt;&lt;span&gt;    originRequest:
+&lt;&#x2F;span&gt;&lt;span&gt;      noTLSVerify: true
+&lt;&#x2F;span&gt;&lt;span&gt;  - service: http_status:404
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I basically had to end the TLS encryption to my tunnel. My browser wouldn&#x27;t accept my self-signed certificate otherwise, because of my own self-declared authority. Cloudflare&#x27;s certificate would take the relay here.&lt;&#x2F;p&gt;
+&lt;p&gt;I don&#x27;t believe this is a big deal, though.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;moment-of-truth&quot;&gt;Moment of Truth&lt;&#x2F;h2&gt;
+&lt;p&gt;One thing I like to do after finishing a setup just relies on pressing the power button.&lt;&#x2F;p&gt;
+&lt;p&gt;You don&#x27;t know if you did everything right if you kept your session alive, but forgot to enable or restart services. The only way to know is to pull the plug.&lt;&#x2F;p&gt;
+&lt;p&gt;Yeah. This step took me a few times.&lt;&#x2F;p&gt;
+&lt;p&gt;I think I still got an issue to this day though, because every now and then, trying to access my server would result in the Cloudflare gateway error page, and I don&#x27;t think this is on them. I probably still have a race condition to fix, or to make sure the tunnel runs when all of its dependencies are ready, not just started.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;finishing-touches&quot;&gt;Finishing Touches&lt;&#x2F;h2&gt;
+&lt;p&gt;Setting up a server is nice, but it&#x27;s even nicer to keep track of its configuration and ADRs, so I just created a repository for my server, similar to infamous &lt;code&gt;dotfiles&lt;&#x2F;code&gt;. It&#x27;s just securely stored in a Proton Drive :)&lt;&#x2F;p&gt;
+&lt;p&gt;I do have a &lt;code&gt;k8s&lt;&#x2F;code&gt; folder in a few repositories, which contain app&#x27;s YAML manifests. I decided to go with Kustomize for those, because I believe it&#x27;s the simplest and the cleanest way to deploy small apps on k8s, because it uses plain YAML to generate other YAML, while Helm relies on templating and substitutions. It&#x27;s like replacing Wordpress with a static site generator, in a way.&lt;&#x2F;p&gt;
+&lt;p&gt;And eventually, I&#x27;ll probably have a &quot;generic&quot; CI for my server itself, for shared services, such as PostgreSQL databases with specific versions, and some observability services too :)&lt;&#x2F;p&gt;
+&lt;p&gt;Helm can be very handy though, with its existing collection of charts. But I would keep it at bay for my own apps.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s also worth mentioning that I used Claude Code from time to time, especially for generating a self-signed certificate. This definitely made this step less tedious. And since I stored my server&#x27;s general info (such as IP address, the services it runs, etc) as documentation, I was able to leverage Claude in interesting ways. This post is purely from a human, though.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;wrap-up&quot;&gt;Wrap-up&lt;&#x2F;h2&gt;
+&lt;p&gt;So, this was quite a big chunk. What&#x27;s next?&lt;&#x2F;p&gt;
+&lt;p&gt;Well.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m still undecided which one in particular is next though, as this post is pretty up-to-date with my server&#x27;s current state.&lt;&#x2F;p&gt;
+&lt;p&gt;What was this guy doing all of this for again?
+Oh yeah. Dev server, and training.&lt;&#x2F;p&gt;
+&lt;p&gt;Well, next time, I&#x27;ll probably cover one of those topics:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Setting up ArgoCD (GitOps),&lt;&#x2F;li&gt;
+&lt;li&gt;Setting up Grafana LGTM for Observability, Logs, Tracing (exciting!),&lt;&#x2F;li&gt;
+&lt;li&gt;Setting up SOPS for secrets management,&lt;&#x2F;li&gt;
+&lt;li&gt;Adding a new machine as a cluster node (ok, this one is definitely not next, I need to buy the hardware) (and swapping Minikube with MicroK8s?),&lt;&#x2F;li&gt;
+&lt;li&gt;Server hardening? Since I do not have that many services running or ports open yet, that one may be short.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Yeah. We&#x27;ll see, we&#x27;ll see.&lt;&#x2F;p&gt;
+&lt;p&gt;Anyway, see you next time.&lt;&#x2F;p&gt;
+&lt;p&gt;P.S.: I didn&#x27;t include any copy of my app&#x27;s kubernetes YAML files. Those are pretty standard and would have cluttered the body of this post for little added value.&lt;&#x2F;p&gt;
+</description>
+      </item>
       <item>
           <title>Stop using your app query builder for analytics</title>
           <pubDate>Sun, 18 Jan 2026 00:00:00 +0000</pubDate>

@@ -1,0 +1,744 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+  <title>Blog: Hacking my Linux server at home - Part 2</title>
+  
+
+  
+  
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap"
+    rel="stylesheet">
+
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+
+  
+    <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
+  
+
+  
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="https://mbuffa.github.io/rss.xml">
+  
+
+  <meta name="description" content="Setting up Gitea, Minikube, a CI Runner and a Cloudflare Tunnel" />
+</head>
+
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateGiscusStyle(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+            break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+            break;
+
+          default:
+            activeMode = "dark";
+            break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateGiscusStyle(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+
+  <main class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white bg-blue-900 dark:bg-transparent
+    ">
+    <div class="w-228 max-w-screen m-auto p-4 bg-slate-200 dark:bg-transparent">
+      <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul
+      class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+      
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;">Home</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;articles">Articles</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;demos">Demos</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;tags">Tags</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;hiring">Hiring</a>
+      </li>
+      
+      <li class="ml-auto">
+        <a class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
+            name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
+            name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+      <div class="
+    w-11/12 m-auto mt-2 mb-4 p-4 rounded-md text-center
+    bg-black bg-opacity-100 shadow-lg
+    dark:bg-black dark:bg-opacity-60
+">
+  <h1 class="text-2xl font-bold text-white dark:text-orange-500">Maxime Buffa</h1>
+  <p class="text-lg text-gray-300 dark:text-gray-400 mt-1">Sr. Backend Engineer and DevOps</p>
+  <div class="mt-3 flex justify-center gap-4 flex-wrap">
+    
+    
+    <a href="https:&#x2F;&#x2F;github.com&#x2F;mbuffa" class="
+        inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
+        text-white hover:bg-white hover:text-black
+        dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900"
+    >GitHub</a>
+    
+    <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;maxime-buffa" class="
+        inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
+        text-white hover:bg-white hover:text-black
+        dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900"
+    >LinkedIn</a>
+    
+    <a href="https:&#x2F;&#x2F;bsky.app&#x2F;profile&#x2F;madmakks.bsky.social" class="
+        inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
+        text-white hover:bg-white hover:text-black
+        dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900"
+    >BlueSky</a>
+    
+    <a href="mailto:makkusoft@proton.me" class="
+        inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
+        text-white hover:bg-white hover:text-black
+        dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900"
+    >Email</a>
+    
+  </div>
+</div>
+
+
+      <div class="
+        w-11/12 m-auto mt-2 p-4
+        flex justify-center
+        flex-col flex-wrap
+        lg:flex-row lg:flex-nowrap
+        dark:bg-black dark:bg-opacity-60
+    ">
+        
+
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#see-also" title="See also">
+  See also
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#gitea" title="Gitea">
+  Gitea
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#the-ci-runner" title="The CI Runner">
+  The CI Runner
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#minikube" title="Minikube">
+  Minikube
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#making-the-runner-actually-deploy" title="Making the Runner actually deploy">
+  Making the Runner actually deploy
+</a>
+
+        
+        <ol>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#one-more-port-forward" title="One more port forward">
+  One more port forward
+</a>
+</li>
+          
+          <li>
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#one-last-thing" title="One last thing">
+  One last thing
+</a>
+</li>
+          
+        </ol>
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#opening-to-the-internet" title="Opening to the Internet">
+  Opening to the Internet
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#moment-of-truth" title="Moment of Truth">
+  Moment of Truth
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#finishing-touches" title="Finishing Touches">
+  Finishing Touches
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260120-blog-server-hacking-part-two/#wrap-up" title="Wrap-up">
+  Wrap-up
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-[50vh] pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Blog: Hacking my Linux server at home - Part 2
+    </h1>
+    
+    <div class="p-2">Setting up Gitea, Minikube, a CI Runner and a Cloudflare Tunnel</div>
+    
+    
+    <p class="subtitle">
+      Published on 2026-01-20
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/blog">
+    blog
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/server">
+    server
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/sysadmin">
+    sysadmin
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/dev-ops">
+    dev-ops
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/k8s">
+    k8s
+  </a>
+  
+</p>
+
+    
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS
+      </a>
+    </p>
+  </header>
+
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h3 id="see-also">See also</h3>
+<ul>
+<li><a href="/articles/20251110-blog-server-hacking-part-one">Part One</a></li>
+</ul>
+<h2 id="context">Context</h2>
+<p>In my previous post, I mentioned setting up a home server, which was at this point not doing a lot of things, aside from having a PostgreSQL database and a SSH server.</p>
+<p>In this post, I'll go into details how I managed to get those components up and running:</p>
+<ul>
+<li>A working Gitea (alternative to Github),</li>
+<li>A CI Runner, compatible with Github Actions, for tests and deployments,</li>
+<li>A docker registry to hold my services images,</li>
+<li>A Kubernetes cluster, using Minikube,</li>
+<li>A Cloudflare Tunnel, to expose my services to the World Wide Web,</li>
+<li>And finally, the SystemD configuration files needed to make all of this work (almost) smoothly.</li>
+</ul>
+<p>So, let's move on! I'll try not to flood this page with configuration files though, to keep it clean and simple.</p>
+<h2 id="gitea">Gitea</h2>
+<p>Gitea was <a href="https://docs.gitea.com/category/installation">straighforward to install</a>. In my case, there was a Arch Linux package ready for me, so I just picked that option. The idea was to have something up and running, with the least possible number of abstractions and dependencies, so I didn't think about running it inside Kubernetes, or a VM. At least, not for now.</p>
+<p>Gitea requires a SQL database, so you'd definitely need to provide one, and check that the Postgres database would accept connections for the <code>gitea</code> user in the usual <code>/var/lib/postgres/data/pg_hba.conf</code> configuration file:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span># TYPE  DATABASE        USER            ADDRESS                 METHOD
+</span><span>local   giteadb         gitea                                   scram-sha-256
+</span></code></pre>
+<p>I believe the package was bundled with the proper SystemD config, so a simple <code>systemctl enable gitea</code> was enough to add it to the services SystemD would start on the next reboot.</p>
+<p><strong>One important note though</strong>: In my case, the gitea user was configured with a password reset every six months. So, one morning, I had the sad surprise of realizing something was broken in my setup. You can check if your password has expired by running <code>chage -l YOUR_USER</code> and <code>chage -E -1 YOUR_USER</code> to disable the password reset.</p>
+<p>In my case, since my Gitea user was forbidden to accept TTY login, I decided to disable the password reset. It didn't seem very impactful to do so. And that user would be used only with SSH handshakes to save Git repos on disk (and, yeah, run the CI too).</p>
+<p>After this initial setup, I was happy to open my numerous and unfinished Git repositories and run <code>git remote add self gitea@SERVER:USER/REPO.git</code>.
+When it would be time to push upstream, a simple <code>git push</code> and <code>git push self</code> (or <code>gp</code> and <code>gp self</code> with shortcuts) would be enough to send to both my Github account and my Gitea server.</p>
+<p>I needed a CI to run tests though, but that was requiring two dependencies. Let's move to the next one.</p>
+<h2 id="the-ci-runner">The CI Runner</h2>
+<p>Gitea supports Github Actions, or <a href="https://www.drone.io/">Drone CI</a>. I decided to go with the first option, as I already had a few Github 4s working. I wanted backward compatibility, and to be able to deploy from Github in the event that my server would go down.</p>
+<p>I think I will eventually migrate, to, maybe, <a href="https://argoproj.github.io/cd">ArgoCD</a> though, as Github Actions isn't great by itself, and, as I would discover later, Gitea doesn't actually support 100% of Github Actions. Some differences may emerge, regarding services hostnames within a test step, for example.</p>
+<p>But anyway, we needed Docker. Just one package to install, and to make sure the service would start on boot, and we were good to go.</p>
+<p>The <a href="https://gitea.com/gitea/act_runner">Act Runner repository</a> is a good place if you want quick notes on how to install and configure it. Downloaded the binary, ran the command to register the runner, and pasted the token I generated inside Gitea, so that the runner would be able to use it.</p>
+<p>Remember that I'm using a single machine infrastructure. I may eventually get another Thinkcentre, so that I can declare a new K8s node on it, and have redundancy on my services, but for now, I'm configuring things on only one server, so some security configuration may apply if you decide to setup a swarm of machines.</p>
+<p>It was relatively easy to have simple CI tasks such as tests to work. However, I wanted to be also able to deploy both trunk (automatically) and feature branches (manually). This is one part where I wished Github Actions was as good as Gitlab CI, because I wasn't able to DRY my CI with a single "deployment" step with various triggers. I had to declare two separate workflows.</p>
+<p>But anyway, we need a Kubernetes cluster, right?</p>
+<h2 id="minikube">Minikube</h2>
+<p>When it comes to having Kubernetes on your calculator, you have a few options, at least three:</p>
+<ul>
+<li>Minikube,</li>
+<li>K3s,</li>
+<li>and MicroK8s.</li>
+</ul>
+<p>At least.</p>
+<p>To be honest with you there, I quickly watched Canonical's <a href="https://canonical.com/microk8s/compare">comparison table</a>, saw that there was an Arch package for Minikube, and not for the other ones, and decided to go with it.</p>
+<p>Not a professional benchmark, so you would say, but I'll swap the cluster "distribution" the day I lay my hands on another Thinkcentre, as I said, or even buy proper servers.</p>
+<p>Anyway, installing Minikube was very easy, but I wrote my own SystemD service since it wasn't bundled with one:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>[root@tinker makkusu]# cat /etc/systemd/system/minikube.service 
+</span><span>[Unit]
+</span><span>Description=Kickoff Minikube Cluster
+</span><span>After=docker.service
+</span><span>
+</span><span>[Service]
+</span><span>Type=oneshot
+</span><span>ExecStart=/usr/bin/minikube start --apiserver-ips=ETHERNET_ADDR
+</span><span>RemainAfterExit=true
+</span><span>ExecStop=/usr/bin/minikube stop
+</span><span>StandardOutput=journal
+</span><span>User=makkusu
+</span><span>Group=makkusu
+</span><span>
+</span><span>[Install]
+</span><span>WantedBy=multi-user.target
+</span></code></pre>
+<p>The <code>--apiserver</code> part is interesting. Since my server does have two interfaces (a wireless, and an ethernet one), i needed to specify one in order to be able to use <code>kubectl</code> on my laptop. I believe you may use <code>0.0.0.0</code> here.</p>
+<p>I also had to make sure it would run after the docker service was started, because I ended up using Docker's registry for images pull. Minikube does come with its own registry, but I wasn't able to make my cluster pull from it.</p>
+<p>Also, I decided to make it run under my user, just like the basic official example shows. One would <strong>probably</strong> want to isolate the runtime to a user that isn't in the <code>sudoers</code> list though... I'll probably try to setup MicroK8s this way at some point.</p>
+<p>Once the cluster is started, you can check that it's running by just using <code>kubectl get pods</code> or deploying hello world apps on it.
+I wanted to be able to run <code>kubectl</code> from my laptop though, and this required generating a certificate on the server, copy it to my laptop alongside the <code>~/.kube/config</code> configuration, and adapt the hostname. I won't copy that here for obvious reasons.</p>
+<p>Anyway, that's where the "interesting stuff" begins.</p>
+<h2 id="making-the-runner-actually-deploy">Making the Runner actually deploy</h2>
+<p>This is where things got interesting, and it required me a bit of trial and error to get it right, or at least working. I'm sure there is some streamlining (and hardening) opportunity at arm's length.</p>
+<p>I'll spare you the details about the intermediate steps, but it took a bit of work:</p>
+<ul>
+<li>to get the runner to be able to push Docker images to Minikube's registry,</li>
+<li>to be able to connect to Minikube's API to run kubectl commands in the runner (like <code>kubectl apply -f</code>),</li>
+<li>realize pods weren't able to pull images,</li>
+<li>set the runner to push Docker images to Docker's registry instead,</li>
+<li>and have every bit work without breaking another.</li>
+</ul>
+<p>And this required a bit of TCP port forwarding. So I needed to add 2 SystemD services using <code>socat</code> to route traffic:</p>
+<ul>
+<li>From the Docker IP to my Minikube's registry IP (and port),</li>
+<li>From Any IP to my Minikube API IP (so that kubectl would work in the runner AND on external devices on the network),</li>
+</ul>
+<p>This resulted in those two files:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span># minikube-registry-forward.service
+</span><span>[Unit]
+</span><span>Description=Forward Docker bridge to Minikube registry
+</span><span>After=minikube.service
+</span><span>Requires=minikube.service
+</span><span>
+</span><span>[Service]
+</span><span>Type=simple
+</span><span>ExecStart=/usr/bin/socat TCP-LISTEN:5000,bind=DOCKER_IP,fork,reuseaddr TCP:MINIKUBE_IP:5000
+</span><span>Restart=always
+</span><span>RestartSec=5
+</span><span>StandardOutput=journal
+</span><span>StandardError=journal
+</span><span>
+</span><span>[Install]
+</span><span>WantedBy=multi-user.target
+</span></code></pre>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span># minikube-api-forward.service 
+</span><span>[Unit]
+</span><span>Description=Forward Docker bridge to Minikube API server
+</span><span>After=minikube.service docker.service
+</span><span>Requires=minikube.service docker.service
+</span><span>
+</span><span>[Service]
+</span><span>Type=simple
+</span><span>ExecStart=/usr/bin/socat TCP-LISTEN:8443,fork,bind=0.0.0.0,reuseaddr TCP:MINIKUBE_IP:8443 
+</span><span>Restart=always
+</span><span>RestartSec=5
+</span><span>StandardOutput=journal
+</span><span>StandardError=journal
+</span><span>
+</span><span># Security hardening
+</span><span>NoNewPrivileges=true
+</span><span>PrivateTmp=true
+</span><span>
+</span><span>[Install]
+</span><span>WantedBy=multi-user.target
+</span></code></pre>
+<p>Now that I see it posted, it seems ridiculously straightforward. But I did loose a bit of hair when trying to figure out why my CI would work one day, and would stop working the next one, after I fixed <code>kubectl</code> on my laptop.</p>
+<p>I previously mentioned that my k8s pods weren't able to pull images initially. I honestly do not remember what the message was, and maybe I was just missinbg a port forward, or some authorization, but I ended up using Docker's registry anyway.</p>
+<h3 id="one-more-port-forward">One more port forward</h3>
+<p>One more port forward needed to route HTTPS traffic to the cluster's ingress!</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span># ingress-https-forward.service
+</span><span>[Unit]
+</span><span>Description=Forward HTTPS to Minikube Ingress NodePort
+</span><span>After=network.target
+</span><span>After=minikube.service
+</span><span>
+</span><span>[Service]
+</span><span>Type=simple
+</span><span>ExecStartPre=/bin/bash -c &#39;until nc -z MINIKUBE_API_IP 32655; do sleep 5; done&#39;
+</span><span>ExecStart=/usr/bin/socat TCP-LISTEN:443,bind=0.0.0.0,fork,reuseaddr TCP:MINIKUBE_API_IP:32655
+</span><span>Restart=always
+</span><span>
+</span><span>[Install]
+</span><span>WantedBy=multi-user.target
+</span></code></pre>
+<p>This is an interesting one. You can see that I'm starting the service after the network interface and minikube are started. But that doesn't mean they would be ready to use.</p>
+<p>Hence the <code>ExecStartPre=/bin/bash -c 'until nc -z MINIKUBE_API_IP 32655; do sleep 5; done'</code> line, to delay the service start until Minikube is actually ready to welcome traffic.</p>
+<p><code>32655</code> is my Minikube port for HTTPS.</p>
+<h3 id="one-last-thing">One last thing</h3>
+<p>I needed a TLS certificate, stored as a Kubernetes secret. Of course, that secret would stay on the server. I would only reference it in my k8s files in Git.
+I would eventually evaluate modern SecretOps alternatives. I only used SOPS in the past.</p>
+<p>I'll obviously skip all the TLS generation part, which ends up with a <code>.pem</code> and a <code>.key</code>. Those are common but quite tedious to generate.</p>
+<p>Things were not over though. At this point, I was able to access my server over my local network with a simple <code>/etc/hosts</code> entry, but I wanted to be able to access my pods over the Internet.</p>
+<p>Gitea would stay local network only.</p>
+<p>I remembered about DynDNS a lifetime ago. I wanted to have something similar setup, and to avoid needing a static IP address from my ISP. So I decided to go with Cloudflare Tunnels.</p>
+<h2 id="opening-to-the-internet">Opening to the Internet</h2>
+<p>I already had a cool domain name. Now it was about time to use it.</p>
+<p>The plan was:</p>
+<ul>
+<li>To create the tunnel, and run <code>cloudflared</code> on the server,</li>
+<li>To modify some DNS entries to redirect to Cloudflare's Tunnel,</li>
+<li>And to make sure traffic was effectively hitting the Tunnel, the Ingress, and eventually, the Pods</li>
+</ul>
+<p>You can say I saw that Cloudflare "Gateway Error" gray page for a few hours.</p>
+<p>Setup was relatively easy to follow. You can basically choose to create Tunnels from their dashboard, or yourself with the CLI, which I believe they call "Self-Managed Tunnels".</p>
+<p>But I had forgotten to remove the <code>/etc/hosts</code> entry at some point. So I was quite a bi confused with the debugging.</p>
+<p>The setup went basically like this:</p>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">pacman -Ss</span><span> cloudflare
+</span><span style="color:#bf616a;">yay -S</span><span> cloudflared
+</span><span style="color:#bf616a;">cloudflared</span><span> tunnel login </span><span style="color:#65737e;"># Open a Oauth2 page and gets a token
+</span><span style="color:#bf616a;">cloudflared</span><span> tunnel create suto-tunnel </span><span style="color:#65737e;"># Yeah, that&#39;s the name of my app
+</span><span style="color:#bf616a;">cloudflared</span><span> tunnel route dns suto-tunnel suto.MY_SECRET_DOMAIN.io
+</span><span style="color:#bf616a;">sudo</span><span> cloudflared service install </span><span style="color:#65737e;"># To create the SystemD files
+</span><span style="color:#bf616a;">sudo</span><span> systemctl enable cloudflared
+</span></code></pre>
+<p><code>sudo cloudflared service install</code> created a couple of services, mainly <code>cloudflared.service</code> and a timer update service which was generic enough and that I didn't modify at all.</p>
+<p>However, my <code>cloudflared.service</code> file ended up looking like this:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span># cloudflared.service
+</span><span>[Unit]
+</span><span>Description=cloudflared
+</span><span>After=network-online.target
+</span><span>After=ingress-https-forward.service
+</span><span>Wants=network-online.target
+</span><span>
+</span><span>[Service]
+</span><span>TimeoutStartSec=15
+</span><span>Type=notify
+</span><span>ExecStart=/usr/bin/cloudflared --loglevel debug --config /etc/cloudflared/config.yml tunnel run
+</span><span>Restart=on-failure
+</span><span>RestartSec=5s
+</span><span>
+</span><span>[Install]
+</span><span>WantedBy=multi-user.target
+</span></code></pre>
+<p>One trivial detail: Using <code>create suto-tunnel</code> and <code>route dns</code> cloudflared subcommands would update your user's``~/.cloudflared/config.yaml<code>. So you have to make sure your services point to the right config files, if you decided to put those into </code>/etc/cloudflared`, of course.</p>
+<p>I also thought that the service journal wasn't verbose at all, hence the <code>--loglevel debug</code>. I was getting crazy, not knowing if my external requests were actually hitting the tunnel, or if my DNS entries weren't properly set up or refreshed.</p>
+<p>I still had issues with TLS though. So CF's default configuration ended up like this for me:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>tunnel: TUNNEL_ID
+</span><span>credentials-file: /home/makkusu/.cloudflared/TUNNEL_ID.json
+</span><span>
+</span><span>ingress:
+</span><span>  - hostname: suto.MY_SECRET_DOMAIN.io
+</span><span>    service: https://localhost:443
+</span><span>    originRequest:
+</span><span>      noTLSVerify: true
+</span><span>  - service: http_status:404
+</span></code></pre>
+<p>I basically had to end the TLS encryption to my tunnel. My browser wouldn't accept my self-signed certificate otherwise, because of my own self-declared authority. Cloudflare's certificate would take the relay here.</p>
+<p>I don't believe this is a big deal, though.</p>
+<h2 id="moment-of-truth">Moment of Truth</h2>
+<p>One thing I like to do after finishing a setup just relies on pressing the power button.</p>
+<p>You don't know if you did everything right if you kept your session alive, but forgot to enable or restart services. The only way to know is to pull the plug.</p>
+<p>Yeah. This step took me a few times.</p>
+<p>I think I still got an issue to this day though, because every now and then, trying to access my server would result in the Cloudflare gateway error page, and I don't think this is on them. I probably still have a race condition to fix, or to make sure the tunnel runs when all of its dependencies are ready, not just started.</p>
+<h2 id="finishing-touches">Finishing Touches</h2>
+<p>Setting up a server is nice, but it's even nicer to keep track of its configuration and ADRs, so I just created a repository for my server, similar to infamous <code>dotfiles</code>. It's just securely stored in a Proton Drive :)</p>
+<p>I do have a <code>k8s</code> folder in a few repositories, which contain app's YAML manifests. I decided to go with Kustomize for those, because I believe it's the simplest and the cleanest way to deploy small apps on k8s, because it uses plain YAML to generate other YAML, while Helm relies on templating and substitutions. It's like replacing Wordpress with a static site generator, in a way.</p>
+<p>And eventually, I'll probably have a "generic" CI for my server itself, for shared services, such as PostgreSQL databases with specific versions, and some observability services too :)</p>
+<p>Helm can be very handy though, with its existing collection of charts. But I would keep it at bay for my own apps.</p>
+<p>It's also worth mentioning that I used Claude Code from time to time, especially for generating a self-signed certificate. This definitely made this step less tedious. And since I stored my server's general info (such as IP address, the services it runs, etc) as documentation, I was able to leverage Claude in interesting ways. This post is purely from a human, though.</p>
+<h2 id="wrap-up">Wrap-up</h2>
+<p>So, this was quite a big chunk. What's next?</p>
+<p>Well.</p>
+<p>I'm still undecided which one in particular is next though, as this post is pretty up-to-date with my server's current state.</p>
+<p>What was this guy doing all of this for again?
+Oh yeah. Dev server, and training.</p>
+<p>Well, next time, I'll probably cover one of those topics:</p>
+<ul>
+<li>Setting up ArgoCD (GitOps),</li>
+<li>Setting up Grafana LGTM for Observability, Logs, Tracing (exciting!),</li>
+<li>Setting up SOPS for secrets management,</li>
+<li>Adding a new machine as a cluster node (ok, this one is definitely not next, I need to buy the hardware) (and swapping Minikube with MicroK8s?),</li>
+<li>Server hardening? Since I do not have that many services running or ports open yet, that one may be short.</li>
+</ul>
+<p>Yeah. We'll see, we'll see.</p>
+<p>Anyway, see you next time.</p>
+<p>P.S.: I didn't include any copy of my app's kubernetes YAML files. Those are pretty standard and would have cluttered the body of this post for little added value.</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+</article>
+
+      </div>
+
+      <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written by Maxime Buffa with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://www.getzola.org/" target="_blank">Zola</a> and <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/"
+      target="_blank">Tailwind</a>
+  </span>
+</footer>
+    </div>
+    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link.
+    <br>
+  </main>
+
+  <!-- Heap Analytics loader -->
+    <script type="text/javascript">
+      window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
+      heap.load("4008293954");
+    </script>
+    <script
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+    <script type="module"
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+
+</html>
