@@ -244,7 +244,7 @@ Oh yeah. Dev server, and training.&lt;&#x2F;p&gt;
 &lt;li&gt;Setting up Grafana LGTM for Observability, Logs, Tracing (exciting!),&lt;&#x2F;li&gt;
 &lt;li&gt;Setting up SOPS for secrets management (would allow storing the ingress certificate in VCS securely),&lt;&#x2F;li&gt;
 &lt;li&gt;Adding a new machine as a cluster node (ok, this one is definitely not next, I need to buy the hardware) (and swapping Minikube with MicroK8s?),&lt;&#x2F;li&gt;
-&lt;li&gt;Server hardening? Since I do not have that many services running or ports open yet, that one may be short.&lt;&#x2F;li&gt;
+&lt;li&gt;Server hardening.&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
 &lt;p&gt;Yeah. We&#x27;ll see, we&#x27;ll see.&lt;&#x2F;p&gt;
 &lt;p&gt;Anyway, see you next time.&lt;&#x2F;p&gt;
