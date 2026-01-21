@@ -13,17 +13,17 @@ tags = ["blog", "server", "sysadmin", "dev-ops", "k8s"]
 In my previous post, I mentioned setting up a home server, which was at this point not doing a lot of things, aside from having a PostgreSQL database and a SSH server.
 
 In this post, I'll go into details how I managed to get those components up and running:
-* A working Gitea (alternative to Github),
-* A CI Runner, compatible with Github Actions, for tests and deployments,
+* A working Gitea (alternative to GitHub),
+* A CI Runner, compatible with GitHub Actions, for tests and deployments,
 * A docker registry to hold my services images,
 * A Kubernetes cluster, using Minikube,
 * A Cloudflare Tunnel, to expose my services to the World Wide Web,
-* And finally, the SystemD configuration files needed to make all of this work (almost) smoothly.
+* And finally, the Systemd configuration files needed to make all of this work (almost) smoothly.
 
 So, let's move on! I'll try not to flood this page with configuration files though, to keep it clean and simple.
 
 ## Gitea
-Gitea was [straighforward to install][1]. In my case, there was a Arch Linux package ready for me, so I just picked that option. The idea was to have something up and running, with the least possible number of abstractions and dependencies, so I didn't think about running it inside Kubernetes, or a VM. At least, not for now.
+Gitea was [straightforward to install][1]. In my case, there was a Arch Linux package ready for me, so I just picked that option. The idea was to have something up and running, with the least possible number of abstractions and dependencies, so I didn't think about running it inside Kubernetes, or a VM. At least, not for now.
 
 Gitea requires a SQL database, so you'd definitely need to provide one, and check that the Postgres database would accept connections for the `gitea` user in the usual `/var/lib/postgres/data/pg_hba.conf` configuration file:
 ```
@@ -31,21 +31,21 @@ Gitea requires a SQL database, so you'd definitely need to provide one, and chec
 local   giteadb         gitea                                   scram-sha-256
 ```
 
-I believe the package was bundled with the proper SystemD config, so a simple `systemctl enable gitea` was enough to add it to the services SystemD would start on the next reboot.
+I believe the package was bundled with the proper Systemd config, so a simple `systemctl enable gitea` was enough to add it to the services Systemd would start on the next reboot.
 
 **One important note though**: In my case, the gitea user was configured with a password reset every six months. So, one morning, I had the sad surprise of realizing something was broken in my setup. You can check if your password has expired by running `chage -l YOUR_USER` and `chage -E -1 YOUR_USER` to disable the password reset.
 
-In my case, since my Gitea user was forbidden to accept TTY login, I decided to disable the password reset. It didn't seem very impactful to do so. And that user would be used only with SSH handshakes to save Git repos on disk (and, yeah, run the CI too).
+In my case, since my Gitea user was forbidden from TTY login, I decided to disable the password reset. It didn't seem very impactful to do so. And that user would be used only with SSH handshakes to save Git repos on disk (and, yeah, run the CI too).
 
 After this initial setup, I was happy to open my numerous and unfinished Git repositories and run `git remote add self gitea@SERVER:USER/REPO.git`.
-When it would be time to push upstream, a simple `git push` and `git push self` (or `gp` and `gp self` with shortcuts) would be enough to send to both my Github account and my Gitea server.
+When it would be time to push upstream, a simple `git push` and `git push self` (or `gp` and `gp self` with shortcuts) would be enough to send to both my GitHub account and my Gitea server.
 
 I needed a CI to run tests though, but that was requiring two dependencies. Let's move to the next one.
 
 ## The CI Runner
-Gitea supports Github Actions, or [Drone CI][2]. I decided to go with the first option, as I already had a few Github 4s working. I wanted backward compatibility, and to be able to deploy from Github in the event that my server would go down.
+Gitea supports Github Actions, or [Drone CI][2]. I decided to go with the first option, as I already had a few GitHub 4s working. I wanted backward compatibility, and to be able to deploy from GitHub in the event that my server would go down.
 
-I think I will eventually migrate, to, maybe, [ArgoCD][3] though, as Github Actions isn't great by itself, and, as I would discover later, Gitea doesn't actually support 100% of Github Actions. Some differences may emerge, regarding services hostnames within a test step, for example.
+I think I will eventually migrate, to, maybe, [ArgoCD][3] though, as GitHub Actions isn't great by itself, and, as I would discover later, Gitea doesn't actually support 100% of GitHub Actions. Some differences may emerge, regarding services hostnames within a test step, for example.
 
 But anyway, we needed Docker. Just one package to install, and to make sure the service would start on boot, and we were good to go.
 
@@ -53,7 +53,7 @@ The [Act Runner repository][4] is a good place if you want quick notes on how to
 
 Remember that I'm using a single machine infrastructure. I may eventually get another Thinkcentre, so that I can declare a new K8s node on it, and have redundancy on my services, but for now, I'm configuring things on only one server, so some security configuration may apply if you decide to setup a swarm of machines.
 
-It was relatively easy to have simple CI tasks such as tests to work. However, I wanted to be also able to deploy both trunk (automatically) and feature branches (manually). This is one part where I wished Github Actions was as good as Gitlab CI, because I wasn't able to DRY my CI with a single "deployment" step with various triggers. I had to declare two separate workflows.
+It was relatively easy to have simple CI tasks such as tests to work. However, I wanted to be also able to deploy both trunk (automatically) and feature branches (manually). This is one part where I wished GitHub Actions was as good as Gitlab CI, because I wasn't able to DRY my CI with a single "deployment" step with various triggers. I had to declare two separate workflows.
 
 But anyway, we need a Kubernetes cluster, right?
 
@@ -69,7 +69,7 @@ To be honest with you there, I quickly watched Canonical's [comparison table][5]
 
 Not a professional benchmark, so you would say, but I'll swap the cluster "distribution" the day I lay my hands on another Thinkcentre, as I said, or even buy proper servers.
 
-Anyway, installing Minikube was very easy, but I wrote my own SystemD service since it wasn't bundled with one:
+Anyway, installing Minikube was very easy, but I wrote my own Systemd service since it wasn't bundled with one:
 ```
 [root@tinker makkusu]# cat /etc/systemd/system/minikube.service 
 [Unit]
@@ -110,7 +110,7 @@ I'll spare you the details about the intermediate steps, but it took a bit of wo
 * set the runner to push Docker images to Docker's registry instead,
 * and have every bit work without breaking another.
 
-And this required a bit of TCP port forwarding. So I needed to add 2 SystemD services using `socat` to route traffic:
+And this required a bit of TCP port forwarding. So I needed to add 2 Systemd services using `socat` to route traffic:
 * From the Docker IP to my Minikube's registry IP (and port),
 * From Any IP to my Minikube API IP (so that kubectl would work in the runner AND on external devices on the network),
 
@@ -219,7 +219,7 @@ yay -S cloudflared
 cloudflared tunnel login # Open a Oauth2 page and gets a token
 cloudflared tunnel create suto-tunnel # Yeah, that's the name of my app
 cloudflared tunnel route dns suto-tunnel suto.MY_SECRET_DOMAIN.io
-sudo cloudflared service install # To create the SystemD files
+sudo cloudflared service install # To create the Systemd files
 sudo systemctl enable cloudflared
 ```
 
