@@ -2,6 +2,7 @@
 title = "Management: Burn out your team in six months"
 description = "A guide to burn-out"
 date = 2025-08-26
+draft = true
 [taxonomies]
 tags = ["opinion", "management", "leadership"]
 +++
