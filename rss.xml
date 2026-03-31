@@ -20,7 +20,7 @@
 &lt;li&gt;&lt;a href=&quot;&#x2F;articles&#x2F;20260120-blog-server-hacking-part-two&quot;&gt;Part Two&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
 &lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
-&lt;p&gt;In my previous post, I described how I setup Gitea, Act, Minikube and a Cloudflare Tunnel to be able to host my own zeb apps on my server, and ended the post with a list of things to do.&lt;&#x2F;p&gt;
+&lt;p&gt;In my previous post, I described how I setup Gitea, Act, Minikube and a Cloudflare Tunnel to be able to host my own web apps on my server, and ended the post with a list of things to do.&lt;&#x2F;p&gt;
 &lt;p&gt;Let&#x27;s take a look at the &quot;roadmap&quot; at the end of the previous post:&lt;&#x2F;p&gt;
 &lt;ul&gt;
 &lt;li&gt;Setting up ArgoCD (GitOps),&lt;&#x2F;li&gt;
