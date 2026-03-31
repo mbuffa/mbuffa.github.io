@@ -11,7 +11,7 @@ tags = ["blog", "server", "sysadmin", "dev-ops", "k8s"]
 * [Part Two][1]
 
 ## Context
-In my previous post, I described how I setup Gitea, Act, Minikube and a Cloudflare Tunnel to be able to host my own zeb apps on my server, and ended the post with a list of things to do.
+In my previous post, I described how I setup Gitea, Act, Minikube and a Cloudflare Tunnel to be able to host my own web apps on my server, and ended the post with a list of things to do.
 
 Let's take a look at the "roadmap" at the end of the previous post:
 * Setting up ArgoCD (GitOps),
