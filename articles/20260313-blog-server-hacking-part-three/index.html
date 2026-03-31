@@ -1,0 +1,683 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  
+
+  
+  <title>Blog: Hacking my Linux server at home - Part 3</title>
+  
+
+  
+  
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap"
+    rel="stylesheet">
+
+  <link class="stylesheet" rel="stylesheet" href="/main.css" />
+  <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+
+  
+    <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
+  
+
+  
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="https://mbuffa.github.io/rss.xml">
+  
+
+  <meta name="description" content="MicroK8s + ArgoCD + Vault + Kustomize &lt;3" />
+</head>
+
+<body class="stylesheet-mode" onload="loadActiveStylesheet()">
+  <script type="text/javascript">
+    function getStylesheetModeTags() {
+      return document.getElementsByClassName("stylesheet-mode");
+    }
+
+    function getStylesheetTogglerTags() {
+      return document.getElementsByClassName("stylesheet-toggler");
+    }
+
+    function loadActiveStylesheet() {
+      var activeStylesheet = localStorage.getItem("active-stylesheet");
+
+      if (["dark", "light"].indexOf(activeStylesheet) == -1) {
+        activeStylesheet = "dark";
+      }
+
+      var classes = "stylesheet-mode " + activeStylesheet;
+
+      for (elem of getStylesheetModeTags()) {
+        elem.setAttribute("class", classes);
+      }
+
+      updateGiscusStyle(activeStylesheet);
+    }
+
+    function getIconNameForMode(mode) {
+      if (mode == "dark") {
+        return "sunny";
+      }
+      return "moon";
+    }
+
+    function sendToIframe(iframe, message, url) {
+      iframe.contentWindow.postMessage(message, url);
+    }
+
+    function sendToGiscus(message) {
+      var iframe = document.querySelector("iframe.giscus-frame");
+
+      // WORKAROUND:
+      // If the iframe is loaded, we apply the new theme instantly.
+      // If it's not, then we delay the loading, so that the default "dark"
+      // theme won't override it once the iframe is loaded (on first page load).
+      // SHORTCOMINGS:
+      // This can display a dark Giscus inside a light page for a few seconds...
+      // But it prevents displaying a broken form or duplicating the iframe.
+      if (iframe) {
+        sendToIframe(iframe, { giscus: message }, "https://giscus.app");
+      } else {
+        setTimeout(sendToGiscus, 3000, message)
+      }
+    }
+
+    function updateGiscusStyle(mode) {
+      var theme = mode == "dark" ? "dark" : "light";
+
+      sendToGiscus({
+        setConfig: {
+          theme: theme
+        }
+      });
+    }
+
+    function switchStylesheets() {
+      var activeMode = "dark";
+
+      for (elem of getStylesheetModeTags()) {
+        switch (elem.className) {
+          case "stylesheet-mode dark":
+            activeMode = "light";
+            break;
+
+          case "stylesheet-mode light":
+            activeMode = "dark";
+            break;
+
+          default:
+            activeMode = "dark";
+            break;
+        }
+
+        elem.setAttribute("class", "stylesheet-mode " + activeMode);
+      }
+
+      localStorage.setItem("active-stylesheet", activeMode);
+      updateGiscusStyle(activeMode);
+    }
+  </script>
+
+  <script type="text/javascript">loadActiveStylesheet();</script>
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+
+  <main class="
+      m-auto max-w-full h-screen overflow-y-scroll overflow-x-hidden
+      text-black dark:text-white bg-blue-900 dark:bg-transparent
+    ">
+    <div class="w-228 max-w-screen m-auto p-4 bg-slate-200 dark:bg-transparent">
+      <div class="
+    sticky h-12 w-11/12 m-auto mt-4 mb-4 p-1 -top-px rounded-md
+    bg-black bg-opacity-100 shadow-2xl
+    dark:bg-black dark:bg-opacity-80 dark:shadow-transparent
+">
+  <nav class="h-full w-full relative">
+    <ul
+      class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
+      
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;">Home</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;articles">Articles</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;demos">Demos</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;tags">Tags</a>
+      </li>
+      
+      <li>
+        <a class="
+            inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+            dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          href="&#x2F;hiring">Hiring</a>
+      </li>
+      
+      <li class="ml-auto">
+        <a class="
+            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            text-white hover:bg-white hover:text-black active:text-black
+          dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
+          onClick="switchStylesheets()">
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
+            name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
+            name="sunny"></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+      <div class="
+    w-11/12 m-auto mt-2 mb-4 p-4 rounded-md text-center
+    bg-black bg-opacity-100 shadow-lg
+    dark:bg-black dark:bg-opacity-60
+">
+  <h1 class="text-2xl font-bold text-white dark:text-orange-500">Maxime Buffa</h1>
+  <p class="text-lg text-gray-300 dark:text-gray-400 mt-1">Sr. Backend Engineer and DevOps</p>
+  <div class="mt-3 flex justify-center gap-4 flex-wrap">
+    
+    
+    <a href="https:&#x2F;&#x2F;github.com&#x2F;mbuffa" class="
+        inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
+        text-white hover:bg-white hover:text-black
+        dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900"
+    >GitHub</a>
+    
+    <a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;maxime-buffa" class="
+        inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
+        text-white hover:bg-white hover:text-black
+        dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900"
+    >LinkedIn</a>
+    
+    <a href="https:&#x2F;&#x2F;bsky.app&#x2F;profile&#x2F;madmakks.bsky.social" class="
+        inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
+        text-white hover:bg-white hover:text-black
+        dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900"
+    >BlueSky</a>
+    
+    <a href="mailto:makkusoft@proton.me" class="
+        inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
+        text-white hover:bg-white hover:text-black
+        dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900"
+    >Email</a>
+    
+  </div>
+</div>
+
+
+      <div class="
+        w-11/12 m-auto mt-2 p-4
+        flex justify-center
+        flex-col flex-wrap
+        lg:flex-row lg:flex-nowrap
+        dark:bg-black dark:bg-opacity-60
+    ">
+        
+
+
+<aside class="w-full lg:w-3/12">
+  <div class="sticky flex top-50">
+    <ol class="w-full m-0 pl-4 list-decimal">
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/#see-also" title="See also">
+  See also
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/#context" title="Context">
+  Context
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/#swapping-minikube-with-microk8s" title="Swapping Minikube with MicroK8s">
+  Swapping Minikube with MicroK8s
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/#handling-secrets" title="Handling Secrets">
+  Handling Secrets
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/#hashicorp-vault" title="HashiCorp Vault">
+  HashiCorp Vault
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/#argocd-why-how-wtf" title="ArgoCD: Why, How, WTF?">
+  ArgoCD: Why, How, WTF?
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/#a-quick-note-about-k8s-manifests-kustomize-vs-helm" title="A quick note about K8s manifests: Kustomize vs Helm">
+  A quick note about K8s manifests: Kustomize vs Helm
+</a>
+
+        
+      </li>
+      
+      <li>
+        
+<a class="
+    inline-block px-2 text-sm w-full underline hover:no-underline
+  dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+  href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/#wrap-up" title="Wrap-up">
+  Wrap-up
+</a>
+
+        
+      </li>
+      
+    </ol>
+  </div>
+</aside>
+
+
+
+<article class="w-full lg:w-9/12 pt-1 pb-[50vh] pl-4">
+
+  <header class="text-center">
+    <h1 class="text-2xl font-bold m-2 p-2">
+      Blog: Hacking my Linux server at home - Part 3
+    </h1>
+    
+    <div class="p-2">MicroK8s + ArgoCD + Vault + Kustomize &lt;3</div>
+    
+    
+    <p class="subtitle">
+      Published on 2026-03-31
+    </p>
+    
+    
+    
+<p class="max-w-fit m-auto">
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/blog">
+    blog
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/server">
+    server
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/sysadmin">
+    sysadmin
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/dev-ops">
+    dev-ops
+  </a>
+  
+  <a class="inline-block m-1 p-1 underline hover:no-underline"
+    href="/tags/k8s">
+    k8s
+  </a>
+  
+</p>
+
+    
+    <p class="m-2 p-2">
+      <a href="/atom.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to Atom feed">
+        Atom
+      </a>
+      <span>&middot;</span>
+      <a href="/rss.xml"
+         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         title="Subscribe to RSS feed">
+        RSS
+      </a>
+    </p>
+  </header>
+
+  
+
+  
+
+  
+
+  <div class="markdown-content">
+    <h3 id="see-also">See also</h3>
+<ul>
+<li><a href="/articles/20251110-blog-server-hacking-part-one">Part One</a></li>
+<li><a href="/articles/20260120-blog-server-hacking-part-two">Part Two</a></li>
+</ul>
+<h2 id="context">Context</h2>
+<p>In my previous post, I described how I setup Gitea, Act, Minikube and a Cloudflare Tunnel to be able to host my own zeb apps on my server, and ended the post with a list of things to do.</p>
+<p>Let's take a look at the "roadmap" at the end of the previous post:</p>
+<ul>
+<li>Setting up ArgoCD (GitOps),</li>
+<li>Setting up Grafana LGTM for Observability, Logs, Tracing (exciting!),</li>
+<li>Setting up SOPS for secrets management (would allow storing the ingress certificate in VCS securely),</li>
+<li>Adding a new machine as a cluster node (ok, this one is definitely not next, I need to buy the hardware) (and swapping Minikube with MicroK8s?),</li>
+<li>Server hardening.</li>
+</ul>
+<p>Long time, no see. I did a couple of things since the last update :-) and today, I'll detail how I set up HashiCorp's Vault and ArgoCD, among some minor tweaks, and more importantly, why I made those choices over others.</p>
+<h2 id="swapping-minikube-with-microk8s">Swapping Minikube with MicroK8s</h2>
+<p>Let's evacuate the less interesting things first. When it comes to deploying Kubernetes on your own hardware, several options stand out. One of them is Minikube, another is McroK8s. The first one worked for me, but was not offering multi-nodes support, so I figured migrating would bring a few benefits, including some "builtin" plugins such as Helm or ArgoCD.</p>
+<p>No Arch Linux packages for MicroK8s, it's distributed mainly as <code>snaps</code>, universal Linux binaries. Canonical's documentation proved relatively easy to follow, and MicroK8s came with its own SystemD services to manage its various services. Nice.</p>
+<p>I did encounter some obstacles however. Since the Cluster IP was different, I had to figure out how to rewire my various <code>socat</code> port forwards to correctly re-route traffic between Docker (for the registry and the CI on Gitea), MicroK8s, and incoming traffic from Cloudflare.</p>
+<p>But the biggest issue I ultimately faced was random failures on my <code>socat</code> port forward between containers running in my CI, and my Docker registry, this time managed by MicroK8s. For no apparent reason, <code>docker push</code> would randomly fail when using the Docker bridge IP.</p>
+<p>I eventually resorted to use the same network as the host for Act when running containers, which is... arguably not great, but probably not that terrible either, since I will be the first person to either push code and run CIs.</p>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#65737e;"># /etc/act_runner/config.yaml
+</span><span style="color:#bf616a;">host:
+</span><span>  </span><span style="color:#bf616a;">network: </span><span>&quot;</span><span style="color:#a3be8c;">host</span><span>&quot;
+</span></code></pre>
+<p>Definitely not a setting you would toggle in a serious production environment, but I needed a stable base to improve on. I did investigate socat's TTL, IPv6 vs IPv4 and a couple of other parameters. I'm still unsure what's going on.</p>
+<p>Let's move on to the main dishes :)</p>
+<h2 id="handling-secrets">Handling Secrets</h2>
+<p>Storing and managing passwords (and more generally secrets) has always been a great source of smile or happy bullying in some places, with stories ranging from "somebody guessed my password and posted nasty things on Slack" to "somebody stole my whole crypto wallet and spent $5000 with my OpenAI key".</p>
+<p>Mismanaging secrets has always been terrible, but with the rise of malwares, and, more recently, the adoption of AI tools basically indexing your folders and sending those into requests, that's definitely something you want to handle with a minimum of discipline.</p>
+<p>There's usually two types of configuration: unsensitive data (identifiers, usernames, URLs without auth) and secrets, such as passwords, private keys (for asymetric algorithms), or tokens. We're interested in the latter here.</p>
+<p>Some secrets are long or short lived. Things like OAuth2 tokens, valid for a relatively short period of time, are usually stored in application state, cache or databases, and refreshed often.
+Long-lived secrets usually do not receive that much attention though, especially when you start building a service. You just put things into variable environments (either directly or through your PaaS abstraction, like <code>fly secrets</code>), and it stays there for 5 years before seeing its first-ever renewal.</p>
+<p>Let's say we need to have a couple of secret keys to deploy our app, and we want to generate a Kubernetes secret that our app will have access to.
+We could:</p>
+<ul>
+<li>Store the <code>secret.yaml</code> file with plain values in code. It would completely defeat the purpose of secrecy.</li>
+<li>Keep our <code>secret.yaml</code> file aside, in a safe place, such as our password manager. Not great, not lean, tied to one account (that would become one more SPOF in your organization), but at least confidential.</li>
+<li>We could set up environment variables in our CI, and substitute values just before deployment. Sure, it works, but anyone able to run the CI can extract those values.</li>
+<li>We could commit the file with some encryption in our repository, that would be decrypted during the deployment. That's basically how SOPS<a href="https://github.com/getsops/sops">2</a> work.</li>
+<li>We could also store secrets in database. This works for scoped configuration (eg. user tokens), but not for config you expect to be set before your app starts. Abusing it would break your apps lifecycles and prevent K8s to restart or redeploy apps when needed.</li>
+<li>Or, we could use a Kubernetes operator providing <code>External Secrets</code> and combine it with a password vault.</li>
+</ul>
+<p>I chose the last option for the following reasons:</p>
+<ol>
+<li>Using SOPS requires you to manually re-encrypt, commit and push any file you want to handle as a secret,</li>
+<li><code>External Secrets</code> are represented by Kubernetes CRDs (custom definitions) whose state you can track: you can see if something went wrong when trying to update a secret.</li>
+<li>And more importantly, <code>External Secrets</code> let you manage the lifecycle of secrets at "the top of the pipeline", or, so to speak, in the "SecOps domain", meaning you can just update the source of truth, and let "third parties" pull updates, without having to run between heterogenous apps to figure out how they store their secrets.</li>
+</ol>
+<p>You can leverage AWS or GCP infrastructure here. I chose the pure self-hosted approach and decided to go with HashiCorp Vault :)</p>
+<h2 id="hashicorp-vault">HashiCorp Vault</h2>
+<p>HV is essentially an infinite strongbox allowing you to store secrets in various forms, with several engines offering "multi-modal" patterns through engines (for example, Cubbyhole<a href="https://developer.hashicorp.com/vault/docs/secrets/cubbyhole">3</a> for Key-Value store). You can access it with your user account defined at setup, but will eventually require multiple keys to unseal the strongbox (be sure to save those 5 setup keys in a safe place).</p>
+<p>If you suspect an intrusion or unauthorized access, you can seal your vault from the UI, preventing data from being pulled. HV also has a couple of enterprise features, such as recovery, integrating to LDAP, ACLs, and so on.</p>
+<p>And after a bit of setup, you end up with something like this :)
+
+<div class="article-picture" >
+    <img src="https:&#x2F;&#x2F;mbuffa.github.io&#x2F;assets&#x2F;screenshots&#x2F;2026-03-31-vault.png">
+</div></p>
+<p>HV also exposes a handy CLI:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$ VAULT_ADDR=http://127.0.0.1:PORT vault status
+</span><span>Key             Value
+</span><span>---             -----
+</span><span>Seal Type       [REDACTED]
+</span><span>Initialized     true
+</span><span>Sealed          false
+</span><span>Total Shares    5
+</span><span>Threshold       3
+</span><span>Version         [REDACTED]
+</span><span>Build Date      [REDACTED]
+</span><span>Storage Type    file
+</span><span>Cluster Name    [REDACTED]
+</span><span>Cluster ID      [REDACTED]
+</span><span>HA Enabled      false
+</span></code></pre>
+<p>And this CLI also allows you to pull secrets from the commandline.</p>
+<p>But let's move on to the really exciting and squishy part!</p>
+<h2 id="argocd-why-how-wtf">ArgoCD: Why, How, WTF?</h2>
+
+<div class="article-picture" >
+    <img src="https:&#x2F;&#x2F;mbuffa.github.io&#x2F;assets&#x2F;screenshots&#x2F;2026-03-31-argo-splashscreen.png">
+</div>
+<p>Is there anything you could refuse to that face :)?</p>
+<p>Here's a reminder of my previous setup:</p>
+<ul>
+<li>A CI Runner (Act) pulling <code>kubectl</code> and applying my Kubernetes manifests directly.</li>
+<li>Two different CI pipelines for testing (CI) and automatically deploy <code>main</code> builds to my cluster (Continuous Delivery).</li>
+</ul>
+<p>Whether you would replace "raw" K8s files with Helm or Kustomize, this flow would essentially be the same. And would work.</p>
+<p>But here's a few things that can go or seem wrong with this approach:</p>
+<ol>
+<li>You have to monitor a successful deployment manually.</li>
+<li>It can be hard to track or debug failures: you would add logs to your CI, rely on <code>kubectl</code> or a TUI to check your K8s ressources manually...</li>
+<li>You have to explicitly declare all the necessary steps for your app to deploy: update config maps, secrets, migrate your database...</li>
+</ol>
+<p>What if I told you you can have, at the same time:</p>
+<ol>
+<li>A nice UI to visually monitor your K8s deployments, to see their status, failure reasons and logs.</li>
+<li>A process that'll automatically sync your app to the cluster.</li>
+<li>A great separation between your actual application code, and the CD configuration to deploy it.</li>
+</ol>
+<p>Argo<a href="https://argoproj.github.io/cd/">4</a> is basically the "Cluster Admin Dashboard", or at least one of them :) It leverages the GitOps approach to deploy software, adopting the semantics of Git to make the experience flawless and concentrate everything relted to CD.</p>
+<p>After a quick setup (as a MicroK8s addon, in my case: it lives in a specific namespace in my cluster), I just created a new application, specified the Git repository that Argo would listen to, and started debugging and adapting my configuration.
+It took a bit of time to get it right, and also to figure out what was going wrong with my secrets configuration, but I eventually ended up on a green light :)</p>
+<p>I'm <em>almost</em> sure you can setup apps on Argo just by pointing to your app repo directly, since you can specify paths and branches. But in my case, i chose to separate things in a strict manner, so I ended up with:</p>
+<ul>
+<li>A new repo, <code>cd-suto</code>, containing my Kustomize deployment config, a lightweight CI to update my deployment Docker image and push it to the repo,</li>
+<li>My app repo <code>suto</code>, with a <code>test</code> CI, and a <code>deploy</code> CI triggering the <code>update-image</code> CI using a Gitea webhook.</li>
+</ul>
+<p>That additional step in my deploy CI did the trick:</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span>- </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">Trigger ArgoCD deployment
+</span><span style="color:#bf616a;">run</span><span>: </span><span style="color:#b48ead;">|
+</span><span style="color:#a3be8c;">    curl -s -X POST \
+</span><span style="color:#a3be8c;">    -H &quot;Content-Type: application/json&quot; \
+</span><span style="color:#a3be8c;">    -H &quot;Authorization: token ${{ secrets.CD_TOKEN }}&quot; \
+</span><span style="color:#a3be8c;">    &quot;${{ vars.FORGE_URL }}/api/v1/repos/MakkuSoft/cd-suto/actions/workflows/update-image.yaml/dispatches&quot; \
+</span><span style="color:#a3be8c;">    -d &quot;{\&quot;ref\&quot;: \&quot;main\&quot;, \&quot;inputs\&quot;: {\&quot;image_sha\&quot;: \&quot;${{ env.DEPLOY_SHA }}\&quot;}}&quot;
+</span></code></pre>
+<p>And so, my workflow on <code>cd-suto</code> would trigger, build and push my docker image, run <code>kustomize edit set image tinker:32000/suto:${{ inputs.image_sha }}</code>, commit and push to the repo, and Argo would then listen and sync!</p>
+<p>I'm still a very early user of Argo and do not have much experience with it, but after 3 years with custom CI/CD and CLI tools, Argo UX already looks frankly fantastic to me. Also, of course, in the context of a large organization, Argo also allows you to use one monorepo for deployment, with paths and branches dedicated to your apps.</p>
+<p>One specific thing that Argo allows is the separation of "deployment steps" into "waves". Let's say you have a typical Elixir or Rails application that requires to run database migration before running. With a custom Gitlab CI, what I would typically do prevously would be running the K8S job separately, then applying my deployment.</p>
+<p>Argo allows you to define waves as metadata, so it rolls deployments in a very, very simple way:</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">batch/v1
+</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Job
+</span><span style="color:#bf616a;">metadata</span><span>:
+</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">suto-migrate
+</span><span>  </span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">suto
+</span><span>  </span><span style="color:#bf616a;">annotations</span><span>:
+</span><span>    </span><span style="color:#bf616a;">argocd.argoproj.io/hook</span><span>: </span><span style="color:#a3be8c;">PreSync
+</span><span>    </span><span style="color:#bf616a;">argocd.argoproj.io/hook-delete-policy</span><span>: </span><span style="color:#a3be8c;">BeforeHookCreation
+</span><span>    </span><span style="color:#bf616a;">argocd.argoproj.io/sync-wave</span><span>: &quot;</span><span style="color:#a3be8c;">-1</span><span>&quot;
+</span><span>  </span><span style="color:#bf616a;">labels</span><span>:
+</span><span>    </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">suto
+</span><span>    </span><span style="color:#bf616a;">component</span><span>: </span><span style="color:#a3be8c;">migration
+</span><span style="color:#bf616a;">spec</span><span>:
+</span><span>  </span><span style="color:#d08770;">...
+</span></code></pre>
+<p>This reflects on Argo UI, and you can tell the hierarchy between your top dependencies (config map, vault store), medium deps (external secret). Extremely nice!</p>
+
+<div class="article-picture" >
+    <img src="https:&#x2F;&#x2F;mbuffa.github.io&#x2F;assets&#x2F;screenshots&#x2F;2026-03-31-argo-suto.png">
+</div>
+<p>I'll definitely try to blog about tips and tricks about Argo when I get more used to it :)</p>
+<h2 id="a-quick-note-about-k8s-manifests-kustomize-vs-helm">A quick note about K8s manifests: Kustomize vs Helm</h2>
+<p>I briefly mentioned that I migrated my Kubernetes files (which were just plain YAML files). This initial setup had a couple of issues:</p>
+<ol>
+<li>My config map was not versioned (name set to <code>suto-config</code>) which meant my app wouldn't restart when my config map would have been updated.</li>
+<li>It requires a bit of <code>sed</code> to update the hardcoded Docker image in several manifests. Which is a terrible idea.</li>
+<li>There was no guaranteed consistency between my manifests labels, annotations...</li>
+</ol>
+<p>Helm is the "historical" way to "customize" K8s manifests. Kustomize is a newer one, and I prefer it for the following reasons:</p>
+<ol>
+<li>It uses YAML (a "kustomization") to generate more YAML, instead of using templating and variable substitution like Helm does; it's basically a match between a PHP Engine, or a Markdown static site generator: it's simpler, less prone to errors, and more elegant. I only have to think about YAML entries, not templating DSL.</li>
+<li>It offers a centralized and clear way to correctly manage things like config maps (with config map generators) with built-in versioning, common labels and annotations.</li>
+<li>It does not come with an additional layer of CRDs like Helm (Helm Releases), which seem completely redundant with the addition of Argo to the mix.</li>
+<li>Generally speaking, I think it's more adapted to small codebases.</li>
+</ol>
+<p>I still do like Helm a lot for being able to deploy pre-built software, like Traefik, Argo, and so on, but that's it.</p>
+<p>To give you a short example, here's what a Kustomization file may look like:</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">kustomize.config.k8s.io/v1beta1
+</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Kustomization
+</span><span>
+</span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">suto
+</span><span>
+</span><span style="color:#bf616a;">configMapGenerator</span><span>:
+</span><span>- </span><span style="color:#bf616a;">envs</span><span>:
+</span><span>  - </span><span style="color:#a3be8c;">config.properties
+</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">suto-config
+</span><span>  </span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">suto
+</span><span>  </span><span style="color:#bf616a;">options</span><span>:
+</span><span>    </span><span style="color:#bf616a;">annotations</span><span>:
+</span><span>      </span><span style="color:#bf616a;">argocd.argoproj.io/hook</span><span>: </span><span style="color:#a3be8c;">PreSync
+</span><span>      </span><span style="color:#bf616a;">argocd.argoproj.io/hook-delete-policy</span><span>: </span><span style="color:#a3be8c;">BeforeHookCreation
+</span><span>      </span><span style="color:#bf616a;">argocd.argoproj.io/sync-wave</span><span>: &quot;</span><span style="color:#a3be8c;">-2</span><span>&quot;
+</span><span>
+</span><span style="color:#bf616a;">labels</span><span>:
+</span><span>- </span><span style="color:#bf616a;">includeSelectors</span><span>: </span><span style="color:#d08770;">true
+</span><span>  </span><span style="color:#bf616a;">pairs</span><span>:
+</span><span>    </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">suto
+</span><span>
+</span><span style="color:#bf616a;">commonAnnotations</span><span>:
+</span><span>  </span><span style="color:#bf616a;">deploy.suto/commit-sha</span><span>: </span><span style="color:#a3be8c;">42ed863182efffb470a64554c3a77109a9aacb5e
+</span><span>
+</span><span style="color:#bf616a;">resources</span><span>:
+</span><span>- </span><span style="color:#a3be8c;">secret-store.yaml
+</span><span>- </span><span style="color:#a3be8c;">secret.yaml
+</span><span>- </span><span style="color:#a3be8c;">namespace.yaml
+</span><span>- </span><span style="color:#a3be8c;">migrate-job.yaml
+</span><span>- </span><span style="color:#a3be8c;">headless-service.yaml
+</span><span>- </span><span style="color:#a3be8c;">deployment.yaml
+</span><span>- </span><span style="color:#a3be8c;">service.yaml
+</span><span>- </span><span style="color:#a3be8c;">ingress.yaml
+</span><span style="color:#bf616a;">images</span><span>:
+</span><span>- </span><span style="color:#bf616a;">name</span><span>: [</span><span style="color:#a3be8c;">REDACTED</span><span>]</span><span style="color:#a3be8c;">/suto
+</span><span>  </span><span style="color:#bf616a;">newTag</span><span>: </span><span style="color:#a3be8c;">42ed863182efffb470a64554c3a77109a9aacb5e
+</span></code></pre>
+<h2 id="wrap-up">Wrap-up</h2>
+<p>Anyway, we're starting to have a really nice setup here, still very fragile in a couple of areas, but already more elaborate (or closer to the state-of-the-art) than a lot of software companies' own architecture :)</p>
+<p>On this server, we do have:</p>
+<ul>
+<li>Remote access with SSH,</li>
+<li>A K8s cluster,</li>
+<li>A Git Forge (Gitea),</li>
+<li>A CI Runner (Act),</li>
+<li>A Postgres server,</li>
+<li>Vault to store secrets,</li>
+<li>Argo to manage deployments.</li>
+</ul>
+<p>There's a couple of things that I want to tackle from now on:</p>
+<ul>
+<li>Buy another server, and add it to the K8s cluster.</li>
+<li>Setup an OpenTelemetry stack (Grafana's LGTM :) and start using Tracing and Logs.</li>
+<li>Host Postgres inside K8s using PG CloudNative operator, to minimize risks of breaking updates and segregate services, and also enable replication.</li>
+<li>Swap Gitea with Forgejo: Not the most useful move, but Forgejo is the community-driven fork of Gitea, and will probably receive more updates in the long run.</li>
+<li>Migrate to a "dedicated" CI instead of using Act. It's directly compatible with Github Actions, but this proximity creates space for inaccurate implementation or missing documentation. Maybe Woodpecker CI?</li>
+<li>Possibly host Gitea/Forgejo on a separate VM, to separate source code from runtime.</li>
+<li>Add automatic backup/syncing of configuration and data to Proton Drive (I already track my server config files using Git).</li>
+</ul>
+<p>Thank you if you had the patience to read through all of this, do not hesitate to post or DM me recommendations or questions.</p>
+<p>Stay tuned!</p>
+
+  </div>
+
+  
+  <script src="https://giscus.app/client.js"
+    data-repo="mbuffa/mbuffa.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
+    data-theme="dark" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+</article>
+
+      </div>
+
+      <footer class="mt-20 p-4 text-center text-xs font-normal">
+  <span>
+    Written by Maxime Buffa with <a class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
+      href="https://www.getzola.org/" target="_blank">Zola</a> and <a
+      class="dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900" href="https://tailwindcss.com/"
+      target="_blank">Tailwind</a>
+  </span>
+</footer>
+    </div>
+    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link.
+    <br>
+  </main>
+
+  <!-- Heap Analytics loader -->
+    <script type="text/javascript">
+      window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
+      heap.load("4008293954");
+    </script>
+    <script
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+    <script type="module"
+      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+
+</html>

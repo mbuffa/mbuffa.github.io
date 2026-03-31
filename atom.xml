@@ -4,8 +4,247 @@
     <link rel="self" type="application/atom+xml" href="https://mbuffa.github.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://mbuffa.github.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2026-01-20T00:00:00+00:00</updated>
+    <updated>2026-03-31T00:00:00+00:00</updated>
     <id>https://mbuffa.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Blog: Hacking my Linux server at home - Part 3</title>
+        <published>2026-03-31T00:00:00+00:00</published>
+        <updated>2026-03-31T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              mbuffa@users.noreply.github.com (Maxime Buffa)
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/"/>
+        <id>https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/</id>
+        
+        <content type="html" xml:base="https://mbuffa.github.io/articles/20260313-blog-server-hacking-part-three/">&lt;h3 id=&quot;see-also&quot;&gt;See also&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;&#x2F;articles&#x2F;20251110-blog-server-hacking-part-one&quot;&gt;Part One&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;&#x2F;articles&#x2F;20260120-blog-server-hacking-part-two&quot;&gt;Part Two&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;context&quot;&gt;Context&lt;&#x2F;h2&gt;
+&lt;p&gt;In my previous post, I described how I setup Gitea, Act, Minikube and a Cloudflare Tunnel to be able to host my own zeb apps on my server, and ended the post with a list of things to do.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s take a look at the &quot;roadmap&quot; at the end of the previous post:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Setting up ArgoCD (GitOps),&lt;&#x2F;li&gt;
+&lt;li&gt;Setting up Grafana LGTM for Observability, Logs, Tracing (exciting!),&lt;&#x2F;li&gt;
+&lt;li&gt;Setting up SOPS for secrets management (would allow storing the ingress certificate in VCS securely),&lt;&#x2F;li&gt;
+&lt;li&gt;Adding a new machine as a cluster node (ok, this one is definitely not next, I need to buy the hardware) (and swapping Minikube with MicroK8s?),&lt;&#x2F;li&gt;
+&lt;li&gt;Server hardening.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Long time, no see. I did a couple of things since the last update :-) and today, I&#x27;ll detail how I set up HashiCorp&#x27;s Vault and ArgoCD, among some minor tweaks, and more importantly, why I made those choices over others.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;swapping-minikube-with-microk8s&quot;&gt;Swapping Minikube with MicroK8s&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s evacuate the less interesting things first. When it comes to deploying Kubernetes on your own hardware, several options stand out. One of them is Minikube, another is McroK8s. The first one worked for me, but was not offering multi-nodes support, so I figured migrating would bring a few benefits, including some &quot;builtin&quot; plugins such as Helm or ArgoCD.&lt;&#x2F;p&gt;
+&lt;p&gt;No Arch Linux packages for MicroK8s, it&#x27;s distributed mainly as &lt;code&gt;snaps&lt;&#x2F;code&gt;, universal Linux binaries. Canonical&#x27;s documentation proved relatively easy to follow, and MicroK8s came with its own SystemD services to manage its various services. Nice.&lt;&#x2F;p&gt;
+&lt;p&gt;I did encounter some obstacles however. Since the Cluster IP was different, I had to figure out how to rewire my various &lt;code&gt;socat&lt;&#x2F;code&gt; port forwards to correctly re-route traffic between Docker (for the registry and the CI on Gitea), MicroK8s, and incoming traffic from Cloudflare.&lt;&#x2F;p&gt;
+&lt;p&gt;But the biggest issue I ultimately faced was random failures on my &lt;code&gt;socat&lt;&#x2F;code&gt; port forward between containers running in my CI, and my Docker registry, this time managed by MicroK8s. For no apparent reason, &lt;code&gt;docker push&lt;&#x2F;code&gt; would randomly fail when using the Docker bridge IP.&lt;&#x2F;p&gt;
+&lt;p&gt;I eventually resorted to use the same network as the host for Act when running containers, which is... arguably not great, but probably not that terrible either, since I will be the first person to either push code and run CIs.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# &#x2F;etc&#x2F;act_runner&#x2F;config.yaml
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;host:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;network: &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;host&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Definitely not a setting you would toggle in a serious production environment, but I needed a stable base to improve on. I did investigate socat&#x27;s TTL, IPv6 vs IPv4 and a couple of other parameters. I&#x27;m still unsure what&#x27;s going on.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s move on to the main dishes :)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;handling-secrets&quot;&gt;Handling Secrets&lt;&#x2F;h2&gt;
+&lt;p&gt;Storing and managing passwords (and more generally secrets) has always been a great source of smile or happy bullying in some places, with stories ranging from &quot;somebody guessed my password and posted nasty things on Slack&quot; to &quot;somebody stole my whole crypto wallet and spent $5000 with my OpenAI key&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;Mismanaging secrets has always been terrible, but with the rise of malwares, and, more recently, the adoption of AI tools basically indexing your folders and sending those into requests, that&#x27;s definitely something you want to handle with a minimum of discipline.&lt;&#x2F;p&gt;
+&lt;p&gt;There&#x27;s usually two types of configuration: unsensitive data (identifiers, usernames, URLs without auth) and secrets, such as passwords, private keys (for asymetric algorithms), or tokens. We&#x27;re interested in the latter here.&lt;&#x2F;p&gt;
+&lt;p&gt;Some secrets are long or short lived. Things like OAuth2 tokens, valid for a relatively short period of time, are usually stored in application state, cache or databases, and refreshed often.
+Long-lived secrets usually do not receive that much attention though, especially when you start building a service. You just put things into variable environments (either directly or through your PaaS abstraction, like &lt;code&gt;fly secrets&lt;&#x2F;code&gt;), and it stays there for 5 years before seeing its first-ever renewal.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s say we need to have a couple of secret keys to deploy our app, and we want to generate a Kubernetes secret that our app will have access to.
+We could:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Store the &lt;code&gt;secret.yaml&lt;&#x2F;code&gt; file with plain values in code. It would completely defeat the purpose of secrecy.&lt;&#x2F;li&gt;
+&lt;li&gt;Keep our &lt;code&gt;secret.yaml&lt;&#x2F;code&gt; file aside, in a safe place, such as our password manager. Not great, not lean, tied to one account (that would become one more SPOF in your organization), but at least confidential.&lt;&#x2F;li&gt;
+&lt;li&gt;We could set up environment variables in our CI, and substitute values just before deployment. Sure, it works, but anyone able to run the CI can extract those values.&lt;&#x2F;li&gt;
+&lt;li&gt;We could commit the file with some encryption in our repository, that would be decrypted during the deployment. That&#x27;s basically how SOPS&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;getsops&#x2F;sops&quot;&gt;2&lt;&#x2F;a&gt; work.&lt;&#x2F;li&gt;
+&lt;li&gt;We could also store secrets in database. This works for scoped configuration (eg. user tokens), but not for config you expect to be set before your app starts. Abusing it would break your apps lifecycles and prevent K8s to restart or redeploy apps when needed.&lt;&#x2F;li&gt;
+&lt;li&gt;Or, we could use a Kubernetes operator providing &lt;code&gt;External Secrets&lt;&#x2F;code&gt; and combine it with a password vault.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;I chose the last option for the following reasons:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Using SOPS requires you to manually re-encrypt, commit and push any file you want to handle as a secret,&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;External Secrets&lt;&#x2F;code&gt; are represented by Kubernetes CRDs (custom definitions) whose state you can track: you can see if something went wrong when trying to update a secret.&lt;&#x2F;li&gt;
+&lt;li&gt;And more importantly, &lt;code&gt;External Secrets&lt;&#x2F;code&gt; let you manage the lifecycle of secrets at &quot;the top of the pipeline&quot;, or, so to speak, in the &quot;SecOps domain&quot;, meaning you can just update the source of truth, and let &quot;third parties&quot; pull updates, without having to run between heterogenous apps to figure out how they store their secrets.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;You can leverage AWS or GCP infrastructure here. I chose the pure self-hosted approach and decided to go with HashiCorp Vault :)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;hashicorp-vault&quot;&gt;HashiCorp Vault&lt;&#x2F;h2&gt;
+&lt;p&gt;HV is essentially an infinite strongbox allowing you to store secrets in various forms, with several engines offering &quot;multi-modal&quot; patterns through engines (for example, Cubbyhole&lt;a href=&quot;https:&#x2F;&#x2F;developer.hashicorp.com&#x2F;vault&#x2F;docs&#x2F;secrets&#x2F;cubbyhole&quot;&gt;3&lt;&#x2F;a&gt; for Key-Value store). You can access it with your user account defined at setup, but will eventually require multiple keys to unseal the strongbox (be sure to save those 5 setup keys in a safe place).&lt;&#x2F;p&gt;
+&lt;p&gt;If you suspect an intrusion or unauthorized access, you can seal your vault from the UI, preventing data from being pulled. HV also has a couple of enterprise features, such as recovery, integrating to LDAP, ACLs, and so on.&lt;&#x2F;p&gt;
+&lt;p&gt;And after a bit of setup, you end up with something like this :)
+
+&lt;div class=&quot;article-picture&quot; &gt;
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;mbuffa.github.io&amp;#x2F;assets&amp;#x2F;screenshots&amp;#x2F;2026-03-31-vault.png&quot;&gt;
+&lt;&#x2F;div&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;HV also exposes a handy CLI:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;$ VAULT_ADDR=http:&#x2F;&#x2F;127.0.0.1:PORT vault status
+&lt;&#x2F;span&gt;&lt;span&gt;Key             Value
+&lt;&#x2F;span&gt;&lt;span&gt;---             -----
+&lt;&#x2F;span&gt;&lt;span&gt;Seal Type       [REDACTED]
+&lt;&#x2F;span&gt;&lt;span&gt;Initialized     true
+&lt;&#x2F;span&gt;&lt;span&gt;Sealed          false
+&lt;&#x2F;span&gt;&lt;span&gt;Total Shares    5
+&lt;&#x2F;span&gt;&lt;span&gt;Threshold       3
+&lt;&#x2F;span&gt;&lt;span&gt;Version         [REDACTED]
+&lt;&#x2F;span&gt;&lt;span&gt;Build Date      [REDACTED]
+&lt;&#x2F;span&gt;&lt;span&gt;Storage Type    file
+&lt;&#x2F;span&gt;&lt;span&gt;Cluster Name    [REDACTED]
+&lt;&#x2F;span&gt;&lt;span&gt;Cluster ID      [REDACTED]
+&lt;&#x2F;span&gt;&lt;span&gt;HA Enabled      false
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And this CLI also allows you to pull secrets from the commandline.&lt;&#x2F;p&gt;
+&lt;p&gt;But let&#x27;s move on to the really exciting and squishy part!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;argocd-why-how-wtf&quot;&gt;ArgoCD: Why, How, WTF?&lt;&#x2F;h2&gt;
+
+&lt;div class=&quot;article-picture&quot; &gt;
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;mbuffa.github.io&amp;#x2F;assets&amp;#x2F;screenshots&amp;#x2F;2026-03-31-argo-splashscreen.png&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Is there anything you could refuse to that face :)?&lt;&#x2F;p&gt;
+&lt;p&gt;Here&#x27;s a reminder of my previous setup:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A CI Runner (Act) pulling &lt;code&gt;kubectl&lt;&#x2F;code&gt; and applying my Kubernetes manifests directly.&lt;&#x2F;li&gt;
+&lt;li&gt;Two different CI pipelines for testing (CI) and automatically deploy &lt;code&gt;main&lt;&#x2F;code&gt; builds to my cluster (Continuous Delivery).&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Whether you would replace &quot;raw&quot; K8s files with Helm or Kustomize, this flow would essentially be the same. And would work.&lt;&#x2F;p&gt;
+&lt;p&gt;But here&#x27;s a few things that can go or seem wrong with this approach:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;You have to monitor a successful deployment manually.&lt;&#x2F;li&gt;
+&lt;li&gt;It can be hard to track or debug failures: you would add logs to your CI, rely on &lt;code&gt;kubectl&lt;&#x2F;code&gt; or a TUI to check your K8s ressources manually...&lt;&#x2F;li&gt;
+&lt;li&gt;You have to explicitly declare all the necessary steps for your app to deploy: update config maps, secrets, migrate your database...&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;What if I told you you can have, at the same time:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;A nice UI to visually monitor your K8s deployments, to see their status, failure reasons and logs.&lt;&#x2F;li&gt;
+&lt;li&gt;A process that&#x27;ll automatically sync your app to the cluster.&lt;&#x2F;li&gt;
+&lt;li&gt;A great separation between your actual application code, and the CD configuration to deploy it.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Argo&lt;a href=&quot;https:&#x2F;&#x2F;argoproj.github.io&#x2F;cd&#x2F;&quot;&gt;4&lt;&#x2F;a&gt; is basically the &quot;Cluster Admin Dashboard&quot;, or at least one of them :) It leverages the GitOps approach to deploy software, adopting the semantics of Git to make the experience flawless and concentrate everything relted to CD.&lt;&#x2F;p&gt;
+&lt;p&gt;After a quick setup (as a MicroK8s addon, in my case: it lives in a specific namespace in my cluster), I just created a new application, specified the Git repository that Argo would listen to, and started debugging and adapting my configuration.
+It took a bit of time to get it right, and also to figure out what was going wrong with my secrets configuration, but I eventually ended up on a green light :)&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m &lt;em&gt;almost&lt;&#x2F;em&gt; sure you can setup apps on Argo just by pointing to your app repo directly, since you can specify paths and branches. But in my case, i chose to separate things in a strict manner, so I ended up with:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A new repo, &lt;code&gt;cd-suto&lt;&#x2F;code&gt;, containing my Kustomize deployment config, a lightweight CI to update my deployment Docker image and push it to the repo,&lt;&#x2F;li&gt;
+&lt;li&gt;My app repo &lt;code&gt;suto&lt;&#x2F;code&gt;, with a &lt;code&gt;test&lt;&#x2F;code&gt; CI, and a &lt;code&gt;deploy&lt;&#x2F;code&gt; CI triggering the &lt;code&gt;update-image&lt;&#x2F;code&gt; CI using a Gitea webhook.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;That additional step in my deploy CI did the trick:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Trigger ArgoCD deployment
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;run&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;|
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;    curl -s -X POST \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;    -H &amp;quot;Content-Type: application&#x2F;json&amp;quot; \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;    -H &amp;quot;Authorization: token ${{ secrets.CD_TOKEN }}&amp;quot; \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;    &amp;quot;${{ vars.FORGE_URL }}&#x2F;api&#x2F;v1&#x2F;repos&#x2F;MakkuSoft&#x2F;cd-suto&#x2F;actions&#x2F;workflows&#x2F;update-image.yaml&#x2F;dispatches&amp;quot; \
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;    -d &amp;quot;{\&amp;quot;ref\&amp;quot;: \&amp;quot;main\&amp;quot;, \&amp;quot;inputs\&amp;quot;: {\&amp;quot;image_sha\&amp;quot;: \&amp;quot;${{ env.DEPLOY_SHA }}\&amp;quot;}}&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And so, my workflow on &lt;code&gt;cd-suto&lt;&#x2F;code&gt; would trigger, build and push my docker image, run &lt;code&gt;kustomize edit set image tinker:32000&#x2F;suto:${{ inputs.image_sha }}&lt;&#x2F;code&gt;, commit and push to the repo, and Argo would then listen and sync!&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m still a very early user of Argo and do not have much experience with it, but after 3 years with custom CI&#x2F;CD and CLI tools, Argo UX already looks frankly fantastic to me. Also, of course, in the context of a large organization, Argo also allows you to use one monorepo for deployment, with paths and branches dedicated to your apps.&lt;&#x2F;p&gt;
+&lt;p&gt;One specific thing that Argo allows is the separation of &quot;deployment steps&quot; into &quot;waves&quot;. Let&#x27;s say you have a typical Elixir or Rails application that requires to run database migration before running. With a custom Gitlab CI, what I would typically do prevously would be running the K8S job separately, then applying my deployment.&lt;&#x2F;p&gt;
+&lt;p&gt;Argo allows you to define waves as metadata, so it rolls deployments in a very, very simple way:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apiVersion&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;batch&#x2F;v1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Job
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;metadata&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;suto-migrate
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;namespace&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;suto
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;annotations&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;argocd.argoproj.io&#x2F;hook&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;PreSync
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;argocd.argoproj.io&#x2F;hook-delete-policy&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BeforeHookCreation
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;argocd.argoproj.io&#x2F;sync-wave&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;-1&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;labels&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;suto
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;component&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;migration
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;spec&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This reflects on Argo UI, and you can tell the hierarchy between your top dependencies (config map, vault store), medium deps (external secret). Extremely nice!&lt;&#x2F;p&gt;
+
+&lt;div class=&quot;article-picture&quot; &gt;
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;mbuffa.github.io&amp;#x2F;assets&amp;#x2F;screenshots&amp;#x2F;2026-03-31-argo-suto.png&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;I&#x27;ll definitely try to blog about tips and tricks about Argo when I get more used to it :)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-quick-note-about-k8s-manifests-kustomize-vs-helm&quot;&gt;A quick note about K8s manifests: Kustomize vs Helm&lt;&#x2F;h2&gt;
+&lt;p&gt;I briefly mentioned that I migrated my Kubernetes files (which were just plain YAML files). This initial setup had a couple of issues:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;My config map was not versioned (name set to &lt;code&gt;suto-config&lt;&#x2F;code&gt;) which meant my app wouldn&#x27;t restart when my config map would have been updated.&lt;&#x2F;li&gt;
+&lt;li&gt;It requires a bit of &lt;code&gt;sed&lt;&#x2F;code&gt; to update the hardcoded Docker image in several manifests. Which is a terrible idea.&lt;&#x2F;li&gt;
+&lt;li&gt;There was no guaranteed consistency between my manifests labels, annotations...&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Helm is the &quot;historical&quot; way to &quot;customize&quot; K8s manifests. Kustomize is a newer one, and I prefer it for the following reasons:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;It uses YAML (a &quot;kustomization&quot;) to generate more YAML, instead of using templating and variable substitution like Helm does; it&#x27;s basically a match between a PHP Engine, or a Markdown static site generator: it&#x27;s simpler, less prone to errors, and more elegant. I only have to think about YAML entries, not templating DSL.&lt;&#x2F;li&gt;
+&lt;li&gt;It offers a centralized and clear way to correctly manage things like config maps (with config map generators) with built-in versioning, common labels and annotations.&lt;&#x2F;li&gt;
+&lt;li&gt;It does not come with an additional layer of CRDs like Helm (Helm Releases), which seem completely redundant with the addition of Argo to the mix.&lt;&#x2F;li&gt;
+&lt;li&gt;Generally speaking, I think it&#x27;s more adapted to small codebases.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;I still do like Helm a lot for being able to deploy pre-built software, like Traefik, Argo, and so on, but that&#x27;s it.&lt;&#x2F;p&gt;
+&lt;p&gt;To give you a short example, here&#x27;s what a Kustomization file may look like:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;apiVersion&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;kustomize.config.k8s.io&#x2F;v1beta1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;kind&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Kustomization
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;namespace&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;suto
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;configMapGenerator&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;envs&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;config.properties
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;suto-config
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;namespace&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;suto
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;options&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;annotations&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;argocd.argoproj.io&#x2F;hook&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;PreSync
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;argocd.argoproj.io&#x2F;hook-delete-policy&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;BeforeHookCreation
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;argocd.argoproj.io&#x2F;sync-wave&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;-2&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;labels&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;includeSelectors&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;true
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pairs&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;app&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;suto
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;commonAnnotations&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;deploy.suto&#x2F;commit-sha&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;42ed863182efffb470a64554c3a77109a9aacb5e
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;resources&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;secret-store.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;secret.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;namespace.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;migrate-job.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;headless-service.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;deployment.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;service.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ingress.yaml
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;images&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;REDACTED&lt;&#x2F;span&gt;&lt;span&gt;]&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;suto
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;newTag&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;42ed863182efffb470a64554c3a77109a9aacb5e
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;wrap-up&quot;&gt;Wrap-up&lt;&#x2F;h2&gt;
+&lt;p&gt;Anyway, we&#x27;re starting to have a really nice setup here, still very fragile in a couple of areas, but already more elaborate (or closer to the state-of-the-art) than a lot of software companies&#x27; own architecture :)&lt;&#x2F;p&gt;
+&lt;p&gt;On this server, we do have:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Remote access with SSH,&lt;&#x2F;li&gt;
+&lt;li&gt;A K8s cluster,&lt;&#x2F;li&gt;
+&lt;li&gt;A Git Forge (Gitea),&lt;&#x2F;li&gt;
+&lt;li&gt;A CI Runner (Act),&lt;&#x2F;li&gt;
+&lt;li&gt;A Postgres server,&lt;&#x2F;li&gt;
+&lt;li&gt;Vault to store secrets,&lt;&#x2F;li&gt;
+&lt;li&gt;Argo to manage deployments.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;There&#x27;s a couple of things that I want to tackle from now on:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Buy another server, and add it to the K8s cluster.&lt;&#x2F;li&gt;
+&lt;li&gt;Setup an OpenTelemetry stack (Grafana&#x27;s LGTM :) and start using Tracing and Logs.&lt;&#x2F;li&gt;
+&lt;li&gt;Host Postgres inside K8s using PG CloudNative operator, to minimize risks of breaking updates and segregate services, and also enable replication.&lt;&#x2F;li&gt;
+&lt;li&gt;Swap Gitea with Forgejo: Not the most useful move, but Forgejo is the community-driven fork of Gitea, and will probably receive more updates in the long run.&lt;&#x2F;li&gt;
+&lt;li&gt;Migrate to a &quot;dedicated&quot; CI instead of using Act. It&#x27;s directly compatible with Github Actions, but this proximity creates space for inaccurate implementation or missing documentation. Maybe Woodpecker CI?&lt;&#x2F;li&gt;
+&lt;li&gt;Possibly host Gitea&#x2F;Forgejo on a separate VM, to separate source code from runtime.&lt;&#x2F;li&gt;
+&lt;li&gt;Add automatic backup&#x2F;syncing of configuration and data to Proton Drive (I already track my server config files using Git).&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Thank you if you had the patience to read through all of this, do not hesitate to post or DM me recommendations or questions.&lt;&#x2F;p&gt;
+&lt;p&gt;Stay tuned!&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>Blog: Hacking my Linux server at home - Part 2</title>
         <published>2026-01-20T00:00:00+00:00</published>
