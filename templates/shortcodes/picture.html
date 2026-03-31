@@ -1,0 +1,4 @@
+{% set image_url = get_url(path=path) %}
+<div {% if class %}class="{{class}}" {% endif %}>
+    <img src="{{ image_url }}">
+</div>
