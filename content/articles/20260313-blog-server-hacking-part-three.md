@@ -50,7 +50,7 @@ Mismanaging secrets has always been terrible, but with the rise of malwares, and
 There's usually two types of configuration: unsensitive data (identifiers, usernames, URLs without auth) and secrets, such as passwords, private keys (for asymetric algorithms), or tokens. We're interested in the latter here. 
 
 Some secrets are long or short lived. Things like OAuth2 tokens, valid for a relatively short period of time, are usually stored in application state, cache or databases, and refreshed often.
-Long-lived secrets usually do not receive that much attention though, especially when you start building a service. You just put things into variable environments (either directly or through your PaaS abstraction, like `fly secrets`), and it stays there for 5 years before seeing its first-ever renewal.
+Long-lived secrets usually do not receive that much attention though, especially when you start building a service. You just put things into environment variables (either directly or through your PaaS abstraction, like `fly secrets`), and it stays there for 5 years before seeing its first-ever renewal.
 
 Let's say we need to have a couple of secret keys to deploy our app, and we want to generate a Kubernetes secret that our app will have access to.
 We could:
