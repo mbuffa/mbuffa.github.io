@@ -2,6 +2,7 @@
 # zola_version = 0.21.0
 base_url = "https://mbuffa.github.io"
 author = "mbuffa@users.noreply.github.com (Maxime Buffa)"
+theme = "starlit"
 compile_sass = true
 generate_feeds = true
 feed_filenames = ["atom.xml", "rss.xml"]
@@ -16,4 +17,33 @@ taxonomies = [
 highlight_code = true
 
 [extra]
-# Put all your custom variables here
+author_name = "Maxime Buffa"
+author_tagline = "Sr. Backend Engineer and DevOps"
+default_description = "My personal website with tips and rants."
+enable_hero = true
+enable_dark_mode_toggle = true
+heap_analytics_id = "4008293954"
+google_fonts = [
+  "Bitter:ital,wght@0,100..900;1,100..900",
+  "Lato:wght@100;300;700",
+]
+nav_links = [
+  { path = "/", title = "Home" },
+  { path = "/articles", title = "Articles" },
+  { path = "/demos", title = "Demos" },
+  { path = "/tags", title = "Tags" },
+  { path = "/hiring", title = "Hiring" },
+]
+social_links = [
+  { url = "https://github.com/mbuffa", title = "GitHub" },
+  { url = "https://www.linkedin.com/in/maxime-buffa", title = "LinkedIn" },
+  { url = "https://bsky.app/profile/madmakks.bsky.social", title = "BlueSky" },
+  { url = "mailto:makkusoft@proton.me", title = "Email" },
+]
+
+[extra.giscus]
+enabled = true
+repo = "mbuffa/mbuffa.github.io"
+repo_id = "MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
+category = "Announcements"
+category_id = "DIC_kwDODq-lyc4CAZ1r"

@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './templates/**/*.html'
+    './themes/starlit/templates/**/*.html',
+    './templates/**/*.html',
   ],
   darkMode: "class",
   colors: {},

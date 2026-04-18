@@ -1,0 +1,37 @@
+[theme]
+name = "starlit"
+description = "A dark/light blog theme with star animation, Tailwind CSS, and configurable layout."
+homepage = "https://github.com/mbuffa/mbuffa.github.io"
+min_version = "0.19.0"
+license = "MIT"
+author = "Maxime Buffa"
+
+# ─── Configurable [extra] variables ───────────────────────────────────────────
+#
+# Add the following to your site's config.toml [extra] section:
+#
+# [extra]
+# author_name = "Your Name"
+# author_tagline = "Your tagline"
+# default_description = "Your site description."
+# enable_hero = true
+# enable_dark_mode_toggle = true
+# heap_analytics_id = ""           # optional; omit to disable
+# google_fonts = [
+#   "Bitter:ital,wght@0,100..900;1,100..900",
+#   "Lato:wght@100;300;700",
+# ]
+# nav_links = [
+#   { path = "/", title = "Home" },
+#   { path = "/articles", title = "Articles" },
+# ]
+# social_links = [
+#   { url = "https://github.com/you", title = "GitHub" },
+# ]
+#
+# [extra.giscus]
+# enabled = true
+# repo = "your/repo"
+# repo_id = "..."
+# category = "Announcements"
+# category_id = "..."

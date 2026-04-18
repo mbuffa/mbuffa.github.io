@@ -6,12 +6,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "npx npm-watch",
     "watch": "npm run build",
-    "build": "npx tailwindcss@3 -i ./css/main.css -o ./public/main.css --minify"
+    "build": "npx tailwindcss@3 -i ./themes/starlit/css/main.css -o ./public/main.css --minify"
   },
   "watch": {
     "watch": {
       "patterns": [
-        "css/**/**",
+        "themes/starlit/css/**/**",
+        "themes/starlit/templates/**/**",
         "templates/**/**"
       ],
       "extensions": "css,html",
