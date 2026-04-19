@@ -15,34 +15,35 @@
 <article class="w-full lg:w-9/12 pt-1 pb-[50vh] pl-4">
 {% endif %}
   <header class="text-center">
-    <h1 class="text-2xl font-bold m-2 p-2">
+    <h1 class="text-3xl font-bold m-2 p-2 text-teal-700 dark:text-orange-500">
       {{ page.title }}
     </h1>
     {% if page.description %}
-    <div class="p-2">{{ page.description }}</div>
+    <div class="p-2 text-slate-600 dark:text-slate-300 text-lg italic">{{ page.description }}</div>
     {% endif %}
     {% if page.date %}
-    <p class="subtitle">
+    <p class="subtitle text-sm text-slate-500 dark:text-slate-400">
       Published on {{ page.date | date(format="%Y-%m-%d") }}
     </p>
     {% endif %}
     {% if page.taxonomies["tags"] %}
     {{ tags::tags(terms=page.taxonomies["tags"]) }}
     {% endif %}
-    <p class="m-2 p-2">
+    <p class="m-2 p-2 text-xs text-slate-400">
       <a href="/atom.xml"
-         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         class="text-slate-500 hover:text-teal-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
          title="Subscribe to Atom feed">
         Atom
       </a>
       <span>&middot;</span>
       <a href="/rss.xml"
-         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         class="text-slate-500 hover:text-teal-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
          title="Subscribe to RSS feed">
         RSS
       </a>
     </p>
   </header>
+  <hr class="my-4 border-slate-300 dark:border-slate-700" />
 
   {% if page.extra.wasm is defined %}
   <div class="video-embed">
@@ -71,13 +72,16 @@
 
   {% if page.extra.commentable is not defined or page.extra.commentable is
   defined and page.extra.commentable %}
+  {% if config.extra.giscus is defined and config.extra.giscus.enabled %}
   <script src="https://giscus.app/client.js"
-    data-repo="mbuffa/mbuffa.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
-    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-repo="{{ config.extra.giscus.repo }}"
+    data-repo-id="{{ config.extra.giscus.repo_id }}"
+    data-category="{{ config.extra.giscus.category }}"
+    data-category-id="{{ config.extra.giscus.category_id }}"
     data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
     data-theme="dark" data-lang="en" crossorigin="anonymous" async>
     </script>
+  {% endif %}
   {% endif %}
 </article>
 {% endblock content %}

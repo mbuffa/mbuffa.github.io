@@ -169,7 +169,7 @@ This reflects on Argo UI, and you can tell the hierarchy between your top depend
 
 I'll definitely try to blog about tips and tricks about Argo when I get more used to it :)
 
-## A quick note about K8s manifests: Kustomize vs Helm
+## Kustomize vs Helm
 I briefly mentioned that I migrated my Kubernetes files (which were just plain YAML files). This initial setup had a couple of issues:
 1. My config map was not versioned (name set to `suto-config`) which meant my app wouldn't restart when my config map would have been updated.
 2. It requires a bit of `sed` to update the hardcoded Docker image in several manifests. Which is a terrible idea.
