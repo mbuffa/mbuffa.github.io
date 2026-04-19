@@ -141,6 +141,10 @@ div.markdown-content ul {
   list-style-type: circle;
 }
 
+div.markdown-content ol {
+  list-style-type: decimal;
+}
+
 div.markdown-content a {
   text-decoration: underline;
 }
