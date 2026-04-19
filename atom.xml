@@ -80,7 +80,8 @@ We could:&lt;&#x2F;p&gt;
 
 &lt;div class=&quot;article-picture&quot; &gt;
     &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;mbuffa.github.io&amp;#x2F;assets&amp;#x2F;screenshots&amp;#x2F;2026-03-31-vault.png&quot;&gt;
-&lt;&#x2F;div&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;&#x2F;p&gt;
 &lt;p&gt;HV also exposes a handy CLI:&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;$ VAULT_ADDR=http:&#x2F;&#x2F;127.0.0.1:PORT vault status
 &lt;&#x2F;span&gt;&lt;span&gt;Key             Value
@@ -165,7 +166,7 @@ It took a bit of time to get it right, and also to figure out what was going wro
     &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;mbuffa.github.io&amp;#x2F;assets&amp;#x2F;screenshots&amp;#x2F;2026-03-31-argo-suto.png&quot;&gt;
 &lt;&#x2F;div&gt;
 &lt;p&gt;I&#x27;ll definitely try to blog about tips and tricks about Argo when I get more used to it :)&lt;&#x2F;p&gt;
-&lt;h2 id=&quot;a-quick-note-about-k8s-manifests-kustomize-vs-helm&quot;&gt;A quick note about K8s manifests: Kustomize vs Helm&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;kustomize-vs-helm&quot;&gt;Kustomize vs Helm&lt;&#x2F;h2&gt;
 &lt;p&gt;I briefly mentioned that I migrated my Kubernetes files (which were just plain YAML files). This initial setup had a couple of issues:&lt;&#x2F;p&gt;
 &lt;ol&gt;
 &lt;li&gt;My config map was not versioned (name set to &lt;code&gt;suto-config&lt;&#x2F;code&gt;) which meant my app wouldn&#x27;t restart when my config map would have been updated.&lt;&#x2F;li&gt;
@@ -1024,7 +1025,8 @@ Gets the diagnosis wrong.&lt;&#x2F;p&gt;
   &lt;iframe
     src=&quot;https:&#x2F;&#x2F;www.youtube-nocookie.com&#x2F;embed&#x2F;-L-WgKMFuhE&quot;
     webkitallowfullscreen mozallowfullscreen allowfullscreen&gt;&lt;&#x2F;iframe&gt;
-&lt;&#x2F;div&gt;&lt;h2 id=&quot;demo&quot;&gt;Demo&lt;&#x2F;h2&gt;
+&lt;&#x2F;div&gt;
+&lt;h2 id=&quot;demo&quot;&gt;Demo&lt;&#x2F;h2&gt;
 &lt;p&gt;Head over to &lt;a href=&quot;https:&#x2F;&#x2F;path-demo.fly.dev&quot;&gt;Fly.io&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
 &lt;p&gt;You control the robot. Pick a target, find the path, and walk the path.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;repo&quot;&gt;Repo&lt;&#x2F;h2&gt;

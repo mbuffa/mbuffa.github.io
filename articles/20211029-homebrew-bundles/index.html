@@ -14,10 +14,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
   <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap"
-    rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;700&display=swap" rel="stylesheet">
+  
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
@@ -142,7 +143,6 @@
     <ul
       class="w-full h-full m-auto p-0 flex flex-row flex-nowrap justify-center items-center list-none">
       
-      
       <li>
         <a class="
             inline-block no-underline p-4 pt-1 pb-1 hover:no-underline border border-solid rounded-md border-transparent
@@ -183,21 +183,24 @@
           href="&#x2F;hiring">Hiring</a>
       </li>
       
+      
       <li class="ml-auto">
         <a class="
-            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            inline-block no-underline p-2 hover:no-underline border border-solid rounded-md border-transparent
+            cursor-pointer select-none
             text-white hover:bg-white hover:text-black active:text-black
           dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
           onClick="switchStylesheets()">
-          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
-            name="moon"></ion-icon>
-          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
-            name="sunny"></ion-icon>
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden text-xl" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block text-xl" name="sunny"></ion-icon>
         </a>
       </li>
+      
     </ul>
   </nav>
 </div>
+
+      
       <div class="
     w-11/12 m-auto mt-2 mb-4 p-4 rounded-md text-center
     bg-black bg-opacity-100 shadow-lg
@@ -206,7 +209,6 @@
   <h1 class="text-2xl font-bold text-white dark:text-orange-500">Maxime Buffa</h1>
   <p class="text-lg text-gray-300 dark:text-gray-400 mt-1">Sr. Backend Engineer and DevOps</p>
   <div class="mt-3 flex justify-center gap-4 flex-wrap">
-    
     
     <a href="https:&#x2F;&#x2F;github.com&#x2F;mbuffa" class="
         inline-block no-underline px-3 py-1 hover:no-underline border border-solid rounded-md border-transparent
@@ -235,12 +237,14 @@
   </div>
 </div>
 
+      
 
       <div class="
         w-11/12 m-auto mt-2 p-4
         flex justify-center
         flex-col flex-wrap
         lg:flex-row lg:flex-nowrap
+        bg-white bg-opacity-60 rounded-lg
         dark:bg-black dark:bg-opacity-60
     ">
         
@@ -251,14 +255,14 @@
 <article class="w-full pb-[50vh]">
 
   <header class="text-center">
-    <h1 class="text-2xl font-bold m-2 p-2">
+    <h1 class="text-3xl font-bold m-2 p-2 text-teal-700 dark:text-orange-500">
       Unix: Saving and restoring your Homebrew packages
     </h1>
     
-    <div class="p-2">A small tip to backup and restore all your Homebrew packages</div>
+    <div class="p-2 text-slate-600 dark:text-slate-300 text-lg italic">A small tip to backup and restore all your Homebrew packages</div>
     
     
-    <p class="subtitle">
+    <p class="subtitle text-sm text-slate-500 dark:text-slate-400">
       Published on 2021-10-29
     </p>
     
@@ -266,12 +270,12 @@
     
 <p class="max-w-fit m-auto">
   
-  <a class="inline-block m-1 p-1 underline hover:no-underline"
+  <a class="inline-block m-1 px-2 py-0.5 rounded text-sm no-underline bg-teal-100 text-teal-800 hover:bg-teal-200 dark:bg-orange-500 dark:bg-opacity-20 dark:text-orange-400"
     href="/tags/tip">
     tip
   </a>
   
-  <a class="inline-block m-1 p-1 underline hover:no-underline"
+  <a class="inline-block m-1 px-2 py-0.5 rounded text-sm no-underline bg-teal-100 text-teal-800 hover:bg-teal-200 dark:bg-orange-500 dark:bg-opacity-20 dark:text-orange-400"
     href="/tags/unix">
     unix
   </a>
@@ -279,20 +283,21 @@
 </p>
 
     
-    <p class="m-2 p-2">
+    <p class="m-2 p-2 text-xs text-slate-400">
       <a href="/atom.xml"
-         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         class="text-slate-500 hover:text-teal-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
          title="Subscribe to Atom feed">
         Atom
       </a>
       <span>&middot;</span>
       <a href="/rss.xml"
-         class="text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+         class="text-slate-500 hover:text-teal-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
          title="Subscribe to RSS feed">
         RSS
       </a>
     </p>
   </header>
+  <hr class="my-4 border-slate-300 dark:border-slate-700" />
 
   
 
@@ -313,13 +318,16 @@
   </div>
 
   
+  
   <script src="https://giscus.app/client.js"
-    data-repo="mbuffa/mbuffa.github.io"
+    data-repo="mbuffa&#x2F;mbuffa.github.io"
     data-repo-id="MDEwOlJlcG9zaXRvcnkyNDYzOTIyNjU="
-    data-category="Announcements" data-category-id="DIC_kwDODq-lyc4CAZ1r"
+    data-category="Announcements"
+    data-category-id="DIC_kwDODq-lyc4CAZ1r"
     data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0"
     data-theme="dark" data-lang="en" crossorigin="anonymous" async>
     </script>
+  
   
 </article>
 
@@ -333,20 +341,22 @@
       target="_blank">Tailwind</a>
   </span>
 </footer>
+
     </div>
-    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link.
-    <br>
+    <!-- Fix to avoid scrolling "under the overflow break" when using a ToC link. -->
   </main>
 
+  
   <!-- Heap Analytics loader -->
-    <script type="text/javascript">
-      window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
-      heap.load("4008293954");
-    </script>
-    <script
-      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
-    <script type="module"
-      src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+  <script type="text/javascript">
+    window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(r, a); for (var n = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)heap[p[o]] = n(p[o]) };
+    heap.load("4008293954");
+  </script>
+  
+  <script
+    src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.js"></script>
+  <script type="module"
+    src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
 </body>
 
 </html>
