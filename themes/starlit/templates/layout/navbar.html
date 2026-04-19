@@ -18,14 +18,13 @@
       {% if config.extra.enable_dark_mode_toggle | default(value=false) %}
       <li class="ml-auto">
         <a class="
-            inline-block no-underline p-1 hover:no-underline border border-solid rounded-md border-transparent
+            inline-block no-underline p-2 hover:no-underline border border-solid rounded-md border-transparent
+            cursor-pointer select-none
             text-white hover:bg-white hover:text-black active:text-black
           dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-neutral-900 dark:active:text-white"
           onClick="switchStylesheets()">
-          <ion-icon class="stylesheet-toggler inline-block dark:hidden"
-            name="moon"></ion-icon>
-          <ion-icon class="stylesheet-toggler hidden dark:inline-block"
-            name="sunny"></ion-icon>
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden text-xl" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block text-xl" name="sunny"></ion-icon>
         </a>
       </li>
       {% endif %}
