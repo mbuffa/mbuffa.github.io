@@ -1,0 +1,4 @@
+This is a technical blog from humble developer Maxime Buffa, focused on backend and devops topics, with a pinch of hobbyist game development-related mentions. It provides some (hopefully relevant) information, guides and short tips about Elixir/OTP, Kubernetes, Git, Postgres (or SQL in general) and features a few demos.
+It also features a series of articles about setting up your own server, deploying exciting and "cutting edge" technologies on your own bare metal (Kube, ArgoCD, Gitea...). It's not always Shakespeare, but it's authentic.
+
+Also features a hiring page in case someone would need a CTO or a Software Architect to build fast and reliable software.
