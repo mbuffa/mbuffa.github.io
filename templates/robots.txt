@@ -67,6 +67,7 @@ Disallow: /
 
 # Allow other bots (search engines, etc.)
 User-agent: *
+Allow: /llms.txt
 Disallow:
 
 Sitemap: {{ get_url(path="sitemap.xml") }}
