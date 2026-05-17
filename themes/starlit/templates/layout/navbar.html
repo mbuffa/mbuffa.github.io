@@ -13,8 +13,8 @@
       {% if config.extra.enable_dark_mode_toggle | default(value=false) %}
       <li class="ml-auto">
         <a class="nav-link cursor-pointer select-none" onClick="switchStylesheets()">
-          <ion-icon class="stylesheet-toggler inline-block dark:hidden text-xl" name="moon"></ion-icon>
-          <ion-icon class="stylesheet-toggler hidden dark:inline-block text-xl" name="sunny"></ion-icon>
+          <ion-icon class="stylesheet-toggler inline-block dark:hidden h-5 w-5 align-middle" name="moon"></ion-icon>
+          <ion-icon class="stylesheet-toggler hidden dark:inline-block h-5 w-5 align-middle" name="sunny"></ion-icon>
         </a>
       </li>
       {% endif %}

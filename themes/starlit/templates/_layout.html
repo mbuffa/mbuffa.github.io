@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   {% for font in config.extra.google_fonts | default(value=[]) %}
-  <link href="https://fonts.googleapis.com/css2?family={{ font }}&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family={{ font }}&display=optional" rel="stylesheet">
   {% endfor %}
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
