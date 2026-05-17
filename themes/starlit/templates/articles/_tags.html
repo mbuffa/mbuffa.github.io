@@ -1,10 +1,7 @@
 {% macro tags(terms) %}
-<p class="max-w-fit m-auto">
+<div class="flex flex-wrap gap-1.5 justify-center py-1 mt-2">
   {% for term in terms %}
-  <a class="inline-block m-1 px-2 py-0.5 rounded text-sm no-underline bg-teal-100 text-teal-800 hover:bg-teal-200 dark:bg-orange-500 dark:bg-opacity-20 dark:text-orange-400"
-    href="/tags/{{term}}">
-    {{ term }}
-  </a>
+  <a class="badge-chip" href="/tags/{{term}}">{{ term }}</a>
   {% endfor %}
-</p>
+</div>
 {% endmacro tags %}

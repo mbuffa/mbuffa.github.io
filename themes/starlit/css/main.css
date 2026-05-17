@@ -4,65 +4,144 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-html {
-  font-family: 'Bitter', serif, system-ui, -apple-system;
-  font-size: 1.125rem;
+/* ══════════════════════════════════════════════════════
+   Design tokens
+   Defined on body.dark / body.light so every descendant
+   can resolve var(--...) through the cascade.
+   ══════════════════════════════════════════════════════ */
+
+body.dark {
+  --bg:           oklch(0.17 0.012 55);
+  --surface:      oklch(0.215 0.012 55);
+  --surface-2:    oklch(0.25 0.012 55);
+  --border:       oklch(0.33 0.012 60);
+  --text:         oklch(0.92 0.006 70);
+  --text-muted:   oklch(0.70 0.008 70);
+  --accent:       oklch(0.74 0.17 52);
+  --accent-hover: oklch(0.82 0.14 58);
 }
 
-body {
-  overflow: hidden;
-  height: 100vh;
+body.light {
+  --bg:           oklch(0.97 0.006 70);
+  --surface:      oklch(0.995 0.003 70);
+  --surface-2:    oklch(0.95 0.006 70);
+  --border:       oklch(0.88 0.008 60);
+  --text:         oklch(0.30 0.012 60);
+  --text-muted:   oklch(0.50 0.010 60);
+  --accent:       oklch(0.53 0.15 44);
+  --accent-hover: oklch(0.46 0.15 44);
+}
+
+/* ══════════════════════════════════════════════════════
+   Page foundation
+   ══════════════════════════════════════════════════════ */
+
+/* Dark default set on html so there's no background flash
+   before JS fires (dark is the default stored mode). */
+html {
+  font-family: 'Bitter', Georgia, serif;
+  font-size: 1.125rem;
+  background-color: oklch(0.17 0.012 55);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body.dark {
-  background: radial-gradient(ellipse at bottom -200% right -100%, #fd7313 0%, #090A0F 100%);
+  background-color: var(--bg);
+  /* Faint orange glow in the far bottom-right — atmosphere, not a wash */
+  background-image: radial-gradient(
+    ellipse at bottom -80% right -10%,
+    oklch(0.64 0.12 52 / 0.28) 0%,
+    transparent 55%
+  );
+  color: var(--text);
 }
 
-body.light h1,
-body.light h2,
-body.light h3,
-body.light h4,
-body.light h5,
-body.light h6 {
-  color: #0f766e;
-  /* teal-700 */
+body.light {
+  background-color: var(--bg);
+  color: var(--text);
 }
 
-body.light pre {
-  background-color: #f8fafc !important;
-  /* slate-50 */
-  border: 1px solid #cbd5e1 !important;
-  /* slate-300 */
-  border-top: 4px solid #0d9488 !important;
-  /* teal-600 */
+/* ══════════════════════════════════════════════════════
+   Token utilities
+   Defined in @layer components so Tailwind never purges them.
+   ══════════════════════════════════════════════════════ */
+
+@layer components {
+  /* Surfaces */
+  .bg-surface   { background-color: var(--surface); }
+  .bg-surface-2 { background-color: var(--surface-2); }
+  .border-token { border-color: var(--border); }
+
+  /* Text */
+  .text-body   { color: var(--text); }
+  .text-muted  { color: var(--text-muted); }
+  .text-accent { color: var(--accent); }
+
+  /* Reading panel — opaque surface so atmosphere stays in the margins */
+  .reading-panel { background-color: var(--surface); }
+
+  /* Nav / interactive link pill — Lato, orange, hover fills with accent */
+  .nav-link {
+    display: inline-block;
+    padding: 0.2rem 0.85rem;
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
+    font-family: 'Lato', system-ui, sans-serif;
+    font-size: 0.875rem;
+    text-decoration: none;
+    color: var(--accent);
+    transition: background-color 120ms ease-out, color 120ms ease-out;
+  }
+  .nav-link:hover {
+    background-color: var(--accent);
+    color: var(--bg);
+  }
+
+  /* Badge / tag chip — Lato, token-colored, consistent in both modes */
+  .badge-chip {
+    display: inline-block;
+    font-family: 'Lato', system-ui, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.15em 0.6em;
+    border-radius: 0.25rem;
+    color: var(--accent);
+    background-color: var(--surface-2);
+    border: 1px solid var(--border);
+    text-decoration: none;
+  }
+  .badge-chip:hover {
+    color: var(--accent-hover);
+  }
+
+  /* Post list rows — consistent border via the token */
+  .post-list li {
+    border-top: 1px solid var(--border);
+  }
+  .post-list li:first-child {
+    border-top: none;
+  }
 }
 
-body.light code {
-  background-color: #f1f5f9;
-  /* slate-100 */
-  padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-}
+/* ══════════════════════════════════════════════════════
+   Markdown content
+   ══════════════════════════════════════════════════════ */
 
-body.light blockquote {
-  border-left-color: #0d9488;
-  /* teal-600 */
-  background-color: #f8fafc;
-  /* slate-50 */
-}
-
-body.light .markdown-content a {
-  color: #0d9488;
-  /* teal-600 */
-}
-
-.small-caps {
-  font-variant: small-caps;
+div.markdown-content {
+  /* Measure cap — comfortable long-form reading */
+  max-width: 68ch;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--text);
 }
 
 div.markdown-content img {
-  margin: auto;
-  display: flex;
+  display: block;
+  margin: 2rem auto;
   max-width: 90%;
 }
 
@@ -71,17 +150,98 @@ div.markdown-content img[src$="#cropped"] {
   width: 600px;
 }
 
-div.markdown-content ol,
-div.markdown-content ul {
-  margin: 1em;
+/* Headings — modular scale, asymmetric rhythm (bind to following text) */
+div.markdown-content h1,
+div.markdown-content h2,
+div.markdown-content h3,
+div.markdown-content h4,
+div.markdown-content h5,
+div.markdown-content h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--accent);
+  margin-top: 2.5em;
+  margin-bottom: 0.45em;
+  padding: 0;
+  scroll-margin-top: 5.5rem;
 }
 
-div.markdown-content ul {
-  list-style-type: "- ";
+div.markdown-content h1 { font-size: clamp(1.9rem, 1.5rem + 2vw, 2.6rem); }
+div.markdown-content h2 { font-size: clamp(1.5rem, 1.3rem + 1vw, 1.85rem); }
+div.markdown-content h3 { font-size: 1.35rem; }
+div.markdown-content h4 { font-size: 1.15rem; }
+div.markdown-content h5 { font-size: 1rem; font-weight: 600; }
+div.markdown-content h6 { font-size: 0.875rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+div.markdown-content p {
+  line-height: 1.7;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
+
+div.markdown-content ul,
+div.markdown-content ol {
+  padding-left: 1.6em;
+  margin: 1em 0;
+}
+
+div.markdown-content ul  { list-style-type: disc; }
+div.markdown-content ol  { list-style-type: decimal; }
 
 div.markdown-content li {
-  margin: 1em;
+  margin-block: 0.4em;
+  line-height: 1.65;
+}
+
+div.markdown-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+div.markdown-content a:hover {
+  color: var(--accent-hover);
+  text-decoration: none;
+}
+
+/* Inline code chip */
+div.markdown-content code {
+  font-size: 0.875em;
+  background-color: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.1em 0.35em;
+  border-radius: 0.25rem;
+}
+
+/* Code block */
+div.markdown-content pre {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  font-size: 0.875em;
+  line-height: 1.6;
+}
+
+div.markdown-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Blockquote — full border tint, no colored side stripe */
+div.markdown-content blockquote {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 div.markdown-content div.video-embed {
@@ -95,144 +255,17 @@ div.markdown-content div.video-embed iframe {
   height: 400px;
 }
 
-div.markdown-content h1,
-div.markdown-content h2,
-div.markdown-content h3,
-div.markdown-content h4,
-div.markdown-content h5,
-div.markdown-content h6 {
-  margin: 1rem;
-  padding: 1rem;
-  font-weight: bolder;
-}
+/* ══════════════════════════════════════════════════════
+   Custom utility classes
+   ══════════════════════════════════════════════════════ */
 
-div.markdown-content h1 {
-  font-size: xx-large;
-}
+.small-caps  { font-variant: small-caps; }
 
-div.markdown-content h2 {
-  font-size: x-large;
-}
-
-div.markdown-content h3 {
-  font-size: larger;
-}
-
-div.markdown-content h4 {
-  font-size: large;
-}
-
-div.markdown-content h5 {
-  font-size: medium;
-}
-
-div.markdown-content h6 {
-  font-weight: bold;
-}
-
-div.markdown-content p {
-  line-height: 1.625;
-  /* Tailwind 'relaxed' */
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-div.markdown-content ul {
-  list-style-type: circle;
-}
-
-div.markdown-content ol {
-  list-style-type: decimal;
-}
-
-div.markdown-content a {
-  text-decoration: underline;
-}
-
-div.markdown-content a:hover {
-  text-decoration: none;
-}
-
-div.markdown-content pre {
-  margin: 1rem;
-  padding: .5rem;
-  overflow-x: scroll;
-}
-
-div.markdown-content blockquote {
-  margin: 1rem;
-  padding: .5rem;
-  border-left-style: solid;
-  border-left-width: 6px;
-}
-
-body.dark h1,
-body.dark h2,
-body.dark h3,
-body.dark h4,
-body.dark h5,
-body.dark h6 {
-  color: rgb(249, 115, 22);
-  text-shadow: 2px 2px black;
-}
-
-body.dark pre,
-body.dark code,
-body.dark blockquote {
-  background-color: rgba(17, 17, 17, 9) !important;
-}
-
-body.dark pre {
-  border: 1px solid white;
-  border-top-width: 6px;
-}
-
-body.dark blockquote {
-  border-left-color: white;
-}
-
-.w-120 {
-  width: 30rem;
-  /* 480px */
-}
-
-.w-125 {
-  width: 31.25rem;
-  /* 500px */
-}
-
-.min-w-120 {
-  min-width: 30rem;
-  /* 480px */
-}
-
-.max-h-120 {
-  max-height: 30rem;
-  /* 480px */
-}
-
-.min-w-100 {
-  min-width: 25rem;
-  /* 400px */
-}
-
-.min-h-100 {
-  min-height: 25rem;
-  /* 400px */
-}
-
-.top-50 {
-  top: 200px;
-}
-
-.w-192 {
-  width: 48rem
-    /* 768px */
-  ;
-}
-
-.w-228 {
-  width: 57rem
-    /* 912px */
-  ;
-}
+.w-120       { width: 30rem; }
+.w-125       { width: 31.25rem; }
+.min-w-120   { min-width: 30rem; }
+.max-h-120   { max-height: 30rem; }
+.min-w-100   { min-width: 25rem; }
+.min-h-100   { min-height: 25rem; }
+.w-192       { width: 48rem; }
+.w-228       { width: 57rem; }

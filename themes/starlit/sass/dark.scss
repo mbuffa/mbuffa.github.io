@@ -88,9 +88,19 @@ body.dark {
   }
 }
 
+/* Stars are fixed so they stay atmospheric while content scrolls */
 #stars,
 #stars2,
 #stars3 {
-  position: absolute;
+  position: fixed;
   z-index: -1;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  #stars,
+  #stars2,
+  #stars3 {
+    animation: none;
+  }
 }

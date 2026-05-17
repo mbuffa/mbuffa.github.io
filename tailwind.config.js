@@ -5,9 +5,12 @@ module.exports = {
     './templates/**/*.html',
   ],
   darkMode: "class",
-  colors: {},
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Lato', 'system-ui', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }

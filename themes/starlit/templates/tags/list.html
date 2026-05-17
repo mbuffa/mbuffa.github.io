@@ -2,16 +2,13 @@
 
 {% block content %}
 <article class="w-full">
-  <header>
-    <h1 class="m-2 p-2 font-bold text-xl">Tags</h1>
+  <header class="mb-4">
+    <h1 class="font-bold text-xl text-accent">Tags</h1>
   </header>
-  <ul class="flex flex-row flex-wrap">
+  <ul class="flex flex-row flex-wrap gap-2">
     {% for term in terms %}
-    <li class="m-2 p-2">
-      <a class="
-            underline hover:no-underline
-            dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900"
-        href="{{ term.permalink | safe }}">{{ term.name }}</a>
+    <li>
+      <a class="badge-chip text-sm" href="{{ term.permalink | safe }}">{{ term.name }}</a>
     </li>
     {% endfor %}
   </ul>
