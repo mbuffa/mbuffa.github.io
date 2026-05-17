@@ -22,14 +22,14 @@ body.dark {
 }
 
 body.light {
-  --bg:           oklch(0.97 0.006 70);
-  --surface:      oklch(0.995 0.003 70);
-  --surface-2:    oklch(0.95 0.006 70);
-  --border:       oklch(0.88 0.008 60);
-  --text:         oklch(0.30 0.012 60);
-  --text-muted:   oklch(0.50 0.010 60);
-  --accent:       oklch(0.53 0.15 44);
-  --accent-hover: oklch(0.46 0.15 44);
+  --bg:           oklch(0.89 0.035 74);
+  --surface:      oklch(0.965 0.022 86);
+  --surface-2:    oklch(0.93 0.024 86);
+  --border:       oklch(0.82 0.022 76);
+  --text:         oklch(0.32 0.012 62);
+  --text-muted:   oklch(0.50 0.014 64);
+  --accent:       oklch(0.40 0.082 58);
+  --accent-hover: oklch(0.33 0.086 55);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -62,6 +62,13 @@ body.dark {
 body.light {
   background-color: var(--bg);
   color: var(--text);
+}
+
+/* Reading panel reads as a sheet of paper resting on the desk */
+body.light .reading-panel {
+  box-shadow:
+    0 1px 2px oklch(0.40 0.04 70 / 0.10),
+    0 10px 28px oklch(0.40 0.04 70 / 0.12);
 }
 
 /* ══════════════════════════════════════════════════════
