@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -307,17 +308,16 @@
 
   <div class="markdown-content">
     <h2 id="context">Context</h2>
-<p>Doing a COUNT() in SQL is pretty simple, but sometimes you want to return several counts at once with different filters. To achieve this, you would typically do multiple queries, <a href="https://www.postgresql.org/docs/9.1/queries-with.html">optionally with a <code>WITH</code> query</a>.</p>
+<p>Doing a COUNT() in SQL is pretty simple, but sometimes you want to return several counts at once with different filters. To achieve this, you would typically do multiple queries, <a rel="external" href="https://www.postgresql.org/docs/9.1/queries-with.html">optionally with a <code>WITH</code> query</a>.</p>
 <p>Thankfully, there's a way simpler way to do this in PostgreSQL, with <code>FILTER</code>.</p>
 <p>Let's consider we have a simple table (<code>racoons</code>) with a few fields, and we want to return a <code>caretaker_id</code>, the total number of racoons taken care by this person, and the number of racoons that have been released to the wilds.</p>
 <p>It's as simple as this:</p>
-<pre data-lang="sql" style="background-color:#2b303b;color:#c0c5ce;" class="language-sql "><code class="language-sql" data-lang="sql"><span style="color:#b48ead;">SELECT   </span><span style="color:#d08770;">r</span><span>.</span><span style="color:#d08770;">caretaker_id</span><span>,
-</span><span>         </span><span style="color:#96b5b4;">COUNT</span><span>(</span><span style="color:#bf616a;">*</span><span>) as total,
-</span><span>         </span><span style="color:#96b5b4;">COUNT</span><span>(</span><span style="color:#bf616a;">*</span><span>) FILTER (</span><span style="color:#b48ead;">WHERE</span><span> released = </span><span style="color:#d08770;">true</span><span>) as released
-</span><span style="color:#b48ead;">FROM</span><span>     racoons r
-</span><span style="color:#b48ead;">GROUP BY </span><span style="color:#d08770;">r</span><span>.</span><span style="color:#d08770;">caretaker_id</span><span>;
-</span></code></pre>
-<p><a href="https://kb.objectrocket.com/postgresql/how-to-use-the-filter-clause-in-postgresql-881">This page</a> has a bit more information, especially if you're working with a PostgreSQL database prior to 9.4.</p>
+<pre class="giallo z-code"><code data-lang="sql"><span class="giallo-l"><span class="z-keyword">SELECT</span><span class="z-constant">   r</span><span>.</span><span class="z-constant">caretaker_id</span><span>,</span></span>
+<span class="giallo-l"><span class="z-support">         COUNT</span><span>(</span><span class="z-keyword">*</span><span>) </span><span class="z-keyword">as</span><span> total,</span></span>
+<span class="giallo-l"><span class="z-support">         COUNT</span><span>(</span><span class="z-keyword">*</span><span>) </span><span class="z-keyword">FILTER</span><span> (</span><span class="z-keyword">WHERE</span><span> released </span><span class="z-keyword">=</span><span> true) </span><span class="z-keyword">as</span><span> released</span></span>
+<span class="giallo-l"><span class="z-keyword">FROM</span><span>     racoons r</span></span>
+<span class="giallo-l"><span class="z-keyword">GROUP BY</span><span class="z-constant"> r</span><span>.</span><span class="z-constant">caretaker_id</span><span>;</span></span></code></pre>
+<p><a rel="external" href="https://kb.objectrocket.com/postgresql/how-to-use-the-filter-clause-in-postgresql-881">This page</a> has a bit more information, especially if you're working with a PostgreSQL database prior to 9.4.</p>
 
   </div>
 

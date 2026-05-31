@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -371,7 +372,7 @@
 <p>In its early versions and up until v1.0, Phoenix LiveView has been designed to let you manage one LiveView at a time. But in a few cases, you'll need to be able to manage multiple Live Views, for either a complex dashboard, or even a navigation menu living on the side.</p>
 <p>In my case, I had to implement a navigation bar in one of my projects, with a different class for the active element. Using a Live Component was not possible, because those can't be called from a regular (non-Live) template.</p>
 <p>Although, since Live Views are GenServers, and therefore Processes, having one Process per user constantly running just for displaying a dynamic navigation bar isn't great. It would be much better to save those few kilobytes of RAM, and do the work with pure CSS and JS hooks, therefore offloading the logic to the client. But let's just consider we need two LiveViews sitting next to each other for our use case.</p>
-<p>This is where <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.Router.html#live_session/3"><code>live_session/3</code></a> comes into play.</p>
+<p>This is where <a rel="external" href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.Router.html#live_session/3"><code>live_session/3</code></a> comes into play.</p>
 <h2 id="usage">Usage</h2>
 <p><code>live_session/3</code> is a Router-specific "word" (in the Router DSL) that lets you define a handful of things:</p>
 <ul>
@@ -383,54 +384,49 @@
 </ul>
 <h2 id="example">Example</h2>
 <p>This is how my code looks like:</p>
-<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#65737e;"># router.ex
-</span><span>live_session </span><span style="color:#a3be8c;">:admin</span><span>,
-</span><span>  </span><span style="color:#d08770;">on_mount: </span><span>{</span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">InitAssigns</span><span>, </span><span style="color:#a3be8c;">:admin</span><span>},
-</span><span>  </span><span style="color:#d08770;">layout: </span><span>{</span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">Layouts</span><span>, </span><span style="color:#a3be8c;">:&quot;live.admin&quot;</span><span>} </span><span style="color:#b48ead;">do
-</span><span>  scope &quot;</span><span style="color:#a3be8c;">/admin</span><span>&quot;, </span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">Admin </span><span style="color:#b48ead;">do
-</span><span>    pipe_through </span><span style="color:#a3be8c;">:admin
-</span><span>    live &quot;</span><span style="color:#a3be8c;">/</span><span>&quot;, </span><span style="color:#ebcb8b;">IndexLive
-</span><span>  </span><span style="color:#b48ead;">end
-</span><span style="color:#b48ead;">end
-</span></code></pre>
-<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#65737e;"># init_assigns.ex
-</span><span style="color:#b48ead;">defmodule </span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">InitAssigns </span><span style="color:#b48ead;">do
-</span><span>  </span><span style="color:#b48ead;">import </span><span style="color:#ebcb8b;">Phoenix</span><span>.</span><span style="color:#ebcb8b;">Component
-</span><span>
-</span><span>  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">on_mount</span><span>(</span><span style="color:#a3be8c;">:admin</span><span>, _params, _session, socket) </span><span style="color:#b48ead;">do
-</span><span>    current_page =
-</span><span>      </span><span style="color:#b48ead;">case </span><span style="color:#ebcb8b;">Atom</span><span>.to_string(socket.view) </span><span style="color:#b48ead;">do
-</span><span>        &quot;</span><span style="color:#a3be8c;">Elixir.SutoWeb.Admin.AuthLive</span><span>&quot; &lt;&gt; _rest -&gt;
-</span><span>          </span><span style="color:#a3be8c;">:auth
-</span><span>
-</span><span>        &quot;</span><span style="color:#a3be8c;">Elixir.SutoWeb.Admin.ChannelLive</span><span>&quot; &lt;&gt; _rest -&gt;
-</span><span>          </span><span style="color:#a3be8c;">:channels
-</span><span>
-</span><span>        &quot;</span><span style="color:#a3be8c;">Elixir.SutoWeb.Admin.TimerLive</span><span>&quot; &lt;&gt; _rest -&gt;
-</span><span>          </span><span style="color:#a3be8c;">:timers
-</span><span>
-</span><span>        ...
-</span><span>      </span><span style="color:#b48ead;">end
-</span><span>
-</span><span>    {</span><span style="color:#a3be8c;">:cont</span><span>, assign(socket, </span><span style="color:#a3be8c;">:current_page</span><span>, current_page)}
-</span><span>  </span><span style="color:#b48ead;">end
-</span><span style="color:#b48ead;">end
-</span></code></pre>
-<pre data-lang="elixir" style="background-color:#2b303b;color:#c0c5ce;" class="language-elixir "><code class="language-elixir" data-lang="elixir"><span style="color:#65737e;"># Partial layout
-</span><span>&lt;div class=&quot;</span><span style="color:#a3be8c;">min-h-screen h-full flex flex-row bg-gray-300</span><span>&quot;&gt;
-</span><span>  &lt;.live_component
-</span><span>    module={</span><span style="color:#ebcb8b;">SutoWeb</span><span>.</span><span style="color:#ebcb8b;">Admin</span><span>.</span><span style="color:#ebcb8b;">NavLive</span><span>}
-</span><span>    id=&quot;</span><span style="color:#a3be8c;">nav</span><span>&quot;
-</span><span>    class=&quot;</span><span style="color:#a3be8c;">p-5</span><span>&quot;
-</span><span>    current_page={assigns.current_page}
-</span><span>  /&gt;
-</span><span>  &lt;main class=&quot;</span><span style="color:#a3be8c;">p-5 w-full h-screen overflow-auto</span><span>&quot;&gt;
-</span><span>    &lt;.flash_group flash={@</span><span style="color:#bf616a;">flash</span><span>} /&gt;
-</span><span>    {@</span><span style="color:#bf616a;">inner_content</span><span>}
-</span><span>  &lt;/main&gt;
-</span><span>&lt;/div&gt;
-</span></code></pre>
-<p>And the <code>NavLive</code> module here is just a navigation bar built with <a href="https://petal.build/">Petal Framework</a>, defining list items and picking the right Tailwind class for the active item.</p>
+<pre class="giallo z-code"><code data-lang="elixir"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> router.ex</span></span>
+<span class="giallo-l"><span>live_session </span><span class="z-constant">:</span><span class="z-constant">admin</span><span>,</span></span>
+<span class="giallo-l"><span class="z-constant">  on_mount</span><span class="z-constant">:</span><span> {</span><span class="z-entity z-name">SutoWeb</span><span>.</span><span class="z-entity z-name">InitAssigns</span><span>,</span><span class="z-constant"> :</span><span class="z-constant">admin</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span class="z-constant">  layout</span><span class="z-constant">:</span><span> {</span><span class="z-entity z-name">SutoWeb</span><span>.</span><span class="z-entity z-name">Layouts</span><span>,</span><span class="z-constant"> :&quot;</span><span class="z-constant">live.admin</span><span class="z-constant">&quot;</span><span>}</span><span class="z-keyword"> do</span></span>
+<span class="giallo-l"><span>  scope </span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">/admin</span><span class="z-punctuation z-definition z-string">&quot;</span><span>,</span><span class="z-entity z-name"> SutoWeb</span><span>.</span><span class="z-entity z-name">Admin</span><span class="z-keyword"> do</span></span>
+<span class="giallo-l"><span>    pipe_through </span><span class="z-constant">:</span><span class="z-constant">admin</span></span>
+<span class="giallo-l"><span>    live </span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">/</span><span class="z-punctuation z-definition z-string">&quot;</span><span>,</span><span class="z-entity z-name"> IndexLive</span></span>
+<span class="giallo-l"><span class="z-keyword">  end</span></span>
+<span class="giallo-l"><span class="z-keyword">end</span></span></code></pre><pre class="giallo z-code"><code data-lang="elixir"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> init_assigns.ex</span></span>
+<span class="giallo-l"><span class="z-keyword">defmodule</span><span class="z-entity"> SutoWeb</span><span>.</span><span class="z-entity z-name">InitAssigns</span><span class="z-keyword"> do</span></span>
+<span class="giallo-l"><span class="z-keyword">  import</span><span class="z-entity z-name"> Phoenix</span><span>.</span><span class="z-entity z-name">Component</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-keyword">  def</span><span class="z-entity z-name"> on_mount</span><span>(</span><span class="z-constant">:</span><span class="z-constant">admin</span><span>,</span><span class="z-comment"> _params</span><span>,</span><span class="z-comment"> _session</span><span>,</span><span> socket</span><span>)</span><span class="z-keyword"> do</span></span>
+<span class="giallo-l"><span>    current_page </span><span class="z-keyword">=</span></span>
+<span class="giallo-l"><span class="z-keyword">      case</span><span class="z-entity z-name"> Atom</span><span>.</span><span class="z-entity z-name">to_string</span><span>(</span><span>socket</span><span>.</span><span>view</span><span>)</span><span class="z-keyword"> do</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-string">        &quot;</span><span class="z-string">Elixir.SutoWeb.Admin.AuthLive</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-keyword"> &lt;&gt;</span><span class="z-comment"> _rest</span><span class="z-keyword"> -&gt;</span></span>
+<span class="giallo-l"><span class="z-constant">          :</span><span class="z-constant">auth</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-string">        &quot;</span><span class="z-string">Elixir.SutoWeb.Admin.ChannelLive</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-keyword"> &lt;&gt;</span><span class="z-comment"> _rest</span><span class="z-keyword"> -&gt;</span></span>
+<span class="giallo-l"><span class="z-constant">          :</span><span class="z-constant">channels</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-string">        &quot;</span><span class="z-string">Elixir.SutoWeb.Admin.TimerLive</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-keyword"> &lt;&gt;</span><span class="z-comment"> _rest</span><span class="z-keyword"> -&gt;</span></span>
+<span class="giallo-l"><span class="z-constant">          :</span><span class="z-constant">timers</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-keyword">        ..</span><span>.</span></span>
+<span class="giallo-l"><span class="z-keyword">      end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    {</span><span class="z-constant">:</span><span class="z-constant">cont</span><span>,</span><span class="z-entity z-name"> assign</span><span>(</span><span>socket</span><span>,</span><span class="z-constant"> :</span><span class="z-constant">current_page</span><span>,</span><span> current_page</span><span>)</span><span>}</span></span>
+<span class="giallo-l"><span class="z-keyword">  end</span></span>
+<span class="giallo-l"><span class="z-keyword">end</span></span></code></pre><pre class="giallo z-code"><code data-lang="elixir"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> Partial layout</span></span>
+<span class="giallo-l"><span class="z-keyword">&lt;</span><span>div class</span><span class="z-keyword">=</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">min-h-screen h-full flex flex-row bg-gray-300</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-keyword">&gt;</span></span>
+<span class="giallo-l"><span class="z-keyword">  &lt;</span><span>.</span><span>live_component</span></span>
+<span class="giallo-l"><span>    module</span><span class="z-keyword">=</span><span>{</span><span class="z-entity z-name">SutoWeb</span><span>.</span><span class="z-entity z-name">Admin</span><span>.</span><span class="z-entity z-name">NavLive</span><span>}</span></span>
+<span class="giallo-l"><span>    id</span><span class="z-keyword">=</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">nav</span><span class="z-punctuation z-definition z-string">&quot;</span></span>
+<span class="giallo-l"><span>    class</span><span class="z-keyword">=</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">p-5</span><span class="z-punctuation z-definition z-string">&quot;</span></span>
+<span class="giallo-l"><span>    current_page</span><span class="z-keyword">=</span><span>{</span><span>assigns</span><span>.</span><span>current_page</span><span>}</span></span>
+<span class="giallo-l"><span class="z-keyword">  /</span><span class="z-keyword">&gt;</span></span>
+<span class="giallo-l"><span class="z-keyword">  &lt;</span><span>main class</span><span class="z-keyword">=</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">p-5 w-full h-screen overflow-auto</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-keyword">&gt;</span></span>
+<span class="giallo-l"><span class="z-keyword">    &lt;</span><span>.</span><span>flash_group flash</span><span class="z-keyword">=</span><span>{</span><span class="z-variable z-other">@</span><span class="z-variable z-other">flash</span><span>}</span><span class="z-keyword"> /</span><span class="z-keyword">&gt;</span></span>
+<span class="giallo-l"><span>    {</span><span class="z-variable z-other">@</span><span class="z-variable z-other">inner_content</span><span>}</span></span>
+<span class="giallo-l"><span class="z-keyword">  &lt;</span><span class="z-keyword">/</span><span>main</span><span class="z-keyword">&gt;</span></span>
+<span class="giallo-l"><span class="z-keyword">&lt;</span><span class="z-keyword">/</span><span>div</span><span class="z-keyword">&gt;</span></span></code></pre>
+<p>And the <code>NavLive</code> module here is just a navigation bar built with <a rel="external" href="https://petal.build/">Petal Framework</a>, defining list items and picking the right Tailwind class for the active item.</p>
 <p>That's it :) Please keep in mind that using a Live Session for something that could be offloaded to the client (with JavaScript and hooks) isn't great, but this gives you an idea on what structure to use, in case you're building a complex trading dashboard, and you absolutely need to have separate LiveViews on the same page, for concurrency reasons or resilience.</p>
 
   </div>

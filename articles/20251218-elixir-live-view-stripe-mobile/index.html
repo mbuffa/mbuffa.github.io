@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -450,17 +451,16 @@
 <p>If I had to rewrite or adapt it, I would probably try to be the most "low tech" as possible for this, with the possibility of replacing the sensitive parts of the app with plain Phoenix templates, and, maybe, Inertia + React.</p>
 <h2 id="get-me-hooked">Get me hooked</h2>
 <p>As a reminder, a basic LiveView hook looks like this:</p>
-<pre data-lang="js" style="background-color:#2b303b;color:#c0c5ce;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#b48ead;">var </span><span style="color:#bf616a;">hook </span><span>= {
-</span><span>    </span><span style="color:#8fa1b3;">mounted</span><span>() {
-</span><span>        </span><span style="color:#65737e;">// You can execute some code here.
-</span><span>
-</span><span>        </span><span style="color:#bf616a;">this</span><span>.</span><span style="color:#96b5b4;">handleEvent</span><span>(&quot;</span><span style="color:#a3be8c;">event</span><span>&quot;, (</span><span style="color:#bf616a;">payload</span><span>) </span><span style="color:#b48ead;">=&gt; </span><span>{
-</span><span>            </span><span style="color:#65737e;">// You can send events back to the backend:
-</span><span>            </span><span style="color:#65737e;">// this.pushEvent(&quot;event-response&quot;, {})
-</span><span>        })
-</span><span>    }
-</span><span>}
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="javascript"><span class="giallo-l"><span class="z-storage z-type">var</span><span class="z-variable z-other"> hook</span><span class="z-keyword"> =</span><span> {</span></span>
+<span class="giallo-l"><span class="z-entity z-name">    mounted</span><span>(</span><span>)</span><span> {</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-comment">        //</span><span class="z-comment"> You can execute some code here.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-variable z-language">        this</span><span>.</span><span class="z-entity z-name">handleEvent</span><span>(</span><span class="z-punctuation z-definition z-string">&quot;</span><span class="z-string">event</span><span class="z-punctuation z-definition z-string">&quot;</span><span>,</span><span> (</span><span class="z-variable">payload</span><span>)</span><span class="z-storage z-type"> =&gt;</span><span> {</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-comment">            //</span><span class="z-comment"> You can send events back to the backend:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-comment">            //</span><span class="z-comment"> this.pushEvent(&quot;event-response&quot;, {})</span></span>
+<span class="giallo-l"><span>        }</span><span>)</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
 <p>This is a "glue", and it is essential when you have to send messages between frontend and backend and when you need some form of JS interoperability (calling the browser API).</p>
 <p>But you have to keep in mind that your HTML gets rendered progressively, once your <code>mount/3</code> callback in your backend has already been called once. So, If you're, for example, sending a request from a server and waiting for the response to send it to your frontend using <code>push_event</code>, you may face a race condition situation: Your LiveView pushes an event, but your hook isn't ready to handle it yet, and it's lost into abyss.</p>
 <p>There are several things you can do to avoid that.</p>
@@ -468,15 +468,14 @@
 <p>Another thing I tried to do was to keep the hook where it was supposed to be, and added a "root" event listener on top of my Javascript, which would intercept the message, and try "pass" the event to the hook using a Promise, with a retry mechanism that would keep trying until the hook was ready.</p>
 <p>I felt very smart at first, but this was a very overkill, unreliable, and pretty stupid piece of code that I eventually just replaced with DOM.</p>
 <p>As a general advice, I think it is much better to rely on LiveView's capability to track changes on socket assigns, and to pass the relevant arguments you want to pass to your components by using <code>data-</code> attributes, or equivalent. For instance:</p>
-<pre data-lang="html" style="background-color:#2b303b;color:#c0c5ce;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#65737e;">&lt;!-- LiveView --&gt;
-</span><span>&lt;</span><span style="color:#bf616a;">div</span><span>&gt;
-</span><span>    &lt;.LiveComponent /&gt;
-</span><span>    &lt;.LiveComponent&gt;
-</span><span>        &lt;.LiveComponent /&gt; </span><span style="color:#65737e;">&lt;!-- You want to pass one of the LV assigns here. --&gt;
-</span><span>    &lt;/.LiveComponent&gt;
-</span><span>    &lt;.LiveComponent /&gt;
-</span><span>&lt;/</span><span style="color:#bf616a;">div</span><span>&gt;
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="html"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">&lt;!--</span><span class="z-comment"> LiveView </span><span class="z-punctuation z-definition z-comment">--&gt;</span></span>
+<span class="giallo-l"><span>&lt;</span><span class="z-entity z-name z-tag">div</span><span>&gt;</span></span>
+<span class="giallo-l"><span class="z-invalid z-illegal">    &lt;</span><span>.LiveComponent /&gt;</span></span>
+<span class="giallo-l"><span class="z-invalid z-illegal">    &lt;</span><span>.LiveComponent&gt;</span></span>
+<span class="giallo-l"><span class="z-invalid z-illegal">        &lt;</span><span>.LiveComponent /&gt; </span><span class="z-punctuation z-definition z-comment">&lt;!--</span><span class="z-comment"> You want to pass one of the LV assigns here. </span><span class="z-punctuation z-definition z-comment">--&gt;</span></span>
+<span class="giallo-l"><span class="z-invalid z-illegal">    &lt;</span><span>/.LiveComponent&gt;</span></span>
+<span class="giallo-l"><span class="z-invalid z-illegal">    &lt;</span><span>.LiveComponent /&gt;</span></span>
+<span class="giallo-l"><span>&lt;/</span><span class="z-entity z-name z-tag">div</span><span>&gt;</span></span></code></pre>
 <p>You can just pass data using <code>data-</code> attributes. That's what they've been made for. You should use <code>push_event</code> only if you don't want the target component to not re-render completely.</p>
 <p>And this of course applies to events your LiveView would receive from Phoenix PubSub: just update your socket assigns, do not push an event while your DOM may not be ready.</p>
 <h2 id="stripe-specificities">Stripe specificities</h2>

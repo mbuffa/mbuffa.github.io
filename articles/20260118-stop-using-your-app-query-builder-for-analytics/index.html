@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -314,7 +315,7 @@
     <h2 id="context">Context</h2>
 <p>A few years ago (in 2022 I believe), I had a disagreement with an interviewer debriefing one of my take-home assessment. We were discussing the usage of raw SQL in a codebase, and I believe my position cost me the role (or, alternatively, the way I expressed my disagreement did).</p>
 <p>We were basically arguing over a query that was doing a bit of filtering, grouping, and formatting data. This query took no parameter, and considering the query was used to extract analytics, I decided to go for raw SQL.</p>
-<p>This is relatively easy to do with many frameworks, and it's <a href="https://hexdocs.pm/ecto_sql/Ecto.Adapters.SQL.html#query/4">straightforward in Elixir with Ecto</a>.</p>
+<p>This is relatively easy to do with many frameworks, and it's <a rel="external" href="https://hexdocs.pm/ecto_sql/Ecto.Adapters.SQL.html#query/4">straightforward in Elixir with Ecto</a>.</p>
 <p>I think I also failed at expressing stronger arguments at the time other than "You don't need the added complexity of an ORM, for a simple query without arguments." and if I recall correctly, the person I was talking to was just saying "it's safer".</p>
 <p>I did a bit more work related to analytics since then, and I gathered stronger arguments. I'll keep it short, but here they are :)</p>
 <h3 id="your-app-query-builder-is-another-layer-of-complexity">Your app query builder is another layer of complexity</h3>
@@ -341,7 +342,7 @@
 <p>Arguably, some of the things that went wrong could have been avoided by having just one developer do the whole job.</p>
 <p>But I think the best course of action would have been to do it this way:</p>
 <ul>
-<li>Take the time to spin up a <a href="https://www.metabase.com/">Metabase</a> instance (or similar),</li>
+<li>Take the time to spin up a <a rel="external" href="https://www.metabase.com/">Metabase</a> instance (or similar),</li>
 <li>Write queries, <strong>and</strong> validate them on a production replica,</li>
 <li>Validate the output with the QA team,</li>
 <li>Implement a client that would query Metabase's API,</li>

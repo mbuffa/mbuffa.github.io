@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -459,10 +460,9 @@
 <p>I did encounter some obstacles however. Since the Cluster IP was different, I had to figure out how to rewire my various <code>socat</code> port forwards to correctly re-route traffic between Docker (for the registry and the CI on Gitea), MicroK8s, and incoming traffic from Cloudflare.</p>
 <p>But the biggest issue I ultimately faced was random failures on my <code>socat</code> port forward between containers running in my CI, and my Docker registry, this time managed by MicroK8s. For no apparent reason, <code>docker push</code> would randomly fail when using the Docker bridge IP.</p>
 <p>I eventually resorted to use the same network as the host for Act when running containers, which is... arguably not great, but probably not that terrible either, since I will be the first person to either push code and run CIs.</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#65737e;"># /etc/act_runner/config.yaml
-</span><span style="color:#bf616a;">host:
-</span><span>  </span><span style="color:#bf616a;">network: </span><span>&quot;</span><span style="color:#a3be8c;">host</span><span>&quot;
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> /etc/act_runner/config.yaml</span></span>
+<span class="giallo-l"><span class="z-entity z-name">host:</span></span>
+<span class="giallo-l"><span class="z-entity z-name">  network:</span><span class="z-punctuation z-definition z-string"> &quot;</span><span class="z-string">host</span><span class="z-punctuation z-definition z-string">&quot;</span></span></code></pre>
 <p>Definitely not a setting you would toggle in a serious production environment, but I needed a stable base to improve on. I did investigate socat's TTL, IPv6 vs IPv4 and a couple of other parameters. I'm still unsure what's going on.</p>
 <p>Let's move on to the main dishes :)</p>
 <h2 id="handling-secrets">Handling Secrets</h2>
@@ -477,7 +477,7 @@ We could:</p>
 <li>Store the <code>secret.yaml</code> file with plain values in code. It would completely defeat the purpose of secrecy.</li>
 <li>Keep our <code>secret.yaml</code> file aside, in a safe place, such as our password manager. Not great, not lean, tied to one account (that would become one more SPOF in your organization), but at least confidential.</li>
 <li>We could set up environment variables in our CI, and substitute values just before deployment. Sure, it works, but anyone able to run the CI can extract those values.</li>
-<li>We could commit the file with some encryption in our repository, that would be decrypted during the deployment. That's basically how SOPS<a href="https://github.com/getsops/sops">2</a> work.</li>
+<li>We could commit the file with some encryption in our repository, that would be decrypted during the deployment. That's basically how SOPS<a rel="external" href="https://github.com/getsops/sops">2</a> work.</li>
 <li>We could also store secrets in database. This works for scoped configuration (eg. user tokens), but not for config you expect to be set before your app starts. Abusing it would break your apps lifecycles and prevent K8s to restart or redeploy apps when needed.</li>
 <li>Or, we could use a Kubernetes operator providing <code>External Secrets</code> and combine it with a password vault.</li>
 </ul>
@@ -489,7 +489,7 @@ We could:</p>
 </ol>
 <p>You can leverage AWS or GCP infrastructure here. I chose the pure self-hosted approach and decided to go with HashiCorp Vault :)</p>
 <h2 id="hashicorp-vault">HashiCorp Vault</h2>
-<p>HV is essentially an infinite strongbox allowing you to store secrets in various forms, with several engines offering "multi-modal" patterns through engines (for example, Cubbyhole<a href="https://developer.hashicorp.com/vault/docs/secrets/cubbyhole">3</a> for Key-Value store). You can access it with your user account defined at setup, but will eventually require multiple keys to unseal the strongbox (be sure to save those 5 setup keys in a safe place).</p>
+<p>HV is essentially an infinite strongbox allowing you to store secrets in various forms, with several engines offering "multi-modal" patterns through engines (for example, Cubbyhole<a rel="external" href="https://developer.hashicorp.com/vault/docs/secrets/cubbyhole">3</a> for Key-Value store). You can access it with your user account defined at setup, but will eventually require multiple keys to unseal the strongbox (be sure to save those 5 setup keys in a safe place).</p>
 <p>If you suspect an intrusion or unauthorized access, you can seal your vault from the UI, preventing data from being pulled. HV also has a couple of enterprise features, such as recovery, integrating to LDAP, ACLs, and so on.</p>
 <p>And after a bit of setup, you end up with something like this :)
 
@@ -498,21 +498,20 @@ We could:</p>
 </div>
 </p>
 <p>HV also exposes a handy CLI:</p>
-<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>$ VAULT_ADDR=http://127.0.0.1:PORT vault status
-</span><span>Key             Value
-</span><span>---             -----
-</span><span>Seal Type       [REDACTED]
-</span><span>Initialized     true
-</span><span>Sealed          false
-</span><span>Total Shares    5
-</span><span>Threshold       3
-</span><span>Version         [REDACTED]
-</span><span>Build Date      [REDACTED]
-</span><span>Storage Type    file
-</span><span>Cluster Name    [REDACTED]
-</span><span>Cluster ID      [REDACTED]
-</span><span>HA Enabled      false
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="plain"><span class="giallo-l"><span>$ VAULT_ADDR=http://127.0.0.1:PORT vault status</span></span>
+<span class="giallo-l"><span>Key             Value</span></span>
+<span class="giallo-l"><span>---             -----</span></span>
+<span class="giallo-l"><span>Seal Type       [REDACTED]</span></span>
+<span class="giallo-l"><span>Initialized     true</span></span>
+<span class="giallo-l"><span>Sealed          false</span></span>
+<span class="giallo-l"><span>Total Shares    5</span></span>
+<span class="giallo-l"><span>Threshold       3</span></span>
+<span class="giallo-l"><span>Version         [REDACTED]</span></span>
+<span class="giallo-l"><span>Build Date      [REDACTED]</span></span>
+<span class="giallo-l"><span>Storage Type    file</span></span>
+<span class="giallo-l"><span>Cluster Name    [REDACTED]</span></span>
+<span class="giallo-l"><span>Cluster ID      [REDACTED]</span></span>
+<span class="giallo-l"><span>HA Enabled      false</span></span></code></pre>
 <p>And this CLI also allows you to pull secrets from the commandline.</p>
 <p>But let's move on to the really exciting and squishy part!</p>
 <h2 id="argocd-why-how-wtf">ArgoCD: Why, How, WTF?</h2>
@@ -539,7 +538,7 @@ We could:</p>
 <li>A process that'll automatically sync your app to the cluster.</li>
 <li>A great separation between your actual application code, and the CD configuration to deploy it.</li>
 </ol>
-<p>Argo<a href="https://argoproj.github.io/cd/">4</a> is basically the "Cluster Admin Dashboard", or at least one of them :) It leverages the GitOps approach to deploy software, adopting the semantics of Git to make the experience flawless and concentrate everything relted to CD.</p>
+<p>Argo<a rel="external" href="https://argoproj.github.io/cd/">4</a> is basically the "Cluster Admin Dashboard", or at least one of them :) It leverages the GitOps approach to deploy software, adopting the semantics of Git to make the experience flawless and concentrate everything relted to CD.</p>
 <p>After a quick setup (as a MicroK8s addon, in my case: it lives in a specific namespace in my cluster), I just created a new application, specified the Git repository that Argo would listen to, and started debugging and adapting my configuration.
 It took a bit of time to get it right, and also to figure out what was going wrong with my secrets configuration, but I eventually ended up on a green light :)</p>
 <p>I'm <em>almost</em> sure you can setup apps on Argo just by pointing to your app repo directly, since you can specify paths and branches. But in my case, i chose to separate things in a strict manner, so I ended up with:</p>
@@ -548,33 +547,31 @@ It took a bit of time to get it right, and also to figure out what was going wro
 <li>My app repo <code>suto</code>, with a <code>test</code> CI, and a <code>deploy</code> CI triggering the <code>update-image</code> CI using a Gitea webhook.</li>
 </ul>
 <p>That additional step in my deploy CI did the trick:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span>- </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">Trigger ArgoCD deployment
-</span><span style="color:#bf616a;">run</span><span>: </span><span style="color:#b48ead;">|
-</span><span style="color:#a3be8c;">    curl -s -X POST \
-</span><span style="color:#a3be8c;">    -H &quot;Content-Type: application/json&quot; \
-</span><span style="color:#a3be8c;">    -H &quot;Authorization: token ${{ secrets.CD_TOKEN }}&quot; \
-</span><span style="color:#a3be8c;">    &quot;${{ vars.FORGE_URL }}/api/v1/repos/MakkuSoft/cd-suto/actions/workflows/update-image.yaml/dispatches&quot; \
-</span><span style="color:#a3be8c;">    -d &quot;{\&quot;ref\&quot;: \&quot;main\&quot;, \&quot;inputs\&quot;: {\&quot;image_sha\&quot;: \&quot;${{ env.DEPLOY_SHA }}\&quot;}}&quot;
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span>-</span><span class="z-entity z-name z-tag"> n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> T</span><span class="z-string">rigger ArgoCD deployment</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">r</span><span class="z-entity z-name z-tag">un</span><span>:</span><span class="z-keyword"> |</span></span>
+<span class="giallo-l"><span class="z-string">    curl -s -X POST \</span></span>
+<span class="giallo-l"><span class="z-string">    -H &quot;Content-Type: application/json&quot; \</span></span>
+<span class="giallo-l"><span class="z-string">    -H &quot;Authorization: token ${{ secrets.CD_TOKEN }}&quot; \</span></span>
+<span class="giallo-l"><span class="z-string">    &quot;${{ vars.FORGE_URL }}/api/v1/repos/MakkuSoft/cd-suto/actions/workflows/update-image.yaml/dispatches&quot; \</span></span>
+<span class="giallo-l"><span class="z-string">    -d &quot;{\&quot;ref\&quot;: \&quot;main\&quot;, \&quot;inputs\&quot;: {\&quot;image_sha\&quot;: \&quot;${{ env.DEPLOY_SHA }}\&quot;}}&quot;</span></span></code></pre>
 <p>And so, my workflow on <code>cd-suto</code> would trigger, build and push my docker image, run <code>kustomize edit set image tinker:32000/suto:${{ inputs.image_sha }}</code>, commit and push to the repo, and Argo would then listen and sync!</p>
 <p>I'm still a very early user of Argo and do not have much experience with it, but after 3 years with custom CI/CD and CLI tools, Argo UX already looks frankly fantastic to me. Also, of course, in the context of a large organization, Argo also allows you to use one monorepo for deployment, with paths and branches dedicated to your apps.</p>
 <p>One specific thing that Argo allows is the separation of "deployment steps" into "waves". Let's say you have a typical Elixir or Rails application that requires to run database migration before running. With a custom Gitlab CI, what I would typically do prevously would be running the K8S job separately, then applying my deployment.</p>
 <p>Argo allows you to define waves as metadata, so it rolls deployments in a very, very simple way:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">batch/v1
-</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Job
-</span><span style="color:#bf616a;">metadata</span><span>:
-</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">suto-migrate
-</span><span>  </span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">suto
-</span><span>  </span><span style="color:#bf616a;">annotations</span><span>:
-</span><span>    </span><span style="color:#bf616a;">argocd.argoproj.io/hook</span><span>: </span><span style="color:#a3be8c;">PreSync
-</span><span>    </span><span style="color:#bf616a;">argocd.argoproj.io/hook-delete-policy</span><span>: </span><span style="color:#a3be8c;">BeforeHookCreation
-</span><span>    </span><span style="color:#bf616a;">argocd.argoproj.io/sync-wave</span><span>: &quot;</span><span style="color:#a3be8c;">-1</span><span>&quot;
-</span><span>  </span><span style="color:#bf616a;">labels</span><span>:
-</span><span>    </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">suto
-</span><span>    </span><span style="color:#bf616a;">component</span><span>: </span><span style="color:#a3be8c;">migration
-</span><span style="color:#bf616a;">spec</span><span>:
-</span><span>  </span><span style="color:#d08770;">...
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">a</span><span class="z-entity z-name z-tag">piVersion</span><span>:</span><span class="z-string"> b</span><span class="z-string">atch/v1</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">k</span><span class="z-entity z-name z-tag">ind</span><span>:</span><span class="z-string"> J</span><span class="z-string">ob</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">m</span><span class="z-entity z-name z-tag">etadata</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> s</span><span class="z-string">uto-migrate</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">amespace</span><span>:</span><span class="z-string"> s</span><span class="z-string">uto</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  a</span><span class="z-entity z-name z-tag">nnotations</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">rgocd.argoproj.io/hook</span><span>:</span><span class="z-string"> P</span><span class="z-string">reSync</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">rgocd.argoproj.io/hook-delete-policy</span><span>:</span><span class="z-string"> B</span><span class="z-string">eforeHookCreation</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">rgocd.argoproj.io/sync-wave</span><span>:</span><span class="z-punctuation z-definition z-string"> &quot;</span><span class="z-string">-1</span><span class="z-punctuation z-definition z-string">&quot;</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  l</span><span class="z-entity z-name z-tag">abels</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">pp</span><span>:</span><span class="z-string"> s</span><span class="z-string">uto</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    c</span><span class="z-entity z-name z-tag">omponent</span><span>:</span><span class="z-string"> m</span><span class="z-string">igration</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">s</span><span class="z-entity z-name z-tag">pec</span><span>:</span></span>
+<span class="giallo-l"><span class="z-constant">  ...</span></span></code></pre>
 <p>This reflects on Argo UI, and you can tell the hierarchy between your top dependencies (config map, vault store), medium deps (external secret). Extremely nice!</p>
 
 <div class="article-picture" >
@@ -597,44 +594,42 @@ It took a bit of time to get it right, and also to figure out what was going wro
 </ol>
 <p>I still do like Helm a lot for being able to deploy pre-built software, like Traefik, Argo, and so on, but that's it.</p>
 <p>To give you a short example, here's what a Kustomization file may look like:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">kustomize.config.k8s.io/v1beta1
-</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Kustomization
-</span><span>
-</span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">suto
-</span><span>
-</span><span style="color:#bf616a;">configMapGenerator</span><span>:
-</span><span>- </span><span style="color:#bf616a;">envs</span><span>:
-</span><span>  - </span><span style="color:#a3be8c;">config.properties
-</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">suto-config
-</span><span>  </span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">suto
-</span><span>  </span><span style="color:#bf616a;">options</span><span>:
-</span><span>    </span><span style="color:#bf616a;">annotations</span><span>:
-</span><span>      </span><span style="color:#bf616a;">argocd.argoproj.io/hook</span><span>: </span><span style="color:#a3be8c;">PreSync
-</span><span>      </span><span style="color:#bf616a;">argocd.argoproj.io/hook-delete-policy</span><span>: </span><span style="color:#a3be8c;">BeforeHookCreation
-</span><span>      </span><span style="color:#bf616a;">argocd.argoproj.io/sync-wave</span><span>: &quot;</span><span style="color:#a3be8c;">-2</span><span>&quot;
-</span><span>
-</span><span style="color:#bf616a;">labels</span><span>:
-</span><span>- </span><span style="color:#bf616a;">includeSelectors</span><span>: </span><span style="color:#d08770;">true
-</span><span>  </span><span style="color:#bf616a;">pairs</span><span>:
-</span><span>    </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">suto
-</span><span>
-</span><span style="color:#bf616a;">commonAnnotations</span><span>:
-</span><span>  </span><span style="color:#bf616a;">deploy.suto/commit-sha</span><span>: </span><span style="color:#a3be8c;">42ed863182efffb470a64554c3a77109a9aacb5e
-</span><span>
-</span><span style="color:#bf616a;">resources</span><span>:
-</span><span>- </span><span style="color:#a3be8c;">secret-store.yaml
-</span><span>- </span><span style="color:#a3be8c;">secret.yaml
-</span><span>- </span><span style="color:#a3be8c;">namespace.yaml
-</span><span>- </span><span style="color:#a3be8c;">migrate-job.yaml
-</span><span>- </span><span style="color:#a3be8c;">headless-service.yaml
-</span><span>- </span><span style="color:#a3be8c;">deployment.yaml
-</span><span>- </span><span style="color:#a3be8c;">service.yaml
-</span><span>- </span><span style="color:#a3be8c;">ingress.yaml
-</span><span style="color:#bf616a;">images</span><span>:
-</span><span>- </span><span style="color:#bf616a;">name</span><span>: [</span><span style="color:#a3be8c;">REDACTED</span><span>]</span><span style="color:#a3be8c;">/suto
-</span><span>  </span><span style="color:#bf616a;">newTag</span><span>: </span><span style="color:#a3be8c;">42ed863182efffb470a64554c3a77109a9aacb5e
-</span></code></pre>
-<h2 id="wrap-up">Wrap-up</h2>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">a</span><span class="z-entity z-name z-tag">piVersion</span><span>:</span><span class="z-string"> k</span><span class="z-string">ustomize.config.k8s.io/v1beta1</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">k</span><span class="z-entity z-name z-tag">ind</span><span>:</span><span class="z-string"> K</span><span class="z-string">ustomization</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">n</span><span class="z-entity z-name z-tag">amespace</span><span>:</span><span class="z-string"> s</span><span class="z-string">uto</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">c</span><span class="z-entity z-name z-tag">onfigMapGenerator</span><span>:</span></span>
+<span class="giallo-l"><span>-</span><span class="z-entity z-name z-tag"> e</span><span class="z-entity z-name z-tag">nvs</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-string"> c</span><span class="z-string">onfig.properties</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> s</span><span class="z-string">uto-config</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">amespace</span><span>:</span><span class="z-string"> s</span><span class="z-string">uto</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  o</span><span class="z-entity z-name z-tag">ptions</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">nnotations</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      a</span><span class="z-entity z-name z-tag">rgocd.argoproj.io/hook</span><span>:</span><span class="z-string"> P</span><span class="z-string">reSync</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      a</span><span class="z-entity z-name z-tag">rgocd.argoproj.io/hook-delete-policy</span><span>:</span><span class="z-string"> B</span><span class="z-string">eforeHookCreation</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      a</span><span class="z-entity z-name z-tag">rgocd.argoproj.io/sync-wave</span><span>:</span><span class="z-punctuation z-definition z-string"> &quot;</span><span class="z-string">-2</span><span class="z-punctuation z-definition z-string">&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">l</span><span class="z-entity z-name z-tag">abels</span><span>:</span></span>
+<span class="giallo-l"><span>-</span><span class="z-entity z-name z-tag"> i</span><span class="z-entity z-name z-tag">ncludeSelectors</span><span>:</span><span class="z-constant"> true</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  p</span><span class="z-entity z-name z-tag">airs</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">pp</span><span>:</span><span class="z-string"> s</span><span class="z-string">uto</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">c</span><span class="z-entity z-name z-tag">ommonAnnotations</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  d</span><span class="z-entity z-name z-tag">eploy.suto/commit-sha</span><span>:</span><span class="z-string"> 4</span><span class="z-string">2ed863182efffb470a64554c3a77109a9aacb5e</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">r</span><span class="z-entity z-name z-tag">esources</span><span>:</span></span>
+<span class="giallo-l"><span>-</span><span class="z-string"> s</span><span class="z-string">ecret-store.yaml</span></span>
+<span class="giallo-l"><span>-</span><span class="z-string"> s</span><span class="z-string">ecret.yaml</span></span>
+<span class="giallo-l"><span>-</span><span class="z-string"> n</span><span class="z-string">amespace.yaml</span></span>
+<span class="giallo-l"><span>-</span><span class="z-string"> m</span><span class="z-string">igrate-job.yaml</span></span>
+<span class="giallo-l"><span>-</span><span class="z-string"> h</span><span class="z-string">eadless-service.yaml</span></span>
+<span class="giallo-l"><span>-</span><span class="z-string"> d</span><span class="z-string">eployment.yaml</span></span>
+<span class="giallo-l"><span>-</span><span class="z-string"> s</span><span class="z-string">ervice.yaml</span></span>
+<span class="giallo-l"><span>-</span><span class="z-string"> i</span><span class="z-string">ngress.yaml</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">i</span><span class="z-entity z-name z-tag">mages</span><span>:</span></span>
+<span class="giallo-l"><span>-</span><span class="z-entity z-name z-tag"> n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span> [</span><span class="z-string">R</span><span class="z-string">EDACTED</span><span>]</span><span class="z-string">/</span><span class="z-string">suto</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">ewTag</span><span>:</span><span class="z-string"> 4</span><span class="z-string">2ed863182efffb470a64554c3a77109a9aacb5e</span></span></code></pre><h2 id="wrap-up">Wrap-up</h2>
 <p>Anyway, we're starting to have a really nice setup here, still very fragile in a couple of areas, but already more elaborate (or closer to the state-of-the-art) than a lot of software companies' own architecture :)</p>
 <p>On this server, we do have:</p>
 <ul>

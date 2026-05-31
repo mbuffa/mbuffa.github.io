@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -356,7 +357,7 @@
   <div class="markdown-content">
     <h2 id="context">Context</h2>
 <p>There's one thing that you may do when developping your first LiveView apps (or developping applications in the early days of LV) that may have important consequences in production, or even during development, which may also become a bit hard to track down.</p>
-<p>The <a href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html">LiveView documentation</a> is excellent and easy to read, and there's a good paragraph on async operations. But it may not stress out enough how having blocking operations in your <code>mount/3</code> callback may be a very terrible idea.</p>
+<p>The <a rel="external" href="https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html">LiveView documentation</a> is excellent and easy to read, and there's a good paragraph on async operations. But it may not stress out enough how having blocking operations in your <code>mount/3</code> callback may be a very terrible idea.</p>
 <h2 id="your-page-lifecycle">Your page lifecycle</h2>
 <p><code>mount/3</code> is called two times: on your first page render, and another time when your socket gets connected, initially. Also, if your frontend disconnects and reconnects, <code>mount/3</code> will be called again.</p>
 <p>So, let's say you have a typical CRUD app, with a query that would fetch records on the index action, and doing that query in <code>mount</code>. Almost sounds harmless, right?</p>

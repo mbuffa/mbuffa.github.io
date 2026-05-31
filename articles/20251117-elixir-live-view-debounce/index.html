@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -376,8 +377,8 @@
 <p>Simply put, the culprit was the form itself, and how it was handling validation: on each key stroke. That was causing issues when the user experienced some connection latency (even with a fast connection, because of the delay that may happen between HTTP calls), and so LiveView's frontend part was overloading the backend, causing various behaviors, such as a flashing UI, unresponsive widgets, or even lost data.</p>
 <h2 id="solution">Solution</h2>
 <p>I remembered encountering a similar situation with React, and this is honestly Frontend Development 101: you have to throttle or debounce your validations, and you don't need to execute them while the user isn't done typing their name or their phone number anyway.</p>
-<p>Since its early days, <a href="https://hexdocs.pm/phoenix_live_view/1.1.17/bindings.html#rate-limiting-events-with-debounce-and-throttle">LiveView provides an easy way to do that</a>. <code>phx-debounce</code> allows passing an integer value representing milliseconds, or "blur", so that you can decide if you'll trigger validation once the input loses focus, or after a varying period of time. <code>phx-throttle</code> does the same thing, except it emits an event on the first change before the rate limit.</p>
-<p>So, nothing revolutionary here, but you'll probably want to check and optimize your LiveViews (and your components, and <a href="https://github.com/nkezhaya/live_phone/pull/169">libraries</a>) <em>before</em> it gets used by thousands of people.</p>
+<p>Since its early days, <a rel="external" href="https://hexdocs.pm/phoenix_live_view/1.1.17/bindings.html#rate-limiting-events-with-debounce-and-throttle">LiveView provides an easy way to do that</a>. <code>phx-debounce</code> allows passing an integer value representing milliseconds, or "blur", so that you can decide if you'll trigger validation once the input loses focus, or after a varying period of time. <code>phx-throttle</code> does the same thing, except it emits an event on the first change before the rate limit.</p>
+<p>So, nothing revolutionary here, but you'll probably want to check and optimize your LiveViews (and your components, and <a rel="external" href="https://github.com/nkezhaya/live_phone/pull/169">libraries</a>) <em>before</em> it gets used by thousands of people.</p>
 <p>Some days just make you feel you're the cop being shot two days before retirement.</p>
 
   </div>

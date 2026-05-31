@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -347,7 +348,7 @@
 <p>You might want to flag this data as deprecated, so that no one (including you) would rely on this no longer updated or relevant data.</p>
 <h2 id="how">How</h2>
 <p>You could of course add comments in your code, but there would be no guarantee someone would check those comments before using those attributes. Also, you wouldn't notice anything if existing code would use those attributes indirectly.</p>
-<p>Fortunately, Rails provides <a href="https://apidock.com/rails/v4.0.2/Module/deprecate">a nice way to flag ActiveRecord attributes as obsolete</a>, stabilized since Rails 4.x.</p>
+<p>Fortunately, Rails provides <a rel="external" href="https://apidock.com/rails/v4.0.2/Module/deprecate">a nice way to flag ActiveRecord attributes as obsolete</a>, stabilized since Rails 4.x.</p>
 <p>Let's create a <code>Deprecator</code> class, that'll embed any behavior we'd like to implement. We can be creative here, like:</p>
 <ul>
 <li>logging the action</li>
@@ -355,27 +356,24 @@
 <li>shaming your coworkers on Slack with a bot message</li>
 </ul>
 <p>But let's keep it simple for the time being:</p>
-<pre data-lang="ruby" style="background-color:#2b303b;color:#c0c5ce;" class="language-ruby "><code class="language-ruby" data-lang="ruby"><span style="color:#65737e;"># app/deprecators/field_deprecator.rb
-</span><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">FieldDeprecator
-</span><span style="color:#eff1f5;">  </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">deprecation_warning</span><span>(</span><span style="color:#bf616a;">field</span><span>, </span><span style="color:#bf616a;">replacement</span><span>, </span><span style="color:#bf616a;">_caller_backtrace </span><span>= </span><span style="color:#d08770;">nil</span><span>)
-</span><span>    message = &quot;#{field}</span><span style="color:#a3be8c;"> is deprecated, please favor </span><span>#{replacement}&quot;
-</span><span>    </span><span style="color:#ebcb8b;">Kernel</span><span>.</span><span style="color:#96b5b4;">warn</span><span> message
-</span><span>  </span><span style="color:#b48ead;">end
-</span><span style="color:#b48ead;">end
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="ruby"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> app/deprecators/field_deprecator.rb</span></span>
+<span class="giallo-l"><span class="z-keyword">class</span><span class="z-entity z-name"> FieldDeprecator</span></span>
+<span class="giallo-l"><span class="z-keyword">  def</span><span class="z-entity z-name"> deprecation_warning</span><span>(</span><span class="z-variable z-parameter z-function">field</span><span>,</span><span class="z-variable z-parameter z-function"> replacement</span><span>,</span><span class="z-variable z-parameter z-function"> _caller_backtrace</span><span class="z-keyword"> =</span><span class="z-constant"> nil</span><span>)</span></span>
+<span class="giallo-l"><span class="z-variable">    message</span><span class="z-keyword"> =</span><span class="z-punctuation z-definition z-string"> &quot;</span><span class="z-string">#{</span><span class="z-string">field</span><span class="z-string">}</span><span class="z-string"> is deprecated, please favor </span><span class="z-string">#{</span><span class="z-string">replacement</span><span class="z-string">}</span><span class="z-punctuation z-definition z-string">&quot;</span></span>
+<span class="giallo-l"><span class="z-support">    Kernel</span><span>.</span><span class="z-support">warn</span><span> message</span></span>
+<span class="giallo-l"><span class="z-keyword">  end</span></span>
+<span class="giallo-l"><span class="z-keyword">end</span></span></code></pre>
 <p>We're not respecting the semantics of the second argument, but hey, this is duck-typing :trollface:</p>
 <p>Then, all we have to do is to add a call to this class method in our model:</p>
-<pre data-lang="ruby" style="background-color:#2b303b;color:#c0c5ce;" class="language-ruby "><code class="language-ruby" data-lang="ruby"><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">Racoon </span><span style="color:#eff1f5;">&lt; </span><span style="color:#a3be8c;">ApplicationRecord
-</span><span>  deprecate \
-</span><span>    </span><span style="color:#a3be8c;">owner_id: </span><span>&#39;</span><span style="color:#a3be8c;">Racoon#caretaker_id</span><span>&#39;,
-</span><span>    </span><span style="color:#65737e;"># ... any other attribute you need to deprecate.
-</span><span>    </span><span style="color:#a3be8c;">deprecator: </span><span style="color:#ebcb8b;">FieldDeprecator</span><span>.</span><span style="color:#8fa1b3;">new
-</span><span style="color:#b48ead;">end
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="ruby"><span class="giallo-l"><span class="z-keyword">class</span><span class="z-entity z-name"> Racoon</span><span> &lt;</span><span class="z-entity"> ApplicationRecord</span></span>
+<span class="giallo-l"><span>  deprecate \</span></span>
+<span class="giallo-l"><span class="z-constant">    owner_id</span><span class="z-constant">:</span><span class="z-punctuation z-definition z-string"> &#39;</span><span class="z-string">Racoon#caretaker_id</span><span class="z-punctuation z-definition z-string">&#39;</span><span>,</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-comment">    #</span><span class="z-comment"> ... any other attribute you need to deprecate.</span></span>
+<span class="giallo-l"><span class="z-constant">    deprecator</span><span class="z-constant">:</span><span class="z-support"> FieldDeprecator</span><span>.</span><span class="z-keyword">new</span></span>
+<span class="giallo-l"><span class="z-keyword">end</span></span></code></pre>
 <p>With our current deprecator, this would output a warning message everytime this field is being read and updated:</p>
-<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>&gt; Racoon.first.owner_id
-</span><span>owner_id is deprecated, please favor Racoon#caretaker_id
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="plain"><span class="giallo-l"><span>&gt; Racoon.first.owner_id</span></span>
+<span class="giallo-l"><span>owner_id is deprecated, please favor Racoon#caretaker_id</span></span></code></pre>
 <p><em>Et voilà.</em></p>
 
   </div>

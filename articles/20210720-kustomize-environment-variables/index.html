@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -360,138 +361,125 @@
     <h2 id="context">Context</h2>
 <p>Using environment variables in your Kubernetes manifests built with Kustomize may be a bit tedious, but I recently found how you can actually use some.</p>
 <h2 id="prerequisites">Prerequisites</h2>
-<p>I won't go into too much details about Kubernetes manifests, or deploying on Kubernetes in general. I learned as I went, mostly by looking at examples and documentation. If you're looking for tutorials or courses, there are pretty good resources available for free. <a href="https://prefetch.net/blog/2019/10/16/the-beginners-guide-to-creating-kubernetes-manifests/">This great article</a> gives some very useful tips to learn by doing, and there's even <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-interactive/">an official interactive tutorial</a>.</p>
+<p>I won't go into too much details about Kubernetes manifests, or deploying on Kubernetes in general. I learned as I went, mostly by looking at examples and documentation. If you're looking for tutorials or courses, there are pretty good resources available for free. <a rel="external" href="https://prefetch.net/blog/2019/10/16/the-beginners-guide-to-creating-kubernetes-manifests/">This great article</a> gives some very useful tips to learn by doing, and there's even <a rel="external" href="https://kubernetes.io/docs/tutorials/kubernetes-basics/deploy-app/deploy-interactive/">an official interactive tutorial</a>.</p>
 <p>And, of course, you also need to know Docker :-)</p>
 <h2 id="let-s-get-started">Let's get started</h2>
 <p>Let's take this stripped down deployment example, named <code>deployment.yaml</code>:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">apps/v1
-</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
-</span><span style="color:#bf616a;">metadata</span><span>:
-</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">MYAPP
-</span><span>  </span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">default
-</span><span>  </span><span style="color:#bf616a;">labels</span><span>:
-</span><span>    </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">MYAPP
-</span><span style="color:#bf616a;">spec</span><span>:
-</span><span>  </span><span style="color:#bf616a;">selector</span><span>:
-</span><span>    </span><span style="color:#bf616a;">matchLabels</span><span>:
-</span><span>      </span><span style="color:#bf616a;">app</span><span>: </span><span style="color:#a3be8c;">MYAPP
-</span><span>  </span><span style="color:#bf616a;">replicas</span><span>: </span><span style="color:#d08770;">1
-</span><span>  </span><span style="color:#bf616a;">template</span><span>:
-</span><span>    </span><span style="color:#bf616a;">spec</span><span>:
-</span><span>      </span><span style="color:#bf616a;">containers</span><span>:
-</span><span>        - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">MYAPP
-</span><span>          </span><span style="color:#bf616a;">image</span><span>: </span><span style="color:#a3be8c;">MYAPP:latest
-</span><span>          </span><span style="color:#bf616a;">resources</span><span>:
-</span><span>            </span><span style="color:#bf616a;">requests</span><span>:
-</span><span>              </span><span style="color:#bf616a;">cpu</span><span>: </span><span style="color:#a3be8c;">100m
-</span><span>              </span><span style="color:#bf616a;">memory</span><span>: </span><span style="color:#a3be8c;">100Mi
-</span><span>            </span><span style="color:#bf616a;">limits</span><span>:
-</span><span>              </span><span style="color:#bf616a;">cpu</span><span>: </span><span style="color:#a3be8c;">100m
-</span><span>              </span><span style="color:#bf616a;">memory</span><span>: </span><span style="color:#a3be8c;">100Mi
-</span><span>          </span><span style="color:#bf616a;">env</span><span>:
-</span><span>            - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">DB_HOST
-</span><span>              </span><span style="color:#bf616a;">valueFrom</span><span>:
-</span><span>                </span><span style="color:#bf616a;">configMapKeyRef</span><span>:
-</span><span>                  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">MYAPP
-</span><span>                  </span><span style="color:#bf616a;">key</span><span>: </span><span style="color:#a3be8c;">DB_HOST
-</span><span>          </span><span style="color:#bf616a;">ports</span><span>:
-</span><span>            - </span><span style="color:#bf616a;">containerPort</span><span>: </span><span style="color:#d08770;">80
-</span><span>              </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">MYAPP
-</span><span>      </span><span style="color:#bf616a;">restartPolicy</span><span>: </span><span style="color:#a3be8c;">Always
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">a</span><span class="z-entity z-name z-tag">piVersion</span><span>:</span><span class="z-string"> a</span><span class="z-string">pps/v1</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">k</span><span class="z-entity z-name z-tag">ind</span><span>:</span><span class="z-string"> D</span><span class="z-string">eployment</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">m</span><span class="z-entity z-name z-tag">etadata</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> M</span><span class="z-string">YAPP</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">amespace</span><span>:</span><span class="z-string"> d</span><span class="z-string">efault</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  l</span><span class="z-entity z-name z-tag">abels</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">pp</span><span>:</span><span class="z-string"> M</span><span class="z-string">YAPP</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">s</span><span class="z-entity z-name z-tag">pec</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  s</span><span class="z-entity z-name z-tag">elector</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    m</span><span class="z-entity z-name z-tag">atchLabels</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      a</span><span class="z-entity z-name z-tag">pp</span><span>:</span><span class="z-string"> M</span><span class="z-string">YAPP</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  r</span><span class="z-entity z-name z-tag">eplicas</span><span>:</span><span class="z-constant"> 1</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  t</span><span class="z-entity z-name z-tag">emplate</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    s</span><span class="z-entity z-name z-tag">pec</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      c</span><span class="z-entity z-name z-tag">ontainers</span><span>:</span></span>
+<span class="giallo-l"><span>        -</span><span class="z-entity z-name z-tag"> n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> M</span><span class="z-string">YAPP</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">          i</span><span class="z-entity z-name z-tag">mage</span><span>:</span><span class="z-string"> M</span><span class="z-string">YAPP:latest</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">          r</span><span class="z-entity z-name z-tag">esources</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">            r</span><span class="z-entity z-name z-tag">equests</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">              c</span><span class="z-entity z-name z-tag">pu</span><span>:</span><span class="z-string"> 1</span><span class="z-string">00m</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">              m</span><span class="z-entity z-name z-tag">emory</span><span>:</span><span class="z-string"> 1</span><span class="z-string">00Mi</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">            l</span><span class="z-entity z-name z-tag">imits</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">              c</span><span class="z-entity z-name z-tag">pu</span><span>:</span><span class="z-string"> 1</span><span class="z-string">00m</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">              m</span><span class="z-entity z-name z-tag">emory</span><span>:</span><span class="z-string"> 1</span><span class="z-string">00Mi</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">          e</span><span class="z-entity z-name z-tag">nv</span><span>:</span></span>
+<span class="giallo-l"><span>            -</span><span class="z-entity z-name z-tag"> n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> D</span><span class="z-string">B_HOST</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">              v</span><span class="z-entity z-name z-tag">alueFrom</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">                c</span><span class="z-entity z-name z-tag">onfigMapKeyRef</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">                  n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> M</span><span class="z-string">YAPP</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">                  k</span><span class="z-entity z-name z-tag">ey</span><span>:</span><span class="z-string"> D</span><span class="z-string">B_HOST</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">          p</span><span class="z-entity z-name z-tag">orts</span><span>:</span></span>
+<span class="giallo-l"><span>            -</span><span class="z-entity z-name z-tag"> c</span><span class="z-entity z-name z-tag">ontainerPort</span><span>:</span><span class="z-constant"> 80</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">              n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> M</span><span class="z-string">YAPP</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      r</span><span class="z-entity z-name z-tag">estartPolicy</span><span>:</span><span class="z-string"> A</span><span class="z-string">lways</span></span></code></pre>
 <p>You would typically associate this with a <code>Kustomization.yaml</code> file:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">resources</span><span>:
-</span><span>  - </span><span style="color:#a3be8c;">deployment.yaml
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">r</span><span class="z-entity z-name z-tag">esources</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-string"> d</span><span class="z-string">eployment.yaml</span></span></code></pre>
 <p>This file allows you to define values shared across multiple resources (like services, jobs, ingresses...), either by editing it directly, like this:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">resources</span><span>:
-</span><span>  - </span><span style="color:#a3be8c;">deployment.yaml
-</span><span>
-</span><span style="color:#bf616a;">namespace</span><span>: </span><span style="color:#a3be8c;">web
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">r</span><span class="z-entity z-name z-tag">esources</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-string"> d</span><span class="z-string">eployment.yaml</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">n</span><span class="z-entity z-name z-tag">amespace</span><span>:</span><span class="z-string"> w</span><span class="z-string">eb</span></span></code></pre>
 <p>...or programmatically, for example, in your CI:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">$</span><span> kustomize edit set namespace web
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-entity z-name">$</span><span class="z-string"> kustomize</span><span class="z-string"> edit</span><span class="z-string"> set</span><span class="z-string"> namespace</span><span class="z-string"> web</span></span></code></pre>
 <p>Running <code>kustomize build .</code> in the directory containing your kustomization and deployment would result in an output that you could apply directly with <code>kubectl apply</code>. Just run <code>kustomize build . | kubectl apply -f -</code> and you're good to go.</p>
 <p>Now let's say we want to add an annotation at build time in our CI with an environment variable, like this:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">apps/v1
-</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
-</span><span style="color:#bf616a;">metadata</span><span>:
-</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">MYAPP
-</span><span style="color:#bf616a;">spec</span><span>:
-</span><span>  </span><span style="color:#bf616a;">template</span><span>:
-</span><span>    </span><span style="color:#bf616a;">annotations</span><span>:
-</span><span>      </span><span style="color:#bf616a;">example.com/git-commit</span><span>: </span><span style="color:#a3be8c;">$(CI_COMMIT_SHORT_SHA)
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">a</span><span class="z-entity z-name z-tag">piVersion</span><span>:</span><span class="z-string"> a</span><span class="z-string">pps/v1</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">k</span><span class="z-entity z-name z-tag">ind</span><span>:</span><span class="z-string"> D</span><span class="z-string">eployment</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">m</span><span class="z-entity z-name z-tag">etadata</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> M</span><span class="z-string">YAPP</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">s</span><span class="z-entity z-name z-tag">pec</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  t</span><span class="z-entity z-name z-tag">emplate</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">nnotations</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      e</span><span class="z-entity z-name z-tag">xample.com/git-commit</span><span>:</span><span class="z-string"> $</span><span class="z-string">(CI_COMMIT_SHORT_SHA)</span></span></code></pre>
 <p>This can be pretty useful if, for example, you want to do a new deployment even if the docker image specified in that deployment hasn't changed.</p>
 <p>Running <code>kustomize build .</code> now would keep that line as-is.</p>
 <p>In that case, you <em>could</em> add an annotation programmatically, like this:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">kustomize</span><span> edit add annotation example.com/git_commit:$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-entity z-name">kustomize</span><span class="z-string"> edit</span><span class="z-string"> add</span><span class="z-string"> annotation</span><span class="z-string"> example.com/git_commit:</span><span class="z-variable z-other">$</span><span class="z-variable z-other">CI_COMMIT_SHORT_SHA</span></span></code></pre>
 <p>But then all your resources would be affected, mearning that your service and ingress would also be redeployed in that example. In some cases, you really want to scope your changes.</p>
 <p>To use environment variables, you need to specify them in your <code>Kustomization</code>, in a <code>vars:</code> section:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">resources</span><span>:
-</span><span>  - </span><span style="color:#a3be8c;">deployment.yaml
-</span><span>
-</span><span style="color:#bf616a;">vars</span><span>:
-</span><span>  - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">CI_COMMIT_SHORT_SHA
-</span><span>    </span><span style="color:#bf616a;">objref</span><span>:
-</span><span>      </span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">ConfigMap
-</span><span>      </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">environment-variables
-</span><span>      </span><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">v1
-</span><span>    </span><span style="color:#bf616a;">fieldref</span><span>:
-</span><span>      </span><span style="color:#bf616a;">fieldpath</span><span>: </span><span style="color:#a3be8c;">data.CI_COMMIT_SHORT_SHA
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">r</span><span class="z-entity z-name z-tag">esources</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-string"> d</span><span class="z-string">eployment.yaml</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">v</span><span class="z-entity z-name z-tag">ars</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-entity z-name z-tag"> n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> C</span><span class="z-string">I_COMMIT_SHORT_SHA</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    o</span><span class="z-entity z-name z-tag">bjref</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      k</span><span class="z-entity z-name z-tag">ind</span><span>:</span><span class="z-string"> C</span><span class="z-string">onfigMap</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> e</span><span class="z-string">nvironment-variables</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      a</span><span class="z-entity z-name z-tag">piVersion</span><span>:</span><span class="z-string"> v</span><span class="z-string">1</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    f</span><span class="z-entity z-name z-tag">ieldref</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      f</span><span class="z-entity z-name z-tag">ieldpath</span><span>:</span><span class="z-string"> d</span><span class="z-string">ata.CI_COMMIT_SHORT_SHA</span></span></code></pre>
 <p>Each variable defined here must have a name and references to let Kustomize know where it's supposed to get that value. In that example, I'm using a <code>configMap</code>, which is often the best option to store configuration.</p>
 <p>While we could definitely define a <code>ConfigMap</code> ourselves as part of our <code>Resources</code>, we would lose the ability to define that variable at build time.</p>
 <p>That's why we want to build a <code>ConfigMap</code> programmatically, by sourcing a file we'll create in our CI:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">resources</span><span>:
-</span><span>  - </span><span style="color:#a3be8c;">deployment.yaml
-</span><span>
-</span><span style="color:#bf616a;">configMapGenerator</span><span>:
-</span><span>  - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">environment-variables
-</span><span>    </span><span style="color:#bf616a;">envs</span><span>: [</span><span style="color:#a3be8c;">environment-properties.env</span><span>]
-</span><span>    </span><span style="color:#bf616a;">behavior</span><span>: </span><span style="color:#a3be8c;">create
-</span><span>
-</span><span style="color:#bf616a;">vars</span><span>: </span><span style="color:#d08770;">...
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">r</span><span class="z-entity z-name z-tag">esources</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-string"> d</span><span class="z-string">eployment.yaml</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">c</span><span class="z-entity z-name z-tag">onfigMapGenerator</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-entity z-name z-tag"> n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> e</span><span class="z-string">nvironment-variables</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    e</span><span class="z-entity z-name z-tag">nvs</span><span>:</span><span> [</span><span class="z-string">e</span><span class="z-string">nvironment-properties.env</span><span>]</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    b</span><span class="z-entity z-name z-tag">ehavior</span><span>:</span><span class="z-string"> c</span><span class="z-string">reate</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">v</span><span class="z-entity z-name z-tag">ars</span><span>:</span><span class="z-constant"> ...</span></span></code></pre>
 <p>There's one more thing we need to do though. For the sake of testing your code locally, just create a file named <code>environment-properties.env</code> containing the following content:</p>
-<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>CI_COMMIT_SHORT_SHA=unknown
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="plain"><span class="giallo-l"><span>CI_COMMIT_SHORT_SHA=unknown</span></span></code></pre>
 <p>(You should keep that file tracked in your CI, it would make debugging locally easier.)</p>
 <p>Running <code>kustomize build .</code> at this point would, still, keep that variable as-is. That's because we try to substitute a value in a field that Kustomize doesn't look in by default, probably for performance or security concerns.</p>
 <p>To fix this, we need to add a custom transformer. Put that in your Kustomization:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">configurations</span><span>:
-</span><span>  - </span><span style="color:#a3be8c;">env-var-transformer.yaml
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">c</span><span class="z-entity z-name z-tag">onfigurations</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-string"> e</span><span class="z-string">nv-var-transformer.yaml</span></span></code></pre>
 <p>And then create <code>env-var-transformer.yaml</code> with that content:</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">varReference</span><span>:
-</span><span>  - </span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
-</span><span>    </span><span style="color:#bf616a;">path</span><span>: </span><span style="color:#a3be8c;">spec/template/metadata/annotations
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">v</span><span class="z-entity z-name z-tag">arReference</span><span>:</span></span>
+<span class="giallo-l"><span>  -</span><span class="z-entity z-name z-tag"> k</span><span class="z-entity z-name z-tag">ind</span><span>:</span><span class="z-string"> D</span><span class="z-string">eployment</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    p</span><span class="z-entity z-name z-tag">ath</span><span>:</span><span class="z-string"> s</span><span class="z-string">pec/template/metadata/annotations</span></span></code></pre>
 <p>Now, running <code>kustomize build .</code> locally should give you the expected result.</p>
 <p>Finally, in our CI job, we can build that file:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#96b5b4;">echo</span><span> CI_COMMIT_SHORT_SHA=$</span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA </span><span>&gt; environment-properties.env
-</span><span style="color:#65737e;"># And then, you just have to apply your changes:
-</span><span style="color:#bf616a;">kustomize</span><span> build . |</span><span style="color:#bf616a;">kubectl</span><span> apply</span><span style="color:#bf616a;"> -f</span><span> -
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-support">echo</span><span class="z-string"> CI_COMMIT_SHORT_SHA=</span><span class="z-variable z-other">$</span><span class="z-variable z-other">CI_COMMIT_SHORT_SHA</span><span class="z-keyword"> &gt;</span><span class="z-string"> environment-properties.env</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> And then, you just have to apply your changes:</span></span>
+<span class="giallo-l"><span class="z-entity z-name">kustomize</span><span class="z-string"> build</span><span class="z-string"> .</span><span class="z-keyword"> |</span><span class="z-entity z-name">kubectl</span><span class="z-string"> apply</span><span class="z-constant"> -</span><span class="z-constant">f</span><span class="z-string"> -</span></span></code></pre>
 <p>Now running <code>kustomize build .</code> would result in this :-)</p>
-<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">v1
-</span><span style="color:#bf616a;">data</span><span>:
-</span><span>  </span><span style="color:#bf616a;">CI_COMMIT_SHORT_SHA</span><span>: &quot;</span><span style="color:#a3be8c;">123456</span><span>&quot;
-</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">ConfigMap
-</span><span style="color:#bf616a;">metadata</span><span>:
-</span><span>  </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">environment-variables-2t266m664k
-</span><span>---
-</span><span style="color:#bf616a;">apiVersion</span><span>: </span><span style="color:#a3be8c;">apps/v1
-</span><span style="color:#bf616a;">kind</span><span>: </span><span style="color:#a3be8c;">Deployment
-</span><span style="color:#bf616a;">spec</span><span>:
-</span><span>  </span><span style="color:#bf616a;">template</span><span>:
-</span><span>    </span><span style="color:#bf616a;">annotations</span><span>:
-</span><span>      </span><span style="color:#bf616a;">example.com/git-commit</span><span>: &quot;</span><span style="color:#a3be8c;">123456</span><span>&quot;
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag">a</span><span class="z-entity z-name z-tag">piVersion</span><span>:</span><span class="z-string"> v</span><span class="z-string">1</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">d</span><span class="z-entity z-name z-tag">ata</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  C</span><span class="z-entity z-name z-tag">I_COMMIT_SHORT_SHA</span><span>:</span><span class="z-punctuation z-definition z-string"> &quot;</span><span class="z-string">123456</span><span class="z-punctuation z-definition z-string">&quot;</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">k</span><span class="z-entity z-name z-tag">ind</span><span>:</span><span class="z-string"> C</span><span class="z-string">onfigMap</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">m</span><span class="z-entity z-name z-tag">etadata</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  n</span><span class="z-entity z-name z-tag">ame</span><span>:</span><span class="z-string"> e</span><span class="z-string">nvironment-variables-2t266m664k</span></span>
+<span class="giallo-l"><span class="z-entity">---</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">a</span><span class="z-entity z-name z-tag">piVersion</span><span>:</span><span class="z-string"> a</span><span class="z-string">pps/v1</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">k</span><span class="z-entity z-name z-tag">ind</span><span>:</span><span class="z-string"> D</span><span class="z-string">eployment</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">s</span><span class="z-entity z-name z-tag">pec</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">  t</span><span class="z-entity z-name z-tag">emplate</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">    a</span><span class="z-entity z-name z-tag">nnotations</span><span>:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag">      e</span><span class="z-entity z-name z-tag">xample.com/git-commit</span><span>:</span><span class="z-punctuation z-definition z-string"> &quot;</span><span class="z-string">123456</span><span class="z-punctuation z-definition z-string">&quot;</span></span></code></pre>
 <p>Tada!</p>
-<p>Kustomize has a predefined list of fields it'll actually replace corresponding patterns with environment variables. You can check this list <a href="https://github.com/kubernetes-sigs/kustomize/blob/a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce/api/konfig/builtinpluginconsts/varreference.go">directly in the repository</a>. If you want to do variable substitution in a field that is not in that list, you can follow the section <code>I want to put $VAR in some (currently disallowed) field</code> <a href="https://github.com/kubernetes-sigs/kustomize/issues/2052">on this Github issue</a>, which points to the aforementioned source file.</p>
+<p>Kustomize has a predefined list of fields it'll actually replace corresponding patterns with environment variables. You can check this list <a rel="external" href="https://github.com/kubernetes-sigs/kustomize/blob/a280cdf5eeb748f5a72c8d94164ffdd68d03c5ce/api/konfig/builtinpluginconsts/varreference.go">directly in the repository</a>. If you want to do variable substitution in a field that is not in that list, you can follow the section <code>I want to put $VAR in some (currently disallowed) field</code> <a rel="external" href="https://github.com/kubernetes-sigs/kustomize/issues/2052">on this Github issue</a>, which points to the aforementioned source file.</p>
 <p>Hope this will help some people stumbling around here.</p>
 
   </div>

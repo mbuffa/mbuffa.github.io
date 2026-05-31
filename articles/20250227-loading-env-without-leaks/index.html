@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -320,20 +321,18 @@
 <li>...worst-case scenario, you end up connecting to a production database when running a task that was supposed to run against a test database, and things go wild.</li>
 <li>You may leak tokens every time you call <code>env</code> in your terminal. Not ideal if you're streaming your content.</li>
 </ul>
-<p>You can actually make sure your application loads its necessary environment variables without those inconveniences, either by using a Shell script, or a Makefile. Two very simple solutions compared to, say, setting up and maintaining SOPS<a href="https://github.com/getsops/sops">1</a>.</p>
+<p>You can actually make sure your application loads its necessary environment variables without those inconveniences, either by using a Shell script, or a Makefile. Two very simple solutions compared to, say, setting up and maintaining SOPS<a rel="external" href="https://github.com/getsops/sops">1</a>.</p>
 <p>So, basically by adding something like <code>server.sh</code> with the following:</p>
-<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#65737e;">#!/bin/sh
-</span><span style="color:#b48ead;">export </span><span style="color:#bf616a;">$</span><span>(cat .env | xargs)
-</span><span style="color:#65737e;"># Running your server
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#!</span><span class="z-comment">/bin/sh</span></span>
+<span class="giallo-l"><span class="z-storage">export</span><span> $(</span><span class="z-entity z-name">cat</span><span class="z-string"> .env</span><span class="z-keyword"> |</span><span class="z-entity z-name"> xargs</span><span>)</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> Running your server</span></span></code></pre>
 <p>Your env will be loaded inside the context of a new TTY (if I remember my UNIX lessons correctly).</p>
 <p>It also works with Makefiles (and yeah, I hate the syntax, it's annoying and weird, but I always end up writing Makefiles):</p>
-<pre data-lang="Makefile" style="background-color:#2b303b;color:#c0c5ce;" class="language-Makefile "><code class="language-Makefile" data-lang="Makefile"><span style="color:#b48ead;">include </span><span style="color:#a3be8c;">.env
-</span><span style="color:#b48ead;">export
-</span><span>
-</span><span style="color:#8fa1b3;">server</span><span>:
-</span><span>  </span><span style="color:#65737e;"># Running your server
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="make"><span class="giallo-l"><span class="z-keyword">include</span><span> .env</span></span>
+<span class="giallo-l"><span class="z-keyword">export</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name">server</span><span>:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-comment">  #</span><span class="z-comment"> Running your server</span></span></code></pre>
 <p>And that's it. Also, make sure your variables are properly defined (such as <code>FOO=bar</code>, without quotes) because having additional quotes may cause issues (some loaders would escape quotes).</p>
 <p>Not a revolutionary take, but better be safe (and clean) than sorry!</p>
 

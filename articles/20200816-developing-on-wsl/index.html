@@ -22,6 +22,7 @@
 
   <link class="stylesheet" rel="stylesheet" href="/main.css" />
   <link class="stylesheet" rel="stylesheet" href="/dark.css" />
+  <link class="stylesheet" rel="stylesheet" href="/syntax.css" />
 
   
     <link rel="alternate" type="application/atom+xml" title="Atom" href="https://mbuffa.github.io/atom.xml">
@@ -460,7 +461,7 @@
   <div class="markdown-content">
     <h2 id="context">Context</h2>
 <p>The latest versions of Windows 10 have seen the maturation of WSL, the Windows Subsystem for Linux. Basically, it allows installing a Linux distribution that'll use a special Linux kernel running "nativaly" on Windows 10. It doesn't run on a virtualized environment, although it seems to use a Hyper-V volume for storage.</p>
-<p>Oh, and you can also use their shiny new <a href="https://github.com/microsoft/terminal">Terminal</a> for ultimate ease of use.</p>
+<p>Oh, and you can also use their shiny new <a rel="external" href="https://github.com/microsoft/terminal">Terminal</a> for ultimate ease of use.</p>
 <h2 id="the-good">The Good</h2>
 <h3 id="seamless-development">Seamless development</h3>
 <p>You will evolve in a familiar environment if you're already using VSCode, since it leverages its client/server architecture, each running on Windows and Linux respectively. Typing <code>code .</code> in your terminal will open VSCode. Extensions will be installed server-side.</p>
@@ -485,11 +486,10 @@ And sure, there's bugtracking through Github, but I think WSL as a whole is pret
 <h2 id="the-ugly">The Ugly</h2>
 <h3 id="get-out-of-my-path">Get out of my $PATH</h3>
 <p>To achieve a seemless integration with Windows, my Ubuntu installation has basically the whole Windows mess injected into its default $PATH:</p>
-<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>➜  / echo $PATH
-</span><span>/home/makks/.asdf/shims:/home/makks/.asdf/bin:/home/makks/.cargo/bin:/home/makks/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/Git/cmd:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Users/Makks/.cargo/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Makks/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Makks.cargo/bin:/mnt/c/Users/Makks/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps
-</span></code></pre>
+<pre class="giallo z-code"><code data-lang="plain"><span class="giallo-l"><span>➜  / echo $PATH</span></span>
+<span class="giallo-l"><span>/home/makks/.asdf/shims:/home/makks/.asdf/bin:/home/makks/.cargo/bin:/home/makks/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/Git/cmd:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Users/Makks/.cargo/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Makks/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Makks.cargo/bin:/mnt/c/Users/Makks/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Makks/AppData/Local/Microsoft/WindowsApps</span></span></code></pre>
 <p>Whish is... yeah. It itched me in many places when I saw this, and when I saw random DLLs popping in my autocompletion. But this is sadly probably the price to pay for this kind of integration.</p>
-<p><a href="https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/">There's a setting to disable this</a> (and even a few other things), but my distro just didn't cared about my feelings and refused to apply it. Judging by the comments section, I'm not alone in this situation.</p>
+<p><a rel="external" href="https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/">There's a setting to disable this</a> (and even a few other things), but my distro just didn't cared about my feelings and refused to apply it. Judging by the comments section, I'm not alone in this situation.</p>
 <p>This kind of dirty black magic may annoy you if you want your distro to be 100% clean. But I guess you wouldn't want to use WSL in the first place in that was the case ;)</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>I'm very satisfied with WSL and its related developments so far. My primary reason for using it is the need for good UI and accessibility tools, because I have an extremely low vision (but I'll run into details in a future article) but it's also really satisfying to leverage a good CPU (in that case, a Ryzen 3800X) instead of the traditional coughing overpriced Macbook Pro any startup company grants its employees with.</p>
