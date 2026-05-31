@@ -56,6 +56,16 @@ body.light .markdown-content a {
   /* teal-600 */
 }
 
+body.light .markdown-content th {
+  color: #0f766e;
+  /* teal-700 */
+}
+
+body.light .markdown-content td {
+  color: #1e293b;
+  /* slate-800 */
+}
+
 .small-caps {
   font-variant: small-caps;
 }
@@ -166,6 +176,29 @@ div.markdown-content blockquote {
   border-left-width: 6px;
 }
 
+div.markdown-content table {
+  width: 100%;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  display: block;
+}
+
+div.markdown-content th,
+div.markdown-content td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #cbd5e1;
+  /* slate-300 */
+}
+
+div.markdown-content th {
+  font-weight: 600;
+}
+
 body.dark h1,
 body.dark h2,
 body.dark h3,
@@ -189,6 +222,22 @@ body.dark pre {
 
 body.dark blockquote {
   border-left-color: white;
+}
+
+body.dark .markdown-content th {
+  color: rgb(251, 146, 60);
+  /* orange-400 */
+}
+
+body.dark .markdown-content td {
+  color: #e2e8f0;
+  /* slate-200 */
+}
+
+body.dark .markdown-content th,
+body.dark .markdown-content td {
+  border-bottom-color: #334155;
+  /* slate-700 */
 }
 
 .w-120 {

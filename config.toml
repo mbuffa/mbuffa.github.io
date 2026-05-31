@@ -13,8 +13,10 @@ taxonomies = [
   { name = "tags", lang = "fr" },
 ]
 
-[markdown]
-highlight_code = true
+[markdown.highlighting]
+style = "class"
+light_theme = "github-light"
+dark_theme = "github-dark"
 
 [extra]
 author_name = "Maxime Buffa"

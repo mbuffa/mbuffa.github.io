@@ -5,60 +5,49 @@ template = "articles/article.html"
 commentable = false
 +++
 
-Hello. My name is Maxime. I got 12+ years of experience building backends and SaaS products, with a mastery of Elixir (Phoenix) and Ruby (Rails) ecosystems, used to work in small teams with a high level of ownership and responsibility. I'm also proficient in DevOps (Kubernetes, AWS), and in shipping software from A to Z.
+My name is Maxime. I have 12+ years of experience building backends and SaaS products, with deep expertise in the Elixir (Phoenix) and Ruby (Rails) ecosystems. I work in small, high-ownership teams and ship software end to end — including the DevOps side (Kubernetes, AWS).
 
-If you're interested in working together, here is a short summary of the roles I could fill and the services I could offer you, as well as a few criteria.
+If you're hiring, here are the roles I take on, how I work, and how to reach me. You can also read my [Resume][0].
 
-You can also find my [Resume][0] here.
-
-### Criteria & Rates
-
-I'm currently:
-* Preferring freelancing and contracting (B2B), but open to permanent positions depending on conditions.
-* Rates will depend on the tech, responsibilities (management, on-calls, work on week-ends) and/or my seniority relative to the role.
-* My daily base rate is **EUR 500** (hourly: roughly **EUR 60**) for positions where I prefectly match.
-* Looking for full remote, or hybrid positions with monthly gatherings (inside Europe).
-* Open to all durations, but with a high preference for missions of **at least** a month.
-* Comfortable with asynchronous work and operating in different timezones, as well as the increased communication requirements this implies.
+### Contact
+Send me an [email][2] or reach out on [LinkedIn][3]. I'd like to hear about your needs.
 
 ### Positions
+| Role | Core stack & focus | Experience |
+| --- | --- | --- |
+| Backend Engineer | Elixir, Ruby — also Go, Python, Scala | 12+ years |
+| DevOps / SRE | AWS, Kubernetes, CI/CD, tracing, on-call | 4+ years |
+| Product Engineer | Translating user needs into shipped features | 12+ years |
+| Platform Engineer | Internal tooling & CI workflows, developer experience | — |
+| Tech Lead | Leading small teams (2–4) alongside PO, PM and design | 2 years |
 
-Positions I would feel comfortable to fill:
-* Backend Engineer - Proficient with Elixir, Ruby, 12+ years of experience; interests in Go, Python, Scala.
-* DevOps or SRE - 4+ years with the ownership of a complete AWS infrastructure, CI/CD, Kubernetes, debugging/tracing and on calls.
-* Product Engineer - Comfortable with impersonating user cases and delivering useful features.
-* Platform Engineer - Comfortable with building or improving tools or CI workflows to improve developer experience.
+### How I work
+| | |
+| --- | --- |
+| **Engagement** | Freelance / contracting (B2B) preferred; open to permanent for the right role |
+| **Day rate** | EUR 500 baseline (≈ EUR 60/hour) |
+| **Location** | Full remote, or hybrid with monthly gatherings within Europe |
+| **Duration** | Any length, with a preference for engagements of at least one month |
+| **Style** | Fully comfortable working async and across timezones |
 
-Also open to:
-* Full-stack and Frontend development - Comfortable with the [PETAL][1] stack.
-* Tech Lead - Comfortable with leading small teams (2-4 developers) and interacting with designers, PO, PM, roughly 2 years of experience.
-* Junior Engineering Manager (hands-on) - Comfortable with interacting with the C-suite, open to new challenges.
+Rates scale with the tech, responsibilities (management, on-call, weekend work), and seniority the role demands.
 
-### Missions (Examples)
-
-Here's a list of missions that I could handle for you:
-* Developping features,
-* Project Management,
-* Cloud Infrastructure setup and optimization,
-* Improving Developer Experience,
-* Debugging, Deploying, Monitoring and Measuring,
-* Refactoring, Clustering and Scaling existing services,
-* Implementing App-Level Observability (OpenTelemetry),
-* ...and more.
+### What I deliver
+- Building and shipping features
+- Project management
+- Cloud infrastructure setup and optimization
+- Improving developer experience
+- Debugging, deploying, monitoring and measuring
+- Refactoring, clustering and scaling existing services
+- App-level observability (OpenTelemetry)
 
 ### Principles
-
-* I like clean work but I'm not dogmatic with acronyms. I'm a supporter of [Dave Thomas' philosophy][4].
-* Tests are a necessary investment that'll save credibility AND sales. But redundant tests are unproductive.
-* Software must **never** crash.
-* There's almost no "One tool to rule them all", different problems require different solutions and Domain-Specific Languages.
-
-### Let's get in touch!
-
-Do not hesitate to send me an [email][2] or to get in touch on [Linkedin][3], I'd be keen to hear about your needs and discuss them with you.
+- I value clean work without being dogmatic about acronyms — I follow [Dave Thomas' philosophy][4].
+- Tests are a necessary investment that protect credibility and sales; redundant tests are not.
+- Software must **never** crash.
+- There is no single tool to rule them all — different problems call for different solutions.
 
 [0]: /assets/2026-01-01-Resume.pdf
-[1]: https://petal.build/
 [2]: mailto:makkusoft@proton.me
 [3]: https://www.linkedin.com/in/maxime-buffa
 [4]: https://youtu.be/qjJ6LvOU7q0?si=86QV-seuwgZZsDKE
