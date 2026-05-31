@@ -32,18 +32,18 @@
     </thead>
     <tbody>
       {% for post in blog.pages %}
-      <tr class="leading-10 align-top">
-        <td class="w-1/6 p-0.5 pr-2 pt-4 text-right dark:text-white font-mono text-sm">
+      <tr class="align-top">
+        <td class="w-1/6 p-0.5 pr-2 pt-4 text-right dark:text-white font-mono leading-7">
           {{ post.date }}
         </td>
         <td class="w-4/6 p-2 pt-4 pb-4 border-b dark:border-neutral-800">
-          <a class="underline hover:no-underline dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900 font-bold"
+          <a class="underline hover:no-underline dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900 font-bold leading-7"
             href="{{ post.permalink | safe }}">{{ post.title }}</a>
           {% if post.description %}
           <p class="dark:text-neutral-300 text-sm leading-6 mt-1">{{ post.description }}</p>
           {% endif %}
         </td>
-        <td class="pt-4">
+        <td class="pt-4 leading-7">
           {{ badge_macro::badge(href="/tags/blog", title="Blog") }}
         </td>
       </tr>
