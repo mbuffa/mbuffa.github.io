@@ -33,6 +33,7 @@ nav_links = [
   { path = "/", title = "Home" },
   { path = "/articles", title = "Articles" },
   { path = "/demos", title = "Demos" },
+  { path = "/blog", title = "Blog" },
   { path = "/tags", title = "Tags" },
   { path = "/hiring", title = "Hiring" },
 ]

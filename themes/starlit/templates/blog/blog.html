@@ -1,0 +1,54 @@
+{% extends "_layout.html" %}
+{% import "components/_badge.html" as badge_macro %}
+
+{% block content %}
+{% set blog = get_taxonomy_term(kind="tags", term="blog") %}
+<article class="w-full">
+  <table class="w-full">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="text-left">
+          <h1 class="m-2 p-2 inline-block font-bold text-2xl">{{ section.title }}</h1>
+          <p class="m-2 p-2 inline-block font-normal dark:text-white text-black">
+            {{ section.extra.subtitle }}
+          </p>
+          <p class="m-2 p-2">
+            <a href="/atom.xml"
+              class="inline-block text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+              title="Subscribe to Atom feed">
+              Atom
+            </a>
+            <span class="text-white">&middot;</span>
+            <a href="/rss.xml"
+              class="inline-block text-orange-500 hover:text-orange-600 dark:text-orange-500 dark:hover:text-orange-400 underline hover:no-underline"
+              title="Subscribe to RSS feed">
+              RSS
+            </a>
+          </p>
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in blog.pages %}
+      <tr class="leading-10 align-top">
+        <td class="w-1/6 p-0.5 pr-2 pt-4 text-right dark:text-white font-mono text-sm">
+          {{ post.date }}
+        </td>
+        <td class="w-4/6 p-2 pt-4 pb-4 border-b dark:border-neutral-800">
+          <a class="underline hover:no-underline dark:text-orange-500 dark:hover:text-orange-500 dark:hover:bg-neutral-900 font-bold"
+            href="{{ post.permalink | safe }}">{{ post.title }}</a>
+          {% if post.description %}
+          <p class="dark:text-neutral-300 text-sm leading-6 mt-1">{{ post.description }}</p>
+          {% endif %}
+        </td>
+        <td class="pt-4">
+          {{ badge_macro::badge(href="/tags/blog", title="Blog") }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</article>
+{% endblock content %}
